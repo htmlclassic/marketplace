@@ -29,7 +29,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const itemsCount = cartItems?.length || 0;
 
   return (
-    <html className={inter.className}>
+    <html className={inter.className} lang='ru'>
       <body className="flex flex-col gap-8 pb-8 min-h-screen max-w-[1920px] mx-auto bg-gray-100">
         <ClientWrapper cartItemsCount={itemsCount}>
           <Navbar  session={!!session} />
