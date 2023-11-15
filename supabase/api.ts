@@ -268,8 +268,6 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           let status: 'seller' | 'courier' | 'done';
           const dateDiff = dayjs(order.delivery_date).diff(dayjs(), 'day', true);
 
-          console.log(dateDiff);
-
           if (dateDiff <= 0) status = 'done';
           else if (dateDiff < 2) status = 'courier';
           else status = 'seller';
