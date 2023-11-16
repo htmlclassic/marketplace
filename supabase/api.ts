@@ -216,6 +216,8 @@ export function getAPI(supabase: SupabaseClient<Database>) {
         .update({ quantity })
         .eq('product_id', productId);
 
+      revalidate('/cart');
+
       return !error;
     },
 
