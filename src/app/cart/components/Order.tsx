@@ -4,9 +4,12 @@ import { useRouter } from "next/navigation";
 import { CartContext } from "@/src/reactContext";
 import { useContext, useState } from "react";
 
-import buyItems from '../serverAction';
+import buyItems from '../buyItems';
 import LoadingSpinner from "@/src/components/LoadingSpinner";
 import clsx from "clsx";
+import { Errors } from "../enums";
+import { createClientSupabaseClient } from "@/supabase/utils_client";
+import { getAPI } from "@/supabase/api";
 
 interface Props {
   itemsTotalCount: number;
@@ -16,7 +19,10 @@ interface Props {
 }
 
 export default function Order({ itemsTotalCount, total, userBalance, uid }: Props) {
+  const api = getAPI(createClientSupabaseClient())
+
   const router = useRouter();
+
   const [address, setAddress] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const { setCartItemsCount } = useContext(CartContext);
@@ -24,11 +30,32 @@ export default function Order({ itemsTotalCount, total, userBalance, uid }: Prop
   const handler = async () => {
     setSubmitting(true);
     
-    const res = await buyItems(uid, address);
-
-    if (res) {
+    try {
+      await buyItems(uid, address);
+      await api.clearCart();
       setCartItemsCount(0);
+
       router.push('/orders');
+    } catch(err) {
+      const error = err as { message: Errors }
+      setSubmitting(false);
+
+      // handle buyItems errors
+      switch(error.message) {
+        case Errors.PRODUCTS_QUANTITY_CHANGED:
+          router.refresh();
+          break;
+        case Errors.EMPTY_ADDRESS:
+          break;
+        case Errors.EMPTY_CART:
+          break;
+        case Errors.USER_OWNS_PRODUCT:
+          break;
+        case Errors.PRODUCTS_DONT_EXIST:
+          break;
+        case Errors.LOW_BALANCE:
+          break;
+      }
     }
   };
 
