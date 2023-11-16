@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ItemList from "./components/ItemList";
 import Order from "./components/Order";
 import { CartState } from "./page";
@@ -9,6 +9,7 @@ import EmptyCart from "./components/EmptyCart";
 interface Props {
   products: Product[];
   cart: CartState[];
+  itemsQuantityChanged: string[];
   userBalance: number;
   uid: string;
 }
@@ -17,11 +18,21 @@ export default function PageClient(
   {
     products,
     cart: initialCart,
+    itemsQuantityChanged,
     userBalance,
     uid
   }: Props
 ) {
   const [cart, setCart] = useState(initialCart);
+
+  useEffect(() => {
+    const totalQuantityIntital = initialCart.reduce((acc, item) => item.quantity + acc, 0);
+    const totalQuantityCurrentState = cart.reduce((acc, item) => item.quantity + acc, 0);
+
+    if (totalQuantityCurrentState !== totalQuantityIntital) {
+      setCart(initialCart);
+    }
+  }, [initialCart])
 
   if (cart.length === 0) return <EmptyCart />
   
@@ -34,6 +45,7 @@ export default function PageClient(
         <ItemList
           products={products}
           cart={cart}
+          itemsQuantityChanged={itemsQuantityChanged}
           setCart={setCart}
         />
       </div>

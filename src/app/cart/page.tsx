@@ -27,11 +27,22 @@ export default async function Page() {
     ( await Promise.all(itemsInCart!.map(product => api.getProductById(product.product_id))) )
       .filter(product => product) as Product[];
 
+
+  const itemsQuantityChanged: string[] = [];
   // form cart state
   for (const product of products) {
     const item = itemsInCart.find(i => i.product_id === product.id);
 
     if (item) {
+      // if products' quantity in marketplace became less than user has in the cart
+      // display a message about it and change item's quantity in the user's cart
+      if (item.quantity > product.quantity) {
+        item.quantity = product.quantity;
+        itemsQuantityChanged.push(item.product_id);
+
+        await api.setCartItemQuantity(item.product_id, product.quantity);
+      }
+
       cart.push({
         ...item,
         price: product.price,
@@ -44,6 +55,7 @@ export default async function Page() {
     <PageClient
       products={products}
       cart={cart}
+      itemsQuantityChanged={itemsQuantityChanged}
       userBalance={userBalance}
       uid={uid!}
     />

@@ -7,12 +7,14 @@ import { CartState } from "../page";
 interface Props {
   products: Product[];
   cart: CartState[];
+  itemsQuantityChanged: string[];
   setCart: Dispatch<SetStateAction<CartState[]>>;
 }
 
 export default function ItemList({
     products: productsInitial,
     cart,
+    itemsQuantityChanged,
     setCart
 }: Props) {
   const [products, setProducts] = useState(productsInitial);
@@ -46,13 +48,18 @@ export default function ItemList({
     <div className="flex flex-col gap-10">
       {
         products.map(product =>
-          <Item
-            key={product.id}
-            product={product}
-            cartItem={cart.find(item => item.product_id === product.id)!}
-            handleDeleteProduct={() => handleDeleteProduct(product.id)}
-            setItemQuantity={(newQuantity: number) => setItemQuantity(product.id, newQuantity)}
-          />
+          <div key={product.id} >
+            {
+              itemsQuantityChanged.includes(product.id) &&
+              <p className="text-sm text-red-400 font-bold mb-1">Количество этого товара изменилось</p>
+            }
+            <Item
+              product={product}
+              cartItem={cart.find(item => item.product_id === product.id)!}
+              handleDeleteProduct={() => handleDeleteProduct(product.id)}
+              setItemQuantity={(newQuantity: number) => setItemQuantity(product.id, newQuantity)}
+            />
+          </div>
         )
       }
     </div>

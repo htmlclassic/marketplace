@@ -2,7 +2,7 @@
 
 import { getAPI } from "@/supabase/api";
 import { createClientSupabaseClient } from "@/supabase/utils_client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartState } from "../page";
 
 interface Props {
@@ -17,6 +17,12 @@ export default function ControlQuantity({
   const [quantity, setQuantity] = useState(cartItem.quantity);
   const maxQuantity = cartItem.maxQuantity;
   const api = getAPI(createClientSupabaseClient());
+
+  useEffect(() => {
+    if (cartItem.quantity !== quantity) {
+      setQuantity(cartItem.quantity);
+    }
+  }, [cartItem]);
 
   const changeQuantity = (newQuantity: number) => {
     if (newQuantity >= 1 && newQuantity <= maxQuantity) {
