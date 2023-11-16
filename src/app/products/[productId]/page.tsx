@@ -21,7 +21,7 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
     </div>
   );
 
-  const outOfStock = product.quantity === 0;
+  const outOfStock = product.quantity <= 0;
 
   let cartControl: React.ReactNode;
 

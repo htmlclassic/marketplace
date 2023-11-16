@@ -8,7 +8,7 @@ export default async function Catalog() {
   let itemsList: React.ReactNode = <p>No items on sale yet.</p>;
 
   if (products) {
-    const productsInStock = products.filter(pr => pr.quantity !== 0);
+    const productsInStock = products.filter(pr => pr.quantity > 0);
 
     itemsList = productsInStock.map(product =>
       <ProductPreview key={product.id} product={product} />
