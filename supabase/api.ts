@@ -179,12 +179,14 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       return false;
     },
 
-    async clearCart(userId: string | null) {
-      if (userId) {
+    async clearCart() {
+      const uid = await this.getCurrentUserId();
+
+      if (uid) {
         const { error } = await supabase
           .from('cart')
           .delete()
-          .eq('user_id', userId);
+          .eq('user_id', uid);
 
         if (!error) return true;
       }
