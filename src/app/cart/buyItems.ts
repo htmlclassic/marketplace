@@ -116,10 +116,13 @@ export default async function buyItems(uid: string, address: string) {
   }
 
   function checkProductsAvailability(cartItems: Cart[], products: Product[]) {
-    const itemsQuantity = cartItems.reduce((acc, el) => acc + el.quantity , 0)
-    const productsQuantity = products.reduce((acc, el) => acc + el.quantity , 0)
+    for (const item of cartItems) {
+      const product = products.find(pr => pr.id === item.product_id)!;
 
-    return itemsQuantity <= productsQuantity;
+      if (item.quantity > product.quantity) return false;
+    }
+
+    return true;
   }
 
   function getSumToPay(cartItems: Cart[], products: Product[]) {
