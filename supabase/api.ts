@@ -5,15 +5,28 @@ import dayjs from 'dayjs';
 
 // if you query data from some table and you don't pass RLS policies conditions,
 // supabase returns an empty array
+function removeArrayDuplicates<T>(arr: T[]) {
+  return Array.from(new Set<T>(arr));
+}
 
 export function getAPI(supabase: SupabaseClient<Database>) {
   return {
-    async getProducts() {
-      const { data: products, error } = await supabase
-        .from('product')
-        .select()
-        .order('created_at', { ascending: false })
-      ;
+    async getProducts(ids?: string[]) {
+      if (ids) ids = removeArrayDuplicates(ids);
+
+      const { data: products, error } = 
+        ids
+        ?
+          await supabase
+            .from('product')
+            .select()
+            .filter('id', 'in', `(${ids.join()})`)
+            .order('created_at', { ascending: false })
+        :
+          await supabase
+            .from('product')
+            .select()
+            .order('created_at', { ascending: false });
     
       if (error) throw new Error(error.message);
       if (products.length === 0) return null;
