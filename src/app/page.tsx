@@ -17,7 +17,7 @@ export default async function Catalog() {
 
   return (
     <>
-      <div className="grid grid-cols-[repeat(1,minmax(0,270px))] justify-center min-[560px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-7 x w-full">
+      <div className="grid content-start grid-cols-2 justify-center min-[560px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-7 w-full">
         {itemsList}
       </div>
     </>
