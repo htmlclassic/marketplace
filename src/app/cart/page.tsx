@@ -22,12 +22,9 @@ export default async function Page() {
   if (!itemsInCart) return <EmptyCart />
   
   const userBalance = (await api.getCurrentUserProfileData())!.balance;
+  const products = (await api.getProducts(itemsInCart.map(item => item.product_id))) as Product[];
+
   const cart: CartState[] = [];
-  const products =
-    ( await Promise.all(itemsInCart!.map(product => api.getProductById(product.product_id))) )
-      .filter(product => product) as Product[];
-
-
   const itemsQuantityChanged: string[] = [];
   // form cart state
   for (const product of products) {

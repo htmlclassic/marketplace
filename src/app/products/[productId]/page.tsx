@@ -12,7 +12,7 @@ interface ItemProps {
 
 export default async function ProductPage({ params: { productId } }: ItemProps) {
   const api = getAPI(createServerComponentSupabaseClient());
-  const product = await api.getProductById(productId);
+  const product = ( await api.getProducts([productId]) )?.[0];
   const uid = await api.getCurrentUserId();
 
   if (!product) return (

@@ -316,7 +316,7 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           productInStats.grossPay += item.price;
           productInStats.soldCount += item.quantity;
         } else {
-          const product = (await this.getProductById(item.product_id))!;
+          const product = (await this.getProducts([ item.product_id ]))![0];
 
           if (product.owner !== uid) continue;
 

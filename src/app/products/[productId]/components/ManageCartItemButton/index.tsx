@@ -11,7 +11,7 @@ export default async function ManageCartItemButton({ productId }: Props) {
   const cartItem =  (await api.getCartItems())?.find(item => item.product_id === productId);
   const inCart = !!cartItem;
   const quantityInCart = cartItem?.quantity || 1;
-  const maxQuantity = (await api.getProductById(productId))?.quantity || 0;
+  const maxQuantity = ( await api.getProducts([productId]) )?.[0].quantity || 0;
 
   return (
     <ManageCartItemButtonClient 
