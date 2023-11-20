@@ -1,7 +1,6 @@
 import { getAPI } from "@/supabase/api";
 import { createOtherSupabaseClient } from "@/supabase/utils_server";
 import Table from "./Table";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
