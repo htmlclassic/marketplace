@@ -248,23 +248,30 @@ export function getAPI(supabase: SupabaseClient<Database>) {
 
         if (fetchOrdersError) throw new Error('Couldnt fetch orders: ' + fetchOrdersError.message);
 
+        const { error: fetchOrderItemsError, data: orderItems } = await supabase
+          .from('order_items')
+          .select()
+          .filter('order_id', 'in', `(${orders.map(order => order.id).join()})`);
+
+        if (fetchOrderItemsError) throw new Error('Couldnt fetch orders: ' + fetchOrderItemsError.message);
+
+        const productIds = orderItems.map(orderItem => orderItem.product_id);
+        const products = (await this.getProducts(productIds));
+
+        if (!products) throw new Error('Coudnt fetch products');
+
         for (const order of orders) {
-          const { data: orderItems } = await supabase
-            .from('order_items')
-            .select()
-            .eq('order_id', order.id);
+          const filteredOrderItems = orderItems.filter(orderItem => orderItem.order_id === order.id);
 
-          const items: OrderItem[] = [];
+          const items: OrderItem[] = filteredOrderItems.map(orderItem => {
+            const product = products.find(pr => pr.id === orderItem.product_id)!;
 
-          for (const orderItem of orderItems!) {
-            const product = await this.getProductById(orderItem.product_id);
-
-            items.push({
+            return {
               price: orderItem.price,
               quantity: orderItem.quantity,
-              product: product!
-            });
-          }
+              product
+            };
+          });
 
           // set fake delivery status
           let status: 'seller' | 'courier' | 'done';
