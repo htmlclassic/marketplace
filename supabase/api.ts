@@ -247,6 +247,7 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           .order('created_at', { ascending: false });
 
         if (fetchOrdersError) throw new Error('Couldnt fetch orders: ' + fetchOrdersError.message);
+        if (!orders.length) return null;
 
         const { error: fetchOrderItemsError, data: orderItems } = await supabase
           .from('order_items')
