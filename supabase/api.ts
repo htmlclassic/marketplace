@@ -32,21 +32,6 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       return newProducts;
     },
 
-    async getProductById(productId: string) {
-      const { data: product } = await supabase.from('product').select().eq('id', productId);
-
-      if (product && product.length > 0) {
-        const imageUrls = await this.getImageUrlsByProductId(productId);
-
-        return {
-          ...product[0],
-          imageUrls: imageUrls
-        } as Product;
-      };
-
-      return null;
-    },
-
     async getImageUrlsByProductId(productId: string) {
       const { data } = await supabase
         .storage
