@@ -25,8 +25,8 @@ const PATHS = [
     url: '/orders'
   },
   {
-    content: 'Ваши товары',
-    url: '/sell'
+    content: 'Ваши продажи',
+    url: '/sales'
   },
   {
     content: 'Продать товар',
