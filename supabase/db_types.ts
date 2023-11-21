@@ -45,6 +45,32 @@ export interface Database {
           }
         ]
       }
+      category: {
+        Row: {
+          id: number
+          name: string
+          parent_category: string | null
+        }
+        Insert: {
+          id?: number
+          name: string
+          parent_category?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string
+          parent_category?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_parent_category_fkey"
+            columns: ["parent_category"]
+            isOneToOne: false
+            referencedRelation: "category"
+            referencedColumns: ["name"]
+          }
+        ]
+      }
       order_details: {
         Row: {
           address: string
