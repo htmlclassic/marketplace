@@ -327,6 +327,11 @@ export function getAPI(supabase: SupabaseClient<Database>) {
         } else {
           const product = products.find(pr => pr.id === item.product_id)!;
 
+          // sellers and customers accessing the same table
+          // there's intersection in terms of RLS policies
+          // so rn, I have to skip products, if user doesnt own it
+          if (product.owner !== uid) continue;
+
           stats.push({
             product,
             soldCount: item.quantity,
