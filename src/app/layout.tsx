@@ -8,6 +8,8 @@ import { Inter } from 'next/font/google';
  
 import ClientWrapper from './ClientWrapper';
 import Navbar from '../components/Navbar';
+import MobileMenu from '../components/MobileMenu/MobileMenu';
+import MobileHeader from '../components/MobileHeader/MobileHeader';
 
 export const metadata: Metadata = {
   title: 'Marketplace',
@@ -30,9 +32,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html className={inter.className} lang='ru'>
-      <body className="flex flex-col gap-8 pb-8 min-h-screen max-w-[1920px] mx-auto bg-gray-100">
+      <body className="flex flex-col gap-8 pb-20 min-h-screen max-w-[1920px] mx-auto bg-gray-100">
         <ClientWrapper cartItemsCount={itemsCount}>
           <Navbar  session={!!session} />
+          <MobileHeader />
+          <MobileMenu />
           <main className="grow flex px-6">
             {children}
           </main>

@@ -9,7 +9,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import Image from 'next/image';
-import SearchInput from './SearchInput';
+import SearchInput from '../SearchInput/SearchInput';
 
 interface Props {
   session: boolean;
@@ -63,11 +63,11 @@ export default function Navbar({ session }: Props) {
   );
 
   return (
-    <div className="min-h-[60px] transform-gpu border-transparent sticky top-0 py-1 px-2 flex gap-x-3 min-[530px]:gap-x-10 justify-between items-center bg-[rgba(0,0,0,0.8)] text-white z-10 before:w-full before:h-full before:absolute before:left-0 before:top-0 before:z-[-1] before:backdrop-blur-md">
+    <div className="min-h-[70px] transform-gpu border-transparent sticky top-0 py-1 px-2 hidden sm:flex gap-x-10 justify-between items-center bg-[#82ebae] z-10">
       <button
         ref={ref}
         onClick={() => setShowMenu(!showMenu)}
-        className="min-[920px]:hidden shrink-0 p-2"
+        className="lg:hidden shrink-0 p-2"
       >
         <Image
           src={MenuIcon}
@@ -79,8 +79,8 @@ export default function Navbar({ session }: Props) {
       <nav
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
         className={clsx({
-          'transform-gpu py-3 flex gap-y-2 flex-col min-w-[260px] h-screen w-max transition-all duration-200 -translate-x-full absolute -left-full top-full bg-[rgba(0,0,0,0.8)] min-[920px]:py-0 min-[920px]:transition-none min-[920px]:translate-x-0 min-[920px]:flex-row min-[920px]:min-w-0 min-[920px]:h-auto min-[920px]:static min-[920px]:bg-transparent': true,
-          'backdrop-blur-md left-[-2px] translate-x-0': showMenu
+          'transform-gpu py-3 flex gap-y-2 flex-col min-w-[260px] h-screen w-max transition-all duration-200 -translate-x-full absolute -left-full top-full bg-[#82ebae] lg:py-0 lg:transition-none lg:translate-x-0 lg:flex-row lg:min-w-0 lg:h-auto lg:static lg:bg-transparent': true,
+          'left-[-2px] translate-x-0': showMenu
         })}
       >
         { links[0] }
@@ -91,7 +91,7 @@ export default function Navbar({ session }: Props) {
       </nav>
       <SearchInput />
       <div className={clsx({
-        'flex items-center min-[920px]:gap-5': true,
+        'flex items-center lg:gap-5': true,
         'justify-between': session,
         'justify-end': !session
       })}>

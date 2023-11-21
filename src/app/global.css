@@ -8,14 +8,14 @@
 
 .animate-nav {
   @apply
-    after:transition-all after:duration-200 after:ease-out after:block after:absolute after:h-[2px] after:w-0 hover:after:w-[calc(50%-0.75rem)] after:left-1/2 after:bottom-[7px] after:bg-sky-400
-    before:transition-all before:duration-200 before:ease-out before:block before:absolute before:h-[2px]  before:w-0 hover:before:w-[calc(50%-0.75rem)] before:right-1/2 before:bottom-[7px] before:bg-sky-400
+    after:transition-all after:duration-200 after:ease-out after:block after:absolute after:h-[2px] after:w-0 hover:after:w-[calc(50%-0.75rem)] after:left-1/2 after:bottom-[7px] after:bg-black
+    before:transition-all before:duration-200 before:ease-out before:block before:absolute before:h-[2px]  before:w-0 hover:before:w-[calc(50%-0.75rem)] before:right-1/2 before:bottom-[7px] before:bg-black
 }
 
 .animate-nav-static {
   @apply
-  after:block after:absolute after:h-[2px] after:w-[calc(50%-0.75rem)] after:left-1/2 after:bottom-[7px] after:bg-sky-400
-  before:block before:absolute before:h-[2px] before:w-[calc(50%-0.75rem)] before:right-1/2 before:bottom-[7px] before:bg-sky-400
+  after:block after:absolute after:h-[2px] after:w-[calc(50%-0.75rem)] after:left-1/2 after:bottom-[7px] after:bg-black
+  before:block before:absolute before:h-[2px] before:w-[calc(50%-0.75rem)] before:right-1/2 before:bottom-[7px] before:bg-black
 }
 
 @layer base {
