@@ -22,15 +22,15 @@ const PATHS = [
   },
   {
     content: 'Заказы',
-    url: '/orders'
+    url: '/account/orders'
   },
   {
     content: 'Ваши продажи',
-    url: '/sales'
+    url: '/account/sales'
   },
   {
     content: 'Продать товар',
-    url: '/addProduct'
+    url: '/account/addproduct'
   },
 ];
 
@@ -96,7 +96,7 @@ export default function Navbar({ session }: Props) {
         'justify-end': !session
       })}>
         { session && <CartItemsCount /> }
-        <Link href="/profile" title="Профиль" className="shrink-0 flex p-2 border border-transparent hover:border-white transition-all">
+        <Link href="/account/profile" title="Профиль" className="shrink-0 flex p-2 border border-transparent hover:border-white transition-all">
           <Image
             src={UserIcon}
             width={25}

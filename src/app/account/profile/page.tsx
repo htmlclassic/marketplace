@@ -1,14 +1,9 @@
 import { getAPI } from "@/supabase/api";
 import { createServerComponentSupabaseClient } from "@/supabase/utils_server";
-import { redirect } from "next/navigation";
 import Form from "./Form";
 
 export default async function Profile() {
   const api = getAPI(createServerComponentSupabaseClient());
-  const session = await api.getSession();
-  
-  if (!session) redirect('/login');
-
   const profileData = await api.getCurrentUserProfileData();
 
   return (

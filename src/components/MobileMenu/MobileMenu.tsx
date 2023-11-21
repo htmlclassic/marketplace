@@ -14,7 +14,7 @@ const links = [
     iconSrc: HomeIcon
   },
   {
-    href: '/messages',
+    href: '/account/messages',
     iconSrc: MessageIcon
   },
   {
@@ -22,7 +22,7 @@ const links = [
     iconSrc: CatalogIcon
   },
   {
-    href: '/wallet',
+    href: '/account/wallet',
     iconSrc: WalletIcon
   },
   {
@@ -30,7 +30,7 @@ const links = [
     iconSrc: CartIcon
   },
   {
-    href: '/profile',
+    href: '/account',
     iconSrc: UserIcon
   }
 ];
