@@ -11,7 +11,7 @@ export default async function Page() {
 
   const stats = await api.getSellerStatistics();
 
-  if (!stats) return <p>Вы еще ничего не продавали. Статистика недоступна.</p>
+  if (!stats) return <p>Ни один из ваших товаров ещё не купили. Статистика недоступна.</p>
 
   return (
     <div className="flex w-full overflow-x-auto">
