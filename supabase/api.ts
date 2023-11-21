@@ -304,22 +304,28 @@ export function getAPI(supabase: SupabaseClient<Database>) {
 
       if (!uid) throw new Error('User is not authorized.');
 
-      const { data: soldItems } = await supabase
+      // I set up a condition when querying this table
+      // so it selects only current user's sold items
+      const { error: fetchSoldItemsError, data: soldItems } = await supabase
         .from('order_items')
         .select();
+      
+      if (fetchSoldItemsError) throw new Error('Couldnt fetch sold items: ' + fetchSoldItemsError.message);
+
+      const products = await this.getProducts(soldItems.map(item => item.product_id));
+
+      if (!products) throw new Error('Could fetch products');
 
       const stats: SellerStatistics[] = [];
 
-      for (const item of soldItems!) {
+      for (const item of soldItems) {
         const productInStats = stats.find(pr => pr.product.id === item.product_id);
 
         if (productInStats) {
           productInStats.grossPay += item.price;
           productInStats.soldCount += item.quantity;
         } else {
-          const product = (await this.getProducts([ item.product_id ]))![0];
-
-          if (product.owner !== uid) continue;
+          const product = products.find(pr => pr.id === item.product_id)!;
 
           stats.push({
             product,
