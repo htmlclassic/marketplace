@@ -1,5 +1,4 @@
 import HomeIcon from './assets/home.svg';
-import MessageIcon from './assets/message.svg';
 import CatalogIcon from './assets/catalog.svg';
 import WalletIcon from './assets/wallet.svg';
 import CartIcon from './assets/cart.svg';
@@ -12,10 +11,6 @@ const links = [
   {
     href: '/',
     iconSrc: HomeIcon
-  },
-  {
-    href: '/account/messages',
-    iconSrc: MessageIcon
   },
   {
     href: '/catalog',
