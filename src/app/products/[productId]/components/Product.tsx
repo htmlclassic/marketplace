@@ -2,13 +2,16 @@ import Slider from '@/src/components/Slider';
 import Image from 'next/image';
 import ImgPlaceholder from '@/src/components/noimage.jpg'
 import Link from 'next/link';
+import ChatButton from './ChatButton';
 
 interface ProductProps {
   product: Product;
   children: React.ReactNode;
+  sellerName: string;
+  uid: string | null;
 }
 
-export default function Product({ product, children }: ProductProps) {
+export default function Product({ uid, product, sellerName, children }: ProductProps) {
   let imageList: React.ReactNode = 
     <Image
       src={ImgPlaceholder}
@@ -49,6 +52,12 @@ export default function Product({ product, children }: ProductProps) {
           </Link>
         </p>
         <p>Количество товара: {product.quantity}</p>
+        <p>Продавец: <span className="font-bold">{sellerName}</span></p>
+        <ChatButton
+          uid={uid}
+          productOwnerId={product.owner}
+          productId={product.id}
+        />
         <p className="flex flex-col gap-3">
           <span className="font-bold">Описание</span>
           <span>{product.description}</span>

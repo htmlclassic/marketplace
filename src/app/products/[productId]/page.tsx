@@ -11,7 +11,8 @@ interface ItemProps {
 }
 
 export default async function ProductPage({ params: { productId } }: ItemProps) {
-  const api = getAPI(createServerComponentSupabaseClient());
+  const supabase = createServerComponentSupabaseClient();
+  const api = getAPI(supabase);
   const product = ( await api.getProducts([productId]) )?.[0];
   const uid = await api.getCurrentUserId();
 
@@ -20,7 +21,8 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
       <p>Такого товара не существует.</p>
     </div>
   );
-
+  
+  const { data: sellerName } = await supabase.rpc('get_user_name', { userid: product.owner});
   const outOfStock = product.quantity <= 0;
 
   let cartControl: React.ReactNode;
@@ -41,7 +43,11 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
 
   return (
     <div className="grow space-y-5">
-      <Product product={product}>{cartControl}</Product>
+      <Product
+        product={product}
+        sellerName={sellerName!}
+        uid={uid}
+      >{cartControl}</Product>
     </div>
   );
 }
