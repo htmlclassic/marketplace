@@ -32,12 +32,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html className={inter.className} lang='ru'>
-      <body className="flex flex-col gap-8 pb-20 min-h-screen max-w-[1920px] mx-auto bg-gray-100">
+      <body className="flex flex-col gap-2 pb-20 sm:gap-6 sm:pb-6 min-h-screen max-w-[1920px] mx-auto bg-gray-100">
         <ClientWrapper cartItemsCount={itemsCount}>
           <Navbar  session={!!session} />
           <MobileHeader />
           <MobileMenu />
-          <main className="grow flex px-6">
+          <main className="grow flex px-2 sm:px-6">
             {children}
           </main>
         </ClientWrapper>
