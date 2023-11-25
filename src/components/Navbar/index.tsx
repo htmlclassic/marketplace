@@ -96,7 +96,7 @@ export default function Navbar({ session }: Props) {
         'justify-end': !session
       })}>
         { session && <CartItemsCount /> }
-        <Link href="/account/profile" title="Профиль" className="shrink-0 flex p-2 border border-transparent hover:border-white transition-all">
+        <Link href="/account" title="Аккаунт" className="shrink-0 flex p-2 border border-transparent hover:border-white transition-all">
           <Image
             src={UserIcon}
             width={25}
