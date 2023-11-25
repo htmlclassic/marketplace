@@ -20,8 +20,6 @@ export default function ChatPreviewList({ chats, uid }: Props) {
     (!chat.message && chat.customer_id === uid)
   );
 
-  if (!filteredChats.length) return <div>У вас нет чатов</div>
-
   useEffect(() => {
     const realtimeFilter = chats.length ? `chat_id=in.(${chatIds})` : undefined;
 
@@ -42,6 +40,8 @@ export default function ChatPreviewList({ chats, uid }: Props) {
 
     return () => { supabase.removeChannel(channel) };
   }, [supabase, chatIds]);
+
+  if (!filteredChats.length) return <div>У вас нет чатов</div>
 
   return (
     filteredChats.map(chat =>
