@@ -71,6 +71,91 @@ export interface Database {
           }
         ]
       }
+      chat: {
+        Row: {
+          created_at: string | null
+          customer_id: string
+          id: number
+          product_id: string
+          seller_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id: string
+          id?: number
+          product_id: string
+          seller_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string
+          id?: number
+          product_id?: string
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "product"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      chat_message: {
+        Row: {
+          author_id: string
+          chat_id: number
+          created_at: string | null
+          id: number
+          text: string
+        }
+        Insert: {
+          author_id: string
+          chat_id: number
+          created_at?: string | null
+          id?: number
+          text: string
+        }
+        Update: {
+          author_id?: string
+          chat_id?: number
+          created_at?: string | null
+          id?: number
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_message_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_message_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chat"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       order_details: {
         Row: {
           address: string
@@ -178,6 +263,13 @@ export interface Database {
         }
         Relationships: [
           {
+            foreignKeyName: "product_category_fkey"
+            columns: ["category"]
+            isOneToOne: false
+            referencedRelation: "category"
+            referencedColumns: ["name"]
+          },
+          {
             foreignKeyName: "product_owner_fkey"
             columns: ["owner"]
             isOneToOne: false
@@ -241,7 +333,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_name: {
+        Args: {
+          userid: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
