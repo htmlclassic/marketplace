@@ -63,7 +63,7 @@ export default function Navbar({ session }: Props) {
   );
 
   return (
-    <div className="min-h-[70px] transform-gpu border-transparent sticky top-0 py-1 px-2 hidden sm:flex gap-x-10 justify-between items-center bg-[#82ebae] z-10">
+    <div className="min-h-[70px] transform-gpu border-transparent sticky top-0 py-1 px-2 hidden sm:flex gap-x-10 justify-between items-center bg-[#82ebae] z-20">
       <button
         ref={ref}
         onClick={() => setShowMenu(!showMenu)}

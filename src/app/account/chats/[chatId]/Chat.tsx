@@ -62,7 +62,7 @@ export default function Chat({
   }, [supabase]);
 
   return (
-    <div className="relative grow border rounded border-slate-300 flex flex-col gap-3 max-w-[1000px] mx-auto max-h-[70vh]">
+    <div className="relative grow border rounded border-slate-300 flex flex-col gap-3 max-w-[1000px] mx-auto max-h-[70vh] overflow-hidden">
       <Link
         href={`/products/${product.id}`}
         className="bg-gray-600 z-10 p-1 flex gap-3 text-white items-center"
@@ -73,13 +73,13 @@ export default function Chat({
           width={50}
           height={50}
         />
-        <p>{product.title}</p>
+        <p className="line-clamp-2">{product.title}</p>
       </Link>
       <div className="relative flex flex-col-reverse gap-3 p-5 mt-5 h-full overflow-auto">
         {
           messages.map(message =>
             <div key={message.createdAt} className={clsx({
-              "rounded-lg p-3 w-max min-w-[100px]": true,
+              "rounded-lg p-3 min-w-[100px] max-w-max [overflow-wrap:anywhere]": true,
               "self-end bg-blue-200": message.author_id === uid,
               "bg-green-200": message.author_id !== uid
             })}>
@@ -124,9 +124,9 @@ function SendMessage({ chat_id, author_id, addMessage }: SendMessageProps) {
   };
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 flex-col items-center sm:flex-row">
       <input
-        className="w-full rounded border border-gray-300"
+        className="w-full rounded border border-gray-300 p-2"
         type="text"
         value={text}
         onChange={e => setText(e.target.value)}
