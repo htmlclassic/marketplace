@@ -14,19 +14,23 @@ interface Props {
 export default function ChatPreviewList({ chats, uid }: Props) {
   const supabase = createClientSupabaseClient();
   const router = useRouter();
+  const chatIds = chats.map(chat => chat.id).join();
   const filteredChats = chats.filter(chat =>
     chat.message ||
     (!chat.message && chat.customer_id === uid)
   );
-  const chatIds = chats.map(chat => chat.id).join();
+
+  if (!filteredChats.length) return <div>У вас нет чатов</div>
 
   useEffect(() => {
+    const realtimeFilter = chats.length ? `chat_id=in.(${chatIds})` : undefined;
+
     const channel = supabase.channel('realtime chat list')
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
         table: 'chat_message',
-        filter: `chat_id=in.(${chatIds})`
+        filter: realtimeFilter
       }, () => router.refresh())
       .on('postgres_changes', {
         event: 'INSERT',

@@ -17,12 +17,7 @@ export default async function Page() {
 
   const uid = (await api.getCurrentUserId())!;
 
-  const chats = await getChats(uid);
-
-  // this causes not to track first chat in useEffect
-  if (!chats) {
-    return <div>У вас пока что нет ни одного чата.</div>
-  }
+  const chats = (await getChats(uid)) || [];
 
   const messages = await Promise.all(
     chats.map(chat => getLastMessage(chat.id))
