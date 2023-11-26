@@ -306,11 +306,11 @@ export function getAPI(supabase: SupabaseClient<Database>) {
 
       // I set up a condition when querying this table
       // so it selects only current user's sold items
-      const { error: fetchSoldItemsError, data: soldItems } = await supabase
+      const { data: soldItems } = await supabase
         .from('order_items')
         .select();
       
-      if (fetchSoldItemsError) throw new Error('Couldnt fetch sold items: ' + fetchSoldItemsError.message);
+      if (!soldItems?.length) return null;
 
       const products = await this.getProducts(soldItems.map(item => item.product_id));
 
