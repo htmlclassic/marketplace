@@ -24,11 +24,11 @@ export function createServiceSupabaseClient() {
         autoRefreshToken: false,
         detectSessionInUrl: false
       },
-      global: {
-        fetch: createFetch({
-          cache: "no-store"
-        })
-      }
+      // global: {
+      //   fetch: createFetch({
+      //     cache: "no-store"
+      //   })
+      // }
     }
   );
 

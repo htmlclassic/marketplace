@@ -6,10 +6,13 @@ import { createServiceSupabaseClient } from "@/supabase/utils_server";
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Errors } from "./enums";
+import { unstable_noStore } from "next/cache";
 
 dayjs.extend(customParseFormat);
 
 export default async function buyItems(uid: string, address: string) {
+  unstable_noStore();
+
   const supabase = createServiceSupabaseClient();
   const api = getAPI(supabase);
 
