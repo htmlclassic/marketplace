@@ -313,6 +313,123 @@ export interface Database {
           }
         ]
       }
+      review: {
+        Row: {
+          author_id: string
+          comment: string
+          cons: string
+          created_at: string
+          id: number
+          product_id: string
+          pros: string
+          rating: number
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          comment: string
+          cons: string
+          created_at?: string
+          id?: number
+          product_id: string
+          pros: string
+          rating: number
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          comment?: string
+          cons?: string
+          created_at?: string
+          id?: number
+          product_id?: string
+          pros?: string
+          rating?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "product"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      review_dislike: {
+        Row: {
+          id: number
+          review_id: number
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          review_id: number
+          user_id: string
+        }
+        Update: {
+          id?: number
+          review_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_dislike_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "review"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_dislike_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      review_like: {
+        Row: {
+          id: number
+          review_id: number
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          review_id: number
+          user_id: string
+        }
+        Update: {
+          id?: number
+          review_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_like_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "review"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_like_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       test: {
         Row: {
           id: number
