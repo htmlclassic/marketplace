@@ -357,5 +357,13 @@ export function getAPI(supabase: SupabaseClient<Database>) {
 
       return null
     },
+
+    async getUserName(id: string | null) {
+      if (!id) return null;
+
+      const { data } = await supabase.rpc('get_user_name', { userid: id});
+  
+      return data;
+    }
   };
 }
