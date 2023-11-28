@@ -1,6 +1,7 @@
 import { getAPI } from '@/supabase/api';
 import { createServerComponentSupabaseClient } from '@/supabase/utils_server';
 import Product from './components/Product';
+import Reviews from './components/Reviews';
 import ManageCartItemButton from './components/ManageCartItemButton';
 import Link from 'next/link';
 
@@ -47,7 +48,10 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
         product={product}
         sellerName={sellerName!}
         uid={uid}
-      >{cartControl}</Product>
+      >
+        {cartControl}
+      </Product>
+      <Reviews productId={productId} />
     </div>
   );
 }

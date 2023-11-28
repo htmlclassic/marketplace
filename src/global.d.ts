@@ -7,6 +7,7 @@ declare global {
   type Product = Database['public']['Tables']['product']['Row'] & { imageUrls: string[] | null };
   type Profile = Database['public']['Tables']['profile']['Row'];
   type Chat = Database['public']['Tables']['chat']['Row'];
+  type Review = Database['public']['Tables']['review']['Row'];
   type Cart = Omit<Database['public']['Tables']['cart']['Row'], 'id' | 'user_id'>;
   type RawMessage = Database['public']['Tables']['chat_message']['Row'];
 
