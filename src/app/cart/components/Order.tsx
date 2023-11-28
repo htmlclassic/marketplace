@@ -35,7 +35,7 @@ export default function Order({ itemsTotalCount, total, userBalance, uid }: Prop
       await api.clearCart();
       setCartItemsCount(0);
 
-      router.push('/orders');
+      router.push('/account/orders');
     } catch(err) {
       const error = err as { message: Errors }
       setSubmitting(false);
