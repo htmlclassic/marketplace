@@ -3,15 +3,23 @@ import Image from 'next/image';
 import ImgPlaceholder from '@/src/components/noimage.jpg'
 import Link from 'next/link';
 import ChatButton from './ChatButton';
+import { Tabs } from './Tabs';
 
 interface ProductProps {
   product: Product;
-  children: React.ReactNode;
+  ManageCartItemButton: React.ReactNode;
+  Reviews: React.ReactNode;
   sellerName: string;
   uid: string | null;
 }
 
-export default function Product({ uid, product, sellerName, children }: ProductProps) {
+export default function Product({
+  uid,
+  product,
+  sellerName,
+  ManageCartItemButton,
+  Reviews
+}: ProductProps) {
   let imageList: React.ReactNode = 
     <Image
       src={ImgPlaceholder}
@@ -37,10 +45,19 @@ export default function Product({ uid, product, sellerName, children }: ProductP
 
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="font-bold text-xl mb-7 max-w-6xl">{product.title}</h2>
-      <Slider>{ imageList }</Slider>
-      {children}
-      <div className="flex flex-col gap-5">
+      <h2 className="font-bold text-xl max-w-6xl order-1 sm:mb-3 sm:order-none">{product.title}</h2>
+      <div className="flex-col gap-5 w-max contents sm:flex">
+        <Slider>{ imageList }</Slider>
+        <div className="order-2 flex-col gap-3 sm:flex-row flex">
+          {ManageCartItemButton}
+          <ChatButton
+            uid={uid}
+            productOwnerId={product.owner}
+            productId={product.id}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col gap-5 order-2">
         <p className="text-lg font-bold text-sky-600">{product.price} ₽</p>
         <p className="flex gap-5 items-center">
           Категория:
@@ -51,17 +68,25 @@ export default function Product({ uid, product, sellerName, children }: ProductP
             {product.category}
           </Link>
         </p>
-        <p>Количество товара: {product.quantity}</p>
         <p>Продавец: <span className="font-bold">{sellerName}</span></p>
-        <ChatButton
-          uid={uid}
-          productOwnerId={product.owner}
-          productId={product.id}
+      </div>
+      <div className="order-last">
+        <Tabs
+          elements={[
+            {
+              node: (
+                <p className="flex flex-col gap-3 max-w-6xl">
+                  <span>{product.description}</span>
+                </p>
+              ),
+              title: 'Описание'
+            },
+            {
+              node: Reviews,
+              title: 'Отзывы'
+            }
+          ]}
         />
-        <p className="flex flex-col gap-3">
-          <span className="font-bold">Описание</span>
-          <span>{product.description}</span>
-        </p>
       </div>
     </div>
   );

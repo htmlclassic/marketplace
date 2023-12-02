@@ -31,7 +31,7 @@ export default function ReviewList({
   }
   
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-5">
       {
         canReview &&   
           <CreateReview
@@ -48,7 +48,7 @@ export default function ReviewList({
               <Review key={i} review={review} />
               )
             :
-            <div>Нет отзывов к данному товару</div>
+            <div>Никто пока что не оценил этот товар.</div>
         }
       </div>
     </div>

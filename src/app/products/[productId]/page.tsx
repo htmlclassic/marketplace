@@ -48,10 +48,9 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
         product={product}
         sellerName={sellerName!}
         uid={uid}
-      >
-        {cartControl}
-      </Product>
-      <Reviews productId={productId} />
+        ManageCartItemButton={cartControl}
+        Reviews={<Reviews productId={product.id} />}
+      />
     </div>
   );
 }

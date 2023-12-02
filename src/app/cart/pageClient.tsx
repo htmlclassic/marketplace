@@ -40,8 +40,8 @@ export default function PageClient(
   const total = cart.reduce((acc, item) => item.quantity * item.price + acc, 0)
 
   return (
-    <div className="relative grow flex flex-wrap gap-20 lg:flex-nowrap">
-      <div className="grow max-w-5xl bg-white p-5 rounded-md">
+    <div className="relative grow flex flex-wrap gap-5 lg:gap-20 lg:flex-nowrap">
+      <div className="grow max-w-5xl bg-white p-2 rounded-md border">
         <ItemList
           products={products}
           cart={cart}
@@ -49,7 +49,7 @@ export default function PageClient(
           setCart={setCart}
         />
       </div>
-      <div className="grow shrink-0 sm:min-w-[420px] bg-white p-5 rounded-md">
+      <div className="grow shrink-0 sm:min-w-[420px] bg-white p-2 rounded-md border">
         <Order
           itemsTotalCount={itemsTotalCount}
           total={total}

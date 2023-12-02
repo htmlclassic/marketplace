@@ -62,7 +62,7 @@ export default function Chat({
   }, [supabase]);
 
   return (
-    <div className="relative grow border rounded border-slate-300 flex flex-col gap-3 max-w-[1000px] mx-auto max-h-[70vh] overflow-hidden">
+    <div className="relative grow border rounded border-slate-300 flex flex-col gap-3 h-full overflow-hidden">
       <Link
         href={`/products/${product.id}`}
         className="bg-gray-600 z-10 p-1 flex gap-3 text-white items-center"

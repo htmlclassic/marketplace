@@ -54,9 +54,9 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
     uid &&
       <button
         onClick={handleCreateChat}
-        className="relative border w-max p-3 transition-all hover:bg-sky-400 hover:text-white rounded"
+        className="relative text-white bg-green-500 min-w-max h-14 w-full transition-all duration-300 hover:bg-green-600 rounded-lg"
       >
-        Чат с продавцом
+        Написать продавцу
         {
           loading &&
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-100">

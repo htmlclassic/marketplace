@@ -25,12 +25,12 @@ interface Props {
 export default function Review({ review }: Props) {
   return (
     <article className="flex flex-col gap-3 max-w-2xl overflow-hidden [overflow-wrap:anywhere]">
-      <header className="flex gap-20 items-center mb-7">
-        <div className="flex gap-3 items-center">
-          <div className="w-12 h-12 rounded-full text-2xl bg-gray-700 text-white flex items-center justify-center">
+      <header className="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center mb-5">
+        <div className="flex gap-3 items-center order-1 sm:order-none">
+          <div className="shrink-0 w-12 h-12 rounded-full text-2xl bg-gray-700 text-white flex items-center justify-center">
             {review.authorName.at(0)}
           </div>
-          <div className="font-bold">{review.authorName}</div>
+          <div className="font-bold w-max">{review.authorName}</div>
         </div>
         <div className="flex gap-3 items-center">
           <div>{dayjs(review.created_at).format('DD MMMM YYYY')}</div>

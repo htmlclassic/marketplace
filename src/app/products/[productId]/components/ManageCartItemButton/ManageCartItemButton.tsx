@@ -29,7 +29,7 @@ export default function ManageCartItemButton({
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center gap-5 w-full max-w-[300px] h-12">
+      <div className="flex justify-center items-center gap-5 w-full h-14">
         <LoadingSpinner />
       </div>
     );
@@ -66,28 +66,28 @@ export default function ManageCartItemButton({
   };
 
   return (
-    <div className="flex justify-between gap-5 w-full max-w-[300px] h-12">
+    <div className="flex justify-between gap-3 w-full h-14">
       {
         inCart
         ?
           <>
             <Link
               href="/cart"
-              className="bg-green-500 w-max px-3 flex items-center rounded-lg transition-all text-white"
+              className="bg-green-500 min-w-max w-1/2 flex justify-center items-center rounded-lg transition-all duration-300 hover:bg-green-600 text-white"
             >
-              Go to cart
+              В корзине
             </Link>
             <div className="flex grow">
               <button
-                className="border-2 cursor-pointer active:border-sky-500 grow"
+                className="border cursor-pointer active:border-sky-500 grow rounded-tl-lg rounded-bl-lg"
                 onClick={handleDecreaseQuantity}
               >
                 -
               </button>
-                <output className="flex justify-center items-center border-2 border-l-0 border-r-0 grow-[2]">
+                <output className="flex justify-center items-center border border-l-0 border-r-0 grow-[2]">
                   {quantity}
                 </output>
-              <button className="border-2 cursor-pointer active:border-sky-500 grow"
+              <button className="border cursor-pointer active:border-sky-500 grow rounded-tr-lg rounded-br-lg"
                 onClick={handleIncreaseQuantity}
               >
                 +
@@ -97,9 +97,9 @@ export default function ManageCartItemButton({
         :
           <button
             onClick={handleAdd}
-            className="bg-sky-500 p-3 rounded-lg transition-all text-white w-full"
+            className="bg-sky-500 transition-all duration-300 hover:bg-sky-600 rounded-lg text-white w-full h-full"
           >
-            Add to cart
+            Добавить в корзину
           </button>
       }
     </div>
