@@ -33,6 +33,7 @@ export function Tabs({ elements }: Props) {
                 "text-black": i === tabIndex,
                 "text-gray-400": i !== tabIndex
               })}
+              key={i}
             >
               {el.title}
             </div>
