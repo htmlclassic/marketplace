@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-import ClearInputIcon from './assets/cross.svg';
-import Image from "next/image";
 import clsx from "clsx";
 
 export default function SearchInput() {

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import ChatPreview from "./ChatPreview";
-import type { Chats } from './page';
+import type { Chats } from './layout';
 import { useRouter } from "next/navigation";
 import { createClientSupabaseClient } from "@/supabase/utils_client";
 
@@ -44,15 +44,19 @@ export default function ChatPreviewList({ chats, uid }: Props) {
   if (!filteredChats.length) return <div>У вас нет чатов</div>
 
   return (
-    filteredChats.map(chat =>
-      <ChatPreview
-        key={chat.id}
-        lastMessage={chat.message?.text}
-        anotherSideName={chat.anotherSideName}
-        chatId={chat.id}
-        authorId={chat.message?.authorId}
-        uid={uid}
-      />
-    )    
+    <div className="flex flex-col">
+      {
+        filteredChats.map(chat =>
+          <ChatPreview
+            key={chat.id}
+            lastMessage={chat.message?.text}
+            anotherSideName={chat.anotherSideName}
+            chatId={chat.id}
+            authorId={chat.message?.authorId}
+            uid={uid}
+          />
+        )
+      }
+    </div>   
   );
 }

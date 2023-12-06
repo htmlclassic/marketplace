@@ -36,10 +36,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <ClientWrapper cartItemsCount={itemsCount}>
           <Navbar  session={!!session} />
           <MobileHeader />
-          <MobileMenu />
-          <main className="grow flex px-2 sm:px-6">
+          <main className="grow flex">
             {children}
           </main>
+          <MobileMenu />
         </ClientWrapper>
       </body>
     </html>

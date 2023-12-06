@@ -14,7 +14,7 @@ export function Tabs({ elements }: Props) {
   const [tabIndex, setTabIndex] = useState(0);
 
   const content = elements.map((el, i) =>
-    <div className={clsx({
+    <div key={i} className={clsx({
       "hidden": i !== tabIndex,
     })}>
       {el.node}

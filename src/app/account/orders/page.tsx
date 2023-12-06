@@ -10,7 +10,10 @@ export default async function Orders() {
     <div className="grow">
       {
         orders ? <OrderList orders={orders} />
-        : <p>Вы ещё ничего не заказывали.</p>
+        : 
+          <div className="h-full flex items-center justify-center text-center">
+            <p>Вы ещё ничего не заказывали</p>
+          </div>
       }
     </div>
   )

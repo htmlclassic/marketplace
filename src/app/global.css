@@ -2,41 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-    @variants responsive {
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-
-      /* Hide scrollbar for IE, Edge and Firefox */
-      .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
-      }
-    }
+@layer components {
+  /* gradient for top navbar */
+  .gradient {
+    background-color: #85FFBD;
+    background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
   }
 
-/* gradient for top navbar */
-.gradient {
-  background-color: #85FFBD;
-  background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
-}
-
-.link-button {
-  @apply bg-sky-400 p-3 rounded-lg text-white text-center;
-}
-
-.animate-nav {
-  @apply
-    after:transition-all after:duration-200 after:ease-out after:block after:absolute after:h-[2px] after:w-0 hover:after:w-[calc(50%-0.75rem)] after:left-1/2 after:bottom-[7px] after:bg-black
-    before:transition-all before:duration-200 before:ease-out before:block before:absolute before:h-[2px]  before:w-0 hover:before:w-[calc(50%-0.75rem)] before:right-1/2 before:bottom-[7px] before:bg-black
-}
-
-.animate-nav-static {
-  @apply
-  after:block after:absolute after:h-[2px] after:w-[calc(50%-0.75rem)] after:left-1/2 after:bottom-[7px] after:bg-black
-  before:block before:absolute before:h-[2px] before:w-[calc(50%-0.75rem)] before:right-1/2 before:bottom-[7px] before:bg-black
+  .side-padding {
+    @apply px-2 sm:px-6;
+  }
 }
 
 @layer base {

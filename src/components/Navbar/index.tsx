@@ -30,7 +30,7 @@ export default function Navbar({ session }: Props) {
   }, []);
 
   return (
-    <div className="gradient min-h-[70px] transform-gpu shadow-md sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center bg-white z-20">
+    <div className="gradient min-h-[70px] transform-gpu sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center bg-white z-20">
       <button
         ref={ref}
         onClick={() => setShowCatalog(!showCatalog)}

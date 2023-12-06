@@ -1,49 +1,59 @@
-import HomeIcon from './assets/home.svg';
-import CatalogIcon from './assets/catalog.svg';
-import WalletIcon from './assets/wallet.svg';
-import CartIcon from './assets/cart.svg';
-import UserIcon from './assets/user.svg';
+'use client';
+
+import HomeIcon from './assets/HomeIcon';
+import CatalogIcon from './assets/CatalogIcon';
+import WalletIcon from './assets/WalletIcon';
+import CartIcon from './assets/CartIcon';
+import UserIcon from './assets/UserIcon';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import clsx from 'clsx';
 
 const links = [
   {
-    href: '/',
-    iconSrc: HomeIcon
-  },
-  {
     href: '/catalog',
-    iconSrc: CatalogIcon
+    Icon: CatalogIcon
   },
   {
     href: '/account/wallet',
-    iconSrc: WalletIcon
+    Icon: WalletIcon
   },
   {
     href: '/cart',
-    iconSrc: CartIcon
+    Icon: CartIcon
   },
   {
     href: '/account',
-    iconSrc: UserIcon
+    Icon: UserIcon
   }
 ];
 
 export default function MobileMenu() {
+  const path = usePathname();
+
   return (
     <div
-      className="bg-white fixed z-10 bottom-0 left-0 w-full px-[15px] flex justify-between items-center sm:hidden"
+      className="bg-white fixed z-30 bottom-0 left-0 w-full px-[15px] flex justify-between items-center sm:hidden"
     >
+      <Link
+        href="/"
+        className={clsx({
+          "py-[15px] px-[15px] transition-all duration-300": true,
+          "text-black": path === '/',
+          "text-gray-400": path !== '/'
+        })}
+      >
+        <HomeIcon width={26} height={26} />
+      </Link>
       {
         links.map(link =>
-          <Link key={link.href} href={link.href} className="py-[15px] px-[15px]">
-            <Image
-              src={link.iconSrc}
-              alt="icon"
-              width={25}
-              height={25}
-            />
+          <Link key={link.href} href={link.href} className={clsx({
+            "py-[15px] px-[15px] transition-all duration-300": true,
+            "text-gray-400": !path.startsWith(link.href),
+            "text-black": path.startsWith(link.href)
+          })}>
+            { <link.Icon width={26}  height={26} /> }
           </Link>
         )
       }
