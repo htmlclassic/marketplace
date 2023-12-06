@@ -23,7 +23,7 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
       .from('chat')
       .select()
       .match({
-        customer_id: '073d5810-2917-4c24-878a-c9cf61059180',
+        customer_id: uid,
         seller_id: productOwnerId,
         product_id: productId
       })
@@ -31,7 +31,7 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
       .single();
 
     if (chat) {
-      router.push(`/account/chats/${chat.id}`)
+      router.push(`/account/chats?activeChatId=${chat.id}`);
     } else {
       const { data: chat } = await supabase
         .from('chat')
@@ -45,7 +45,7 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
         .single();
 
       if (chat) {
-        router.push(`/account/chats/${chat.id}`);
+        router.push(`/account/chats?activeChatId=${chat.id}`);
       }
     }
   }
