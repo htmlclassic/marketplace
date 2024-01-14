@@ -11,7 +11,11 @@ interface Props {
   uid: string | null;
 }
 
-function sendEmail(orderId: number, to: string, trackLink: string = 'www.google.com') {
+function sendEmail(
+  orderId: number,
+  to: string,
+  trackLink: string = 'https://marketplace-one-hazel.vercel.app/track-order'
+) {
   const data = {
     service_id: 'service_vndumiu',
     template_id: 'template_dsdlu2x',
