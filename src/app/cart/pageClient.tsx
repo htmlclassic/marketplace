@@ -1,61 +1,52 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import ItemList from "./components/ItemList";
-import Order from "./components/Order";
-import { CartState } from "./page";
 import EmptyCart from "./components/EmptyCart";
+import { CartContext } from "@/src/CartContext";
+import Link from "next/link";
 
 interface Props {
-  products: Product[];
-  cart: CartState[];
-  itemsQuantityChanged: string[];
-  userBalance: number;
-  uid: string;
+  uid: string | null;
 }
 
-export default function PageClient(
-  {
-    products,
-    cart: initialCart,
-    itemsQuantityChanged,
-    userBalance,
-    uid
-  }: Props
-) {
-  const [cart, setCart] = useState(initialCart);
+/*
+1) выбрать адрес доставки.
+  -выбрать способ оплаты: либо картой, либо с баланса (если авторизован).
+  -выбрать дату доставки
+  кнопка "оплатить онлайн" (если юзер не авторизован, то дополнительно попросить email для отсылки туда
+  трек-кода заказа)
+3) - если карта, то перекинуть на фейк страницу заполнения карточных данных. после заполнения и самбита. купить товары.
 
-  useEffect(() => {
-    const totalQuantityIntital = initialCart.reduce((acc, item) => item.quantity + acc, 0);
-    const totalQuantityCurrentState = cart.reduce((acc, item) => item.quantity + acc, 0);
+*/
 
-    if (totalQuantityCurrentState !== totalQuantityIntital) {
-      setCart(initialCart);
-    }
-  }, [initialCart])
+export default function PageClient({ uid }: Props) {
+  const { cart, removeItem, setItemQuantity } = useContext(CartContext);
 
-  if (cart.length === 0) return <EmptyCart />
+  if (!cart.length) return <EmptyCart />
   
   const itemsTotalCount = cart.reduce((acc, item) => item.quantity + acc, 0)
   const total = cart.reduce((acc, item) => item.quantity * item.price + acc, 0)
 
   return (
-    <div className="relative grow flex flex-wrap gap-5 lg:gap-20 lg:flex-nowrap">
-      <div className="grow max-w-5xl bg-white p-2 rounded-md border">
+    <div className="relative grow flex flex-wrap gap-5 lg:gap-20 lg:flex-nowrap side-padding">
+      <div className="w-full max-w-5xl bg-white p-2 rounded-md border">
         <ItemList
-          products={products}
           cart={cart}
-          itemsQuantityChanged={itemsQuantityChanged}
-          setCart={setCart}
+          removeCartItem={removeItem}
+          setItemQuantity={setItemQuantity}
         />
       </div>
-      <div className="grow shrink-0 sm:min-w-[420px] bg-white p-2 rounded-md border">
-        <Order
-          itemsTotalCount={itemsTotalCount}
-          total={total}
-          userBalance={userBalance}
-          uid={uid}
-        />
+      <div className="grow shrink-0 sm:min-w-[420px] bg-white p-2 rounded-md border flex flex-col gap-7">
+        <Link
+          className="border p-3 w-max"
+          href="/order"
+        >Перейти к оформлению</Link>
+        <div>
+          <h2 className="font-semibold text-lg mb-3">Ваша корзина</h2>
+          <div>Сумма к оплате: {total} ₽</div>
+          <div>Количество товаров: {itemsTotalCount}</div>
+        </div>
       </div>
     </div>
   );

@@ -2,8 +2,8 @@
 
 import clsx from "clsx";
 import { useState } from "react";
-import useEmblaCarousel from 'embla-carousel-react'
 import EmblaCarousel from "./EmblaCarousel";
+import { motion } from "framer-motion";
 
 interface SliderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -11,8 +11,6 @@ interface SliderProps {
 
 export default function Slider({ children: chld }: SliderProps) {
   const children = Array.isArray(chld) ? chld : [ chld ];
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [activeElementIndex, setActiveElementIndex] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -24,7 +22,8 @@ export default function Slider({ children: chld }: SliderProps) {
         <EmblaCarousel
           slides={children}
           options={{
-            loop: true
+            loop: true,
+            hideNavigationArrows: true
           }}
         />
       </div>
@@ -35,12 +34,12 @@ export default function Slider({ children: chld }: SliderProps) {
               onClick={() => setShowPreview(false)}
               className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-30 flex justify-center items-center cursor-pointer"
             >
-              <div 
+              <motion.div
                 onClick={e => e.stopPropagation()}
-                className="relative landscape:h-[80vh] landscape:w-[80vh] portrait:h-[90vw] portrait:w-[90vw] cursor-default overflow-hidden rounded-lg"
+                className="relative landscape:w-[80vh] portrait:w-[90vw] aspect-square cursor-default overflow-hidden rounded-lg"
               >
                 { children[activeElementIndex] }
-              </div>
+              </motion.div>
             </div>
         }
         {

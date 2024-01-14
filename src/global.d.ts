@@ -11,6 +11,11 @@ declare global {
   type Cart = Omit<Database['public']['Tables']['cart']['Row'], 'id' | 'user_id'>;
   type RawMessage = Database['public']['Tables']['chat_message']['Row'];
 
+  type CartItem = Cart & {
+    price: number;
+    maxQuantity: number;
+  };
+
   interface OrderItem {
     price: number;
     product: Product;

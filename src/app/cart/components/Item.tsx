@@ -1,44 +1,53 @@
-import noImage from "@/src/components/noimage.jpg";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import DeleteCartItemButton from "./DeleteCartItemButton";
-import ControlQuantity from "./ControlQuantity";
-import { CartState } from "../page";
+import CartItemControls from "./CartItemControls/CartItemControls";
 
 interface Props {
+  cartItem: CartItem;
   product: Product;
-  cartItem: CartState;
-  handleDeleteProduct: () => void;
+  removeCartItem: () => void;
   setItemQuantity: (newQuantity: number) => void;
 }
 
 export default function Item({
   product,
   cartItem,
-  handleDeleteProduct,
+  removeCartItem,
   setItemQuantity
 }: Props) {
-  const imgSrc = product.imageUrls?.[0];
-
   return (
-    <article key={product.id} className="flex flex-col sm:items-center gap-5 sm:flex-row sm:justify-between">
-      <div className="flex items-center gap-5 sm:flex-nowrap">
-        <div className="w-[150px] h-[150px] relative shrink-0">
-          <Image
-            src={imgSrc || noImage}
-            alt={product.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="flex flex-col gap-3 max-w-xl text-sm">
-          <div className="font-bold sm:line-clamp-2">{product.title}</div>
-          <div className="font-bold text-sky-600 text-lg">{product.price} ₽</div>
+    <motion.div
+      layout
+      transition={{
+        layout: { duration: 0.15 }
+      }}
+      exit={{
+        x: '-100vw',
+        transition: {
+          duration: 0.07
+        }
+      }}
+      className="flex items-center justify-between gap-3"
+      key={product.id}
+    >
+      <div className="flex items-center gap-6">
+        <Image
+          src={product.imageUrls![0]}
+          alt="product photo"
+          width={150}
+          height={150}
+        />
+        <div className="max-w-lg flex flex-col justify-center gap-3">
+          <div className="line-clamp-4">{product.title}</div>
+          <div className="font-semibold line-clamp-1">{product.price} ₽</div>
         </div>
       </div>
-      <div className="flex shrink-0">
-        <DeleteCartItemButton productId={product.id} handleDeleteProduct={handleDeleteProduct} />
-        <ControlQuantity cartItem={cartItem} setItemQuantity={setItemQuantity} />
-      </div>
-    </article>
+      <CartItemControls
+        quantity={cartItem.quantity}
+        maxQuantity={cartItem.maxQuantity}
+        setItemQuantity={setItemQuantity}
+        removeCartItem={removeCartItem}
+      />
+    </motion.div>
   );
 }

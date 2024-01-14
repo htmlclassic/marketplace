@@ -6,15 +6,10 @@ import MenuIcon from './assets/menu-icon.svg';
 import UserIcon from "./assets/user-icon.svg";
 
 import React, { useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
 import Image from 'next/image';
 import SearchInput from '../SearchInput/SearchInput';
 
-interface Props {
-  session: boolean;
-}
-
-export default function Navbar({ session }: Props) {
+export default function Navbar() {
   const [showCatalog, setShowCatalog] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -45,15 +40,8 @@ export default function Navbar({ session }: Props) {
       </button>
       <Link href="/" className='text-2xl font-medium'>Marketplace</Link>
       <SearchInput />
-      <div className={clsx({
-        'flex items-center lg:gap-4': true,
-        'justify-between': session,
-        'justify-end': !session
-      })}>
-        { 
-          session &&
-            <CartItemsCount />
-        }
+      <div className="flex items-center lg:gap-4 justify-between">
+        <CartItemsCount />
         <Link href="/account" title="Аккаунт" className="shrink-0 flex py-2 pl-4">
           <Image
             src={UserIcon}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ReviewType } from ".";
 import Review from "./Review";
 import CreateReview from "./CreateReview";
+import { motion } from 'framer-motion';
 
 interface Props {
   reviews: ReviewType[];
@@ -31,7 +32,10 @@ export default function ReviewList({
   }
   
   return (
-    <div className="flex flex-col gap-5">
+    <motion.div
+      className="flex flex-col"
+    >
+      <h2 className="font-semibold text-xl mb-7">Отзывы</h2>
       {
         canReview &&   
           <CreateReview
@@ -45,12 +49,12 @@ export default function ReviewList({
           reviews.length
             ?
               reviews.map((review, i) =>
-              <Review key={i} review={review} />
+                <Review key={i} review={review} />
               )
             :
-            <div>Никто пока что не оценил этот товар.</div>
+              <div>Никто пока что не оценил этот товар.</div>
         }
       </div>
-    </div>
+    </motion.div>
   );
 }

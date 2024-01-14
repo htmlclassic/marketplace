@@ -1,7 +1,10 @@
 import { revalidate } from '@/src/utils';
 import type { SupabaseClient } from '@supabase/supabase-js';
-
 import dayjs from 'dayjs';
+import throttle from 'lodash/throttle';
+
+// I cant figure out now how to type 'this' when function is wrapped in throttle()
+const THROTTLE_MS = 1000;
 
 // if you query data from some table and you don't pass RLS policies conditions,
 // supabase returns an empty array
@@ -159,8 +162,8 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       return false;
     },
 
-    async deleteFromCart(productId: string, userId?: string | null) {
-      const uid = userId || await this.getCurrentUserId();
+    async deleteFromCart(productId: string) {
+      const uid = await this.getCurrentUserId();
 
       if (uid) {
         await supabase
@@ -208,16 +211,18 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       return null;
     },
 
-    async setCartItemQuantity(productId: string, quantity: number) {
-      const { error } = await supabase
-        .from('cart')
-        .update({ quantity })
-        .eq('product_id', productId);
-
-      revalidate('/cart');
-
-      return !error;
-    },
+    setCartItemQuantity: throttle(
+      async function(productId: string, quantity: number) {
+        const { error } = await supabase
+          .from('cart')
+          .update({ quantity })
+          .eq('product_id', productId);
+  
+        revalidate('/cart');
+  
+        return !error;
+      }
+    , THROTTLE_MS),
 
     async setUserBalance(uid: string, newBalance: number) {
       const { error } = await supabase

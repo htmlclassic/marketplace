@@ -44,7 +44,8 @@ export default function SearchInput() {
             }}
             className={clsx({
               "p-1 flex justify-center items-center text-gray-400 transition-all duration-300 hover:text-black": true,
-              "hidden": !searchValue
+              "scale-0": !searchValue,
+              "scale-100": searchValue
             })}
             title="Очистить поле для поиска"
           >

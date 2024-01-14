@@ -1,3 +1,4 @@
+import Button from "@/src/components/Button";
 import Link from "next/link";
 
 export default function EmptyCart() {
@@ -6,8 +7,11 @@ export default function EmptyCart() {
       <p className="flex flex-col items-center">Ваша корзина пока что пуста <span className="text-xl">😢</span></p>
       <Link
         href="/"
-        className="link-button"
-      >К покупкам</Link>
+      >
+        <Button>
+          К покупкам
+        </Button>
+      </Link>
     </div>
   );
 }

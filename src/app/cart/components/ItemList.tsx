@@ -1,67 +1,57 @@
 'use client';
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { getAPI } from "@/supabase/api";
+import { createClientSupabaseClient } from "@/supabase/utils_client";
+import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import Item from "./Item";
-import { CartState } from "../page";
+import LoadingSpinner from "@/src/components/LoadingSpinner";
 
 interface Props {
-  products: Product[];
-  cart: CartState[];
-  itemsQuantityChanged: string[];
-  setCart: Dispatch<SetStateAction<CartState[]>>;
+  cart: CartItem[];
+  removeCartItem: (productId: string) => void;
+  setItemQuantity: (productId: string, newQuantity: number) => void;
 }
 
-export default function ItemList({
-    products: productsInitial,
-    cart,
-    itemsQuantityChanged,
-    setCart
-}: Props) {
-  const [products, setProducts] = useState(productsInitial);
+export default function ItemList({ cart, removeCartItem, setItemQuantity }: Props) {
+  const [products, setProducts] = useState<Product[] | null>(null);
+  
+  useEffect(() => {
+    (async function seedProducts() {
+      const api = getAPI(createClientSupabaseClient());
+      const products = await api.getProducts(cart.map(item => item.product_id));
 
-  const handleDeleteProduct = (productId: string) => {
-    setProducts(
-      products.filter(product => product.id !== productId)
-    );
+      if (products) {
+        setProducts(products);
+      }
+    })();
+  }, []);
 
-    setCart(
-      cart.filter(cartItem => cartItem.product_id !== productId)
-    );
-  };
-
-  const setItemQuantity = (productId: string, newQuantity: number) => {
-    setCart(
-      cart.map(cartItem => {
-        if (cartItem.product_id === productId) {
-          return {
-            ...cartItem,
-            quantity: newQuantity
-          };
-        }
-
-        return cartItem;
-      })
-    );
-  };
+  if (!products) return (
+    <div className="flex justify-center items-center grow h-full">
+      <LoadingSpinner />
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-10">
-      {
-        products.map(product =>
-          <div key={product.id} >
-            {
-              itemsQuantityChanged.includes(product.id) &&
-              <p className="text-sm text-red-400 font-bold mb-1">Количество этого товара изменилось</p>
-            }
-            <Item
-              product={product}
-              cartItem={cart.find(item => item.product_id === product.id)!}
-              handleDeleteProduct={() => handleDeleteProduct(product.id)}
-              setItemQuantity={(newQuantity: number) => setItemQuantity(product.id, newQuantity)}
-            />
-          </div>
-        )
-      }
+      <AnimatePresence>
+        {
+          cart.map(cartItem => {
+            const product = products.find(({ id }) => id === cartItem.product_id)!;
+
+            return (
+              <Item
+                product={product}
+                cartItem={cartItem}
+                removeCartItem={() => removeCartItem(product.id)}
+                setItemQuantity={(newQuantity: number) => setItemQuantity(product.id, newQuantity)}
+                key={product.id}
+              />
+            );
+          })
+        }
+      </AnimatePresence>
     </div>
   );
 }

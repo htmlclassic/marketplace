@@ -1,5 +1,6 @@
 'use client';
 
+import Button from '@/src/components/Button';
 import LoadingSpinner from '@/src/components/LoadingSpinner';
 import { createClientSupabaseClient } from '@/supabase/utils_client';
 import { useRouter } from 'next/navigation';
@@ -52,17 +53,11 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
 
   return (
     uid &&
-      <button
+      <Button
+        className='bg-emerald-400'
         onClick={handleCreateChat}
-        className="relative text-white bg-green-500 min-w-max h-14 w-full transition-all duration-300 hover:bg-green-600 rounded-lg"
       >
         Написать продавцу
-        {
-          loading &&
-          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-100">
-            <LoadingSpinner />
-          </div>
-        }
-      </button>
+      </Button>
   );
 }

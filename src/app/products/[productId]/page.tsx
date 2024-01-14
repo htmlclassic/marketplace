@@ -2,8 +2,6 @@ import { getAPI } from '@/supabase/api';
 import { createServerComponentSupabaseClient } from '@/supabase/utils_server';
 import Product from './components/Product';
 import Reviews from './components/Reviews';
-import ManageCartItemButton from './components/ManageCartItemButton';
-import Link from 'next/link';
 
 interface ItemProps {
   params: {
@@ -24,31 +22,13 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
   );
   
   const { data: sellerName } = await supabase.rpc('get_user_name', { userid: product.owner});
-  const outOfStock = product.quantity <= 0;
-
-  let cartControl: React.ReactNode;
-
-  if (outOfStock) {
-    cartControl = <p className="text-red-400 text-lg font-bold">Товар закончился.</p>;
-  } else if (uid && uid !== product.owner) {
-    cartControl = <ManageCartItemButton productId={product.id} />;
-  } else if (uid === product.owner) {
-    cartControl = <p className="text-red-400 font-bold underline underline-offset-2">Вы являетесь владельцем этого товара.</p>;
-  } else {
-    cartControl =
-        <Link
-          href="/login"
-          className="border border-black p-3 w-max"
-        >Авторизоваться</Link>
-  }
 
   return (
-    <div className="grow space-y-5">
+    <div className="grow space-y-5 overflow-x-hidden">
       <Product
         product={product}
         sellerName={sellerName!}
         uid={uid}
-        ManageCartItemButton={cartControl}
         Reviews={<Reviews productId={product.id} />}
       />
     </div>

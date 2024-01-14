@@ -5,40 +5,37 @@ import { createServiceSupabaseClient } from "@/supabase/utils_server";
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Errors } from "./enums";
+import { Errors, PaymentType } from "./types";
 import { unstable_noStore } from "next/cache";
 
 dayjs.extend(customParseFormat);
 
-export default async function buyItems(uid: string, address: string) {
+export default async function buyItems(
+  uid: string | null,
+  paymentType: PaymentType,
+  address: string,
+  cart: CartItem[]
+) {
   unstable_noStore();
 
   const supabase = createServiceSupabaseClient();
   const api = getAPI(supabase);
 
   if (address === '') throw new Error(Errors.EMPTY_ADDRESS);
-
-  const cartItems = await api.getCartItems(uid); // product_id, quantity
-
-  if (!cartItems) throw new Error(Errors.EMPTY_CART);
+  if (cart.length === 0) throw new Error(Errors.EMPTY_CART);
   
-  const products = await getProductsByIds(cartItems.map(item => item.product_id));
+  const products = await getProductsByIds(cart.map(item => item.product_id));
+  let orderId: number | undefined;
 
   if (products) {
-    // check if user tries to buy their own product
-    for (const product of products) {
-      if (product.owner === uid) {
-        throw new Error(Errors.USER_OWNS_PRODUCT)
-      }
-    }
-
     // check if there's still enough amount of products to buy
-    if (checkProductsAvailability(cartItems, products)) {
-      let customerBalance = (await api.getCurrentUserProfileData(uid))!.balance;
-      const totalSumToPay = getSumToPay(cartItems, products);
+    if (checkProductsAvailability(cart, products)) {
+      let customerBalance = (await api.getCurrentUserProfileData(uid))?.balance ?? 0;
+      const totalSumToPay = getSumToPay(cart, products);
 
-      if (customerBalance < totalSumToPay)
+      if (paymentType === PaymentType.marketplace_account && customerBalance < totalSumToPay) {
         throw new Error(Errors.LOW_BALANCE);
+      }
 
       // create order and get its id
       const { data: order, error } = await supabase
@@ -47,21 +44,32 @@ export default async function buyItems(uid: string, address: string) {
           user_id: uid,
           delivery_date: dayjs().add(4, 'day').format('YYYY-MM-DD'),
           address
-        }).select('id');
+        })
+        .select('id')
+        .single();
       
-      const orderId = order![0].id;
+      orderId = order?.id;
 
-      for (const cartItem of cartItems) {
+      if (!orderId) throw new Error(Errors.CREATE_ORDER_ERROR);
+
+      for (const cartItem of cart) {
+        // what if cart been populated somehow with fake product ids?
+        // it'll cause the script to fall. stop using this fucking '!' everywhere
         const product = products.find(pr => pr.id === cartItem.product_id)!;
-
         const price = cartItem.quantity * product.price;
-        customerBalance -= price;
 
         const seller = (await supabase
           .from('profile')
           .select()
           .eq('id', product.owner))
           .data![0];
+        
+        // user buys an item from themself
+        const selfBuy = uid === seller.id;
+
+        if (paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
+          customerBalance -= price;
+        }
 
         // substract product's quantity
         await supabase
@@ -69,17 +77,21 @@ export default async function buyItems(uid: string, address: string) {
           .update({ quantity: product.quantity - cartItem.quantity})
           .eq('id', product.id);
         
-        // withdraw from customer's account
-        await supabase
-          .from('profile')
-          .update({ balance: customerBalance })
-          .eq('id', uid)
+        if (paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
+          // withdraw from customer's account
+          await supabase
+            .from('profile')
+            .update({ balance: customerBalance })
+            .eq('id', uid);
+        }
         
-        // deposit on seller's account
-        await supabase
-          .from('profile')
-          .update({ balance: seller.balance + price })
-          .eq('id', seller.id);
+        if (paymentType === PaymentType.bank_card || !selfBuy) {
+          // deposit on seller's account
+          await supabase
+            .from('profile')
+            .update({ balance: seller.balance + price })
+            .eq('id', seller.id);
+        }
 
         // create order_item
         await supabase
@@ -100,7 +112,9 @@ export default async function buyItems(uid: string, address: string) {
     throw new Error(Errors.PRODUCTS_DONT_EXIST);
   }
 
-  // functions
+  return orderId;
+
+  // helper functions
   async function getProductsByIds(ids: string[]) {
     const products: Product[] = [];
 
@@ -137,5 +151,5 @@ export default async function buyItems(uid: string, address: string) {
 
     return total;
   }
-  // end of function
+  // end of helper function
 }
