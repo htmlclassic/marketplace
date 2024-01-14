@@ -236,6 +236,7 @@ export interface Database {
           created_at: string | null
           description: string
           id: string
+          img_urls: string[] | null
           owner: string
           price: number
           quantity: number
@@ -246,6 +247,7 @@ export interface Database {
           created_at?: string | null
           description: string
           id?: string
+          img_urls?: string[] | null
           owner: string
           price: number
           quantity: number
@@ -256,6 +258,7 @@ export interface Database {
           created_at?: string | null
           description?: string
           id?: string
+          img_urls?: string[] | null
           owner?: string
           price?: number
           quantity?: number
