@@ -4,7 +4,7 @@ type OrderBase = Database['public']['Tables']['order']['Row'];
 
 declare global {
   type Database = DB;
-  type Product = Database['public']['Tables']['product']['Row'] & { imageUrls: string[] | null };
+  type Product = Database['public']['Tables']['product']['Row'];
   type Profile = Database['public']['Tables']['profile']['Row'];
   type Chat = Database['public']['Tables']['chat']['Row'];
   type Review = Database['public']['Tables']['review']['Row'];

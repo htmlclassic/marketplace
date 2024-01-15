@@ -27,9 +27,9 @@ export default function Product({
       priority
     />;
 
-  if (product.imageUrls) {
+  if (product.img_urls) {
     imageList = 
-      product.imageUrls.map(imgUrl =>
+      product.img_urls.map(imgUrl =>
         <Image
           key={imgUrl}
           src={imgUrl}

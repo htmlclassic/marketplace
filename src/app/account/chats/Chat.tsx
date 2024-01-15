@@ -32,7 +32,7 @@ export default function Chat({
         className="bg-white border-b z-10 px-3 h-16 shrink-0 flex gap-3 items-center"
       >
         <Image
-          src={product.imageUrls![0]}
+          src={product.img_urls![0]}
           alt='product picture'
           width={40}
           height={40}

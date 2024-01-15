@@ -56,7 +56,7 @@ export default function Order({ order }: Props) {
               <li key={item.product.id} title="Перейти на страницу товара" className="shrink-0 p-3 transition-all border-2 border-transparent hover:border-green-400 rounded-lg">
                 <Link href={`/products/${item.product.id}`}>
                   <Image
-                    src={item.product.imageUrls![0]}
+                    src={item.product.img_urls![0]}
                     alt="img"
                     width={80}
                     height={80}

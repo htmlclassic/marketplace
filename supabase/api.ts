@@ -33,19 +33,8 @@ export function getAPI(supabase: SupabaseClient<Database>) {
     
       if (error) throw new Error(error.message);
       if (products.length === 0) return null;
-      
-      const imageUrls = await Promise.all(
-        products.map(product => this.getImageUrlsByProductId(product.id))
-      );
 
-      const newProducts: Product[] = products.map((product, index) => (
-        {
-          ...product,
-          imageUrls: imageUrls[index]
-        }
-      ));
-
-      return newProducts;
+      return products;
     },
 
     async getImageUrlsByProductId(productId: string) {

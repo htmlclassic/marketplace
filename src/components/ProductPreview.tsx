@@ -11,7 +11,7 @@ export default function ProductPreview({ product }: ProductProps) {
       <Link href={`/products/${product.id}`} className="group/parent overflow-hidden space-y-2">
           <div className="relative aspect-square">
             <Image
-              src={product.imageUrls ? product.imageUrls[0] : ImgPlaceholder}
+              src={product.img_urls ? product.img_urls[0] : ImgPlaceholder}
               fill
               alt="Product picture"
               className="rounded-lg object-cover"

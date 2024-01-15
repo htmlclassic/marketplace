@@ -32,7 +32,7 @@ export default function Item({
     >
       <div className="flex items-center gap-6">
         <Image
-          src={product.imageUrls![0]}
+          src={product.img_urls![0]}
           alt="product photo"
           width={150}
           height={150}
