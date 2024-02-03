@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import CartItemControls from "./CartItemControls/CartItemControls";
+import Link from "next/link";
 
 interface Props {
   cartItem: CartItem;
@@ -30,7 +31,10 @@ export default function Item({
       className="flex items-center justify-between gap-3"
       key={product.id}
     >
-      <div className="flex items-center gap-6">
+      <Link
+        href={`/products/${product.id}`}
+        className="flex items-center gap-6"
+      >
         <Image
           src={product.img_urls![0]}
           alt="product photo"
@@ -41,7 +45,7 @@ export default function Item({
           <div className="line-clamp-4">{product.title}</div>
           <div className="font-semibold line-clamp-1">{product.price} ₽</div>
         </div>
-      </div>
+      </Link>
       <CartItemControls
         quantity={cartItem.quantity}
         maxQuantity={cartItem.maxQuantity}

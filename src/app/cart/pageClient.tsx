@@ -29,7 +29,7 @@ export default function PageClient({ uid }: Props) {
   const total = cart.reduce((acc, item) => item.quantity * item.price + acc, 0)
 
   return (
-    <div className="relative grow flex flex-wrap gap-5 lg:gap-20 lg:flex-nowrap side-padding">
+    <div className="relative grow flex flex-wrap gap-5 lg:gap-20 lg:flex-nowrap side-padding top-margin">
       <div className="w-full max-w-5xl bg-white p-2 rounded-md border">
         <ItemList
           cart={cart}

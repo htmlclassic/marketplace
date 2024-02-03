@@ -3,14 +3,17 @@
 import ProductPreview from '@/src/components/ProductPreview';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
+import { Rating } from './page';
 
 interface Props {
   products: Product[] | null;
+  rating: Rating[];
 }
 
-export default function ProductList({ products }: Props) {
+export default function ProductList({ products, rating }: Props) {
   const searchParams = useSearchParams();
   const text = searchParams.get('text');
+  const orderBy = searchParams.get('filter') as SearchFilter | null;
   const category = searchParams.get('category');
 
   let list: React.ReactNode = <p className="w-max">К сожалению мы не нашли совпадений :(</p>
@@ -32,6 +35,21 @@ export default function ProductList({ products }: Props) {
     });
 
     if (filteredProducts.length) {
+      switch(orderBy) {
+        case 'price_desc':
+          filteredProducts.sort((a, b) => b.price - a.price);
+          break;
+        case 'rating_desc':
+          // refactor it to make it simpler
+          filteredProducts.sort((a, b) =>
+            rating.find(productRating => productRating.productId === a.id)!.avgRating -
+            rating.find(productRating => productRating.productId === b.id)!.avgRating
+          );
+          break;
+        default:
+          filteredProducts.sort((a, b) => a.price - b.price);
+      }
+
       list = filteredProducts.map(pr => <ProductPreview key={pr.id} product={pr} />)
     }
   }

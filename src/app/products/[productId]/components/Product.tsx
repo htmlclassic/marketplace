@@ -1,22 +1,27 @@
+'use client'
+
 import Slider from '@/src/components/Slider';
 import Image from 'next/image';
 import ImgPlaceholder from '@/src/components/noimage.jpg'
 import Link from 'next/link';
 import ChatButton from './ChatButton';
 import CartButton from './CartButton';
+import ManageFavoriteButton from '../../../../components/ManageFavoriteButton';
 
 interface ProductProps {
   product: Product;
   Reviews: React.ReactNode;
   sellerName: string;
   uid: string | null;
+  isFavorite: boolean;
 }
 
 export default function Product({
   uid,
   product,
   sellerName,
-  Reviews
+  Reviews,
+  isFavorite
 }: ProductProps) {
   let imageList: React.ReactNode = 
     <Image
@@ -24,6 +29,7 @@ export default function Product({
       alt="photo of a product"
       className="object-cover"
       fill
+      sizes="2000px"
       priority
     />;
 
@@ -36,19 +42,26 @@ export default function Product({
           alt="photo of a product"
           className="object-cover"
           fill
+          sizes="2000px"
           priority
         />
       );
   }
 
   return (
-    <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-5">
       <h1 className="side-padding font-semibold text-xl max-w-6xl order-1 sm:mb-3 sm:order-none">{product.title}</h1>
+      {
+        uid &&
+          <div className="side-padding">
+            <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
+          </div>
+      }
       <div className="flex-col gap-5 w-max contents sm:flex">
         <div className='sm:side-padding'>
           <Slider>{ imageList }</Slider>
         </div>
-        <div className="side-padding order-2 flex-col gap-3 sm:flex-row flex">
+        <div className="side-padding order-2 flex-col items-center gap-3 sm:flex-row flex">
           <CartButton
             productId={product.id}
             productPrice={product.price}

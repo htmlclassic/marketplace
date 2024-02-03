@@ -22,8 +22,12 @@
     @apply px-2 sm:px-6;
   }
 
+  .top-margin {
+    @apply mt-2 sm:mt-6;
+  }
+
   .button {
-    @apply bg-[rgba(172,86,245)] text-white rounded-lg px-12 py-4 relative font-semibold min-w-max w-full;
+    @apply bg-[rgba(172,86,245)] text-white rounded-lg px-8 py-4 relative font-semibold min-w-max w-full;
   }
 }
 

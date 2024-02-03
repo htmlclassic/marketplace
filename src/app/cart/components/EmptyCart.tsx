@@ -8,7 +8,7 @@ export default function EmptyCart() {
       <Link
         href="/"
       >
-        <Button>
+        <Button className="bg-sky-400">
           К покупкам
         </Button>
       </Link>

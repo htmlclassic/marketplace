@@ -1,11 +1,12 @@
+import SubmitButton from "../SubmitButton";
+import { signUp } from "../actions";
 import Messages from "../messages";
 
 export default function Page() {
   return (
     <form
       className="flex flex-col w-full justify-center gap-3 max-w-[400px] bg-white p-7 rounded-lg"
-      method="post"
-      action={'/auth/sign-up'}
+      action={signUp}
     >
       <h1 className="text-lg mb-5 text-center">Регистрация</h1>
       <input
@@ -34,11 +35,7 @@ export default function Page() {
         required
         minLength={6} // Supabase default min value for a password
       />
-      <button
-        className="border border-gray-700 rounded px-4 py-2 mt-5 transition-all duration-300 hover:border-transparent hover:bg-[rgb(130,235,174)]"
-      >
-        Зарегистрироваться
-      </button>
+      <SubmitButton>Зарегистрироваться</SubmitButton>
       <Messages />
     </form>
   );

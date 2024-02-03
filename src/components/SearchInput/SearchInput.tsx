@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 
 export default function SearchInput() {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
-  const href = searchValue !== '' ? `/search?text=${searchValue}` : '/' ;
+  const href = searchValue !== '' ? `/search?text=${searchValue}` : '/';
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +19,7 @@ export default function SearchInput() {
   return (
     <div className="flex gap-3 grow max-w-[800px]">
       <div className="w-full relative">
-        <div className="bg-white rounded-lg flex">
+        <div className="transition-[background-color] duration-300 rounded-md flex relative border border-white border-opacity-30 focus-within:bg-white focus-within:text-gray-400">
           <input
             ref={inputRef}
             type="text"
@@ -35,7 +35,7 @@ export default function SearchInput() {
               };
             }}
             placeholder="Искать на Marketplace"
-            className="transition-all duration-300 focus:border-slate-300 text-black w-full rounded-lg text-sm p-3 outline-none"
+            className="transition-all duration-300 bg-transparent text-white focus:text-black w-full text-sm p-3 outline-none placeholder:text-white focus:placeholder:text-gray-400"
           />
           <button
             onClick={() => {
@@ -53,7 +53,7 @@ export default function SearchInput() {
           </button>
           <Link 
             href={href}
-            className="shrink-0 p-3 text-gray-400 transition-all duration-300 hover:text-black"
+            className="shrink-0 p-3 text-inherit transition-all duration-300 hover:text-black"
             title="Поиск"
           >
             <SearchIcon />

@@ -13,7 +13,7 @@ function removeArrayDuplicates<T>(arr: T[]) {
 }
 
 export function getAPI(supabase: SupabaseClient<Database>) {
-  return {
+  const api =  {
     async getProducts(ids?: string[]) {
       if (ids) ids = removeArrayDuplicates(ids);
 
@@ -131,6 +131,7 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       return false;
     },
 
+    // wrap in throttle
     async addToCart(productId: string, quantity?: number) {
       const uid = await this.getCurrentUserId();
 
@@ -143,14 +144,13 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           .from('cart')
           .insert({ user_id: uid, product_id: productId, quantity: quantity || 1 });
 
-        revalidate('/cart');
-
         return true;
       }
 
       return false;
     },
 
+    // wrap in throttle
     async deleteFromCart(productId: string) {
       const uid = await this.getCurrentUserId();
 
@@ -160,8 +160,6 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           .delete()
           .eq('user_id', uid)
           .eq('product_id', productId);
-
-        revalidate('/cart');
 
         return true;
       }
@@ -207,7 +205,7 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           .update({ quantity })
           .eq('product_id', productId);
   
-        revalidate('/cart');
+        // revalidate('/cart');
   
         return !error;
       }
@@ -227,12 +225,8 @@ export function getAPI(supabase: SupabaseClient<Database>) {
         let ordersResult: Order[] = [];
 
         // get name of a receiver
-        const { username, first_name, last_name } = (await this.getCurrentUserProfileData())!;
-        let receiver = username;
-
-        if (first_name && last_name) receiver = first_name + ' ' + last_name;
-        else if (first_name) receiver = first_name;
-        else if (last_name) receiver = last_name;
+        const { first_name, last_name } = (await this.getCurrentUserProfileData())!;
+        let receiver = first_name + ' ' + last_name;
 
         const {error: fetchOrdersError, data: orders } = await supabase
           .from('order_details')
@@ -358,6 +352,47 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       const { data } = await supabase.rpc('get_user_name', { userid: id});
   
       return data;
+    },
+
+    addFavoriteProduct: throttle(async (productId: string) => {
+      const uid = await api.getCurrentUserId();
+
+      if (uid) {
+        const { error } = await supabase
+          .from('favorite_product')
+          .insert({ product_id: productId, user_id: uid });
+      }
+    }, THROTTLE_MS),
+
+    deleteFavoriteProduct: throttle(async (productId: string) => {
+      const uid = await api.getCurrentUserId();
+
+      if (uid) {
+        const { error } = await supabase
+          .from('favorite_product')
+          .delete()
+          .eq('product_id', productId);
+      }
+    }, THROTTLE_MS),
+
+    async isProductFavorite(productId: string) {
+      const { data } = await supabase
+        .from('favorite_product')
+        .select()
+        .eq('product_id', productId)
+        .single();
+      
+      return !!data;
+    },
+
+    async getFavoriteProductIds() {
+      const { data } = await supabase
+        .from('favorite_product')
+        .select();
+
+      return data?.length ? data : null;
     }
   };
+
+  return api;
 }

@@ -29,7 +29,9 @@ export default function ItemList({ cart, removeCartItem, setItemQuantity }: Prop
 
   if (!products) return (
     <div className="flex justify-center items-center grow h-full">
-      <LoadingSpinner />
+      <div className="w-8 h-8 text-green-300">
+        <LoadingSpinner />
+      </div>
     </div>
   );
 

@@ -1,6 +1,7 @@
 'use client';
 
-import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react'
+import useEmblaCarousel from 'embla-carousel-react';
+import { EmblaOptionsType } from 'embla-carousel';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import NavDots from './NavDots';

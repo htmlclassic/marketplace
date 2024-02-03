@@ -11,7 +11,7 @@ export default function NavDots({ slidesCount, activeIndex, emblaApi }: BasicPro
               emblaApi?.scrollTo(index);
             }}
             className={clsx({
-              "w-[12px] h-[12px] rounded-full transition-all": true,
+              "w-[12px] h-[3px] rounded-lg transition-all": true,
               "bg-black": index === activeIndex,
               "bg-gray-300": index !== activeIndex
             })}

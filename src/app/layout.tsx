@@ -31,6 +31,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const cartItems = await api.getCartItems();
 
   // get initial cart state
+  // p.s. all pages are dynamically rendered. I think to solve this problem
+  // you have to fetch cart from server in ClientWrapper by using useEffect
   let initialCart: CartItem[] = [];
 
   if (cartItems) {
@@ -63,7 +65,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html className={inter.className} lang='ru'>
-      <body className="flex flex-col gap-2 pb-20 sm:gap-6 sm:pb-6 min-h-screen max-w-[1920px] mx-auto">
+      <body className="flex flex-col pb-20 sm:pb-6 min-h-screen max-w-[1920px] mx-auto">
         <ClientWrapper initialCart={initialCart} uid={uid}>
           <Navbar />
           <MobileHeader />

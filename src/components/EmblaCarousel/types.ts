@@ -1,4 +1,4 @@
-import { EmblaCarouselType } from "embla-carousel-react";
+import { EmblaCarouselType } from "embla-carousel";
 
 export interface BasicProps {
   slidesCount: number;

@@ -156,6 +156,42 @@ export interface Database {
           }
         ]
       }
+      favorite_product: {
+        Row: {
+          created_at: string
+          id: number
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_product_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "product"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorite_product_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       order_details: {
         Row: {
           address: string
@@ -285,26 +321,26 @@ export interface Database {
         Row: {
           balance: number
           birthdate: string | null
+          email: string
           first_name: string | null
           id: string
           last_name: string | null
-          username: string
         }
         Insert: {
           balance?: number
           birthdate?: string | null
+          email: string
           first_name?: string | null
           id: string
           last_name?: string | null
-          username: string
         }
         Update: {
           balance?: number
           birthdate?: string | null
+          email?: string
           first_name?: string | null
           id?: string
           last_name?: string | null
-          username?: string
         }
         Relationships: [
           {

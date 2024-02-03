@@ -4,6 +4,7 @@ import Button from "@/src/components/Button";
 import { CartContext } from "@/src/CartContext";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
+import clsx from "clsx";
 
 interface Props {
   productId: string;
@@ -36,10 +37,28 @@ export default function CartButton({ productId, productPrice , maxQuantity }: Pr
   return (
     <Button
       onClick={handleClick}
-      className="bg-sky-400"
+      className={clsx({
+        "bg-sky-400": !inCart,
+        "bg-sky-500": inCart
+      })}
     >
       {
-        inCart ? 'В корзине' : 'Добавить в корзину'
+        inCart
+          ? 
+            <div>
+              <span>В корзине</span>
+              <span
+                onClick={e => {
+                  e.stopPropagation();
+
+                  cartContext.removeItem(productId);
+                  setInCart(false);
+                }}
+                className="p-3 border transition-all hover:bg-opacity-20 hover:bg-white "
+              >D</span>
+            </div>
+          :
+            'Добавить в корзину'
       }
     </Button>
   );

@@ -1,9 +1,5 @@
-import Nav from "./Nav";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return (
-    <div className="grow">
-      <Nav />
-    </div>
-  );
+  redirect('/account/profile');
 }
