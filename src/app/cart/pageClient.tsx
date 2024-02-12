@@ -10,16 +10,6 @@ interface Props {
   uid: string | null;
 }
 
-/*
-1) выбрать адрес доставки.
-  -выбрать способ оплаты: либо картой, либо с баланса (если авторизован).
-  -выбрать дату доставки
-  кнопка "оплатить онлайн" (если юзер не авторизован, то дополнительно попросить email для отсылки туда
-  трек-кода заказа)
-3) - если карта, то перекинуть на фейк страницу заполнения карточных данных. после заполнения и самбита. купить товары.
-
-*/
-
 export default function PageClient({ uid }: Props) {
   const { cart, removeItem, setItemQuantity } = useContext(CartContext);
 
@@ -29,8 +19,8 @@ export default function PageClient({ uid }: Props) {
   const total = cart.reduce((acc, item) => item.quantity * item.price + acc, 0)
 
   return (
-    <div className="relative grow flex flex-wrap gap-5 lg:gap-20 lg:flex-nowrap side-padding top-margin">
-      <div className="w-full max-w-5xl bg-white p-2 rounded-md border">
+    <div className="relative grow flex flex-col xl:flex-row gap-5 xl:gap-20 side-padding top-margin">
+      <div className="w-full xl:max-w-5xl bg-white p-2 rounded-md border">
         <ItemList
           cart={cart}
           removeCartItem={removeItem}

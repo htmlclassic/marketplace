@@ -107,3 +107,7 @@
             transform: scale3D(0, 0, 1);
   } 
 }
+
+/*
+  .service_header_class is only needed for my React component to get computed height of an element
+*/

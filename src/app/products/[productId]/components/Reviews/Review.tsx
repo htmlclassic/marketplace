@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import { ReviewType } from ".";
-import Rating from "./Rating";
+import Rating from "../../../../../components/Rating";
 
 import updateLocale from 'dayjs/plugin/updateLocale';
 import { useState } from "react";

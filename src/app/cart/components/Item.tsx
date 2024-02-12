@@ -28,7 +28,7 @@ export default function Item({
           duration: 0.07
         }
       }}
-      className="flex items-center justify-between gap-3"
+      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       key={product.id}
     >
       <Link
@@ -40,9 +40,10 @@ export default function Item({
           alt="product photo"
           width={150}
           height={150}
+          className="rounded-md"
         />
         <div className="max-w-lg flex flex-col justify-center gap-3">
-          <div className="line-clamp-4">{product.title}</div>
+          <div className="line-clamp-4 [overflow-wrap:anywhere]">{product.title}</div>
           <div className="font-semibold line-clamp-1">{product.price} ₽</div>
         </div>
       </Link>

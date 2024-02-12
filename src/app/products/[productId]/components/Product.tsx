@@ -5,7 +5,7 @@ import Image from 'next/image';
 import ImgPlaceholder from '@/src/components/noimage.jpg'
 import Link from 'next/link';
 import ChatButton from './ChatButton';
-import CartButton from './CartButton';
+import AddToCartButton from '../../../../components/AddToCartButton';
 import ManageFavoriteButton from '../../../../components/ManageFavoriteButton';
 
 interface ProductProps {
@@ -62,7 +62,7 @@ export default function Product({
           <Slider>{ imageList }</Slider>
         </div>
         <div className="side-padding order-2 flex-col items-center gap-3 sm:flex-row flex">
-          <CartButton
+          <AddToCartButton
             productId={product.id}
             productPrice={product.price}
             maxQuantity={product.quantity}

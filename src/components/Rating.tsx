@@ -17,9 +17,9 @@ export default function Rating({
   name = 'rating', // input's name value
   readonly // not interactable
 }: Props) {
-  let initialValue = val;
+  let initialValue = Math.round(val);
 
-  if (initialValue < 1) initialValue = 1;
+  if (!readonly && initialValue < 1) initialValue = 1;
   if (initialValue > max) initialValue = max;
 
   const [value, setValue] = useState(initialValue);
@@ -37,9 +37,9 @@ export default function Rating({
         new Array(max).fill(0).map((el, i) =>
           <div
             className={clsx({
-              "p-1 cursor-pointer": true,
+              "p-1": true,
               "cursor-default": readonly,
-              "peer hover:text-yellow-400 peer-hover:text-yellow-400": !readonly,
+              "peer hover:text-yellow-400 peer-hover:text-yellow-400 cursor-pointer": !readonly,
               "text-gray-400": i < max - value,
               "text-yellow-400": i >= max - value,
             })}

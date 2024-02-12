@@ -28,7 +28,7 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
   }, []);
 
   return (
-    <div className="relative side-padding grow overflow-hidden pt-20 sm:pt-6">
+    <div className="relative side-padding grow overflow-hidden pt-20 sm:pt-6 max-w-[1600px] mx-auto">
       <div className="absolute w-full left-0 top-[-1px] sm:hidden">
         <button
           onClick={() => setShowMenu(!showMenu)}

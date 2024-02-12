@@ -3,7 +3,7 @@
 // probably I should move datapicker providers to individual routes?
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ruRU } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import 'dayjs/locale/ru';
 import CartContextProvider from '../CartContext';

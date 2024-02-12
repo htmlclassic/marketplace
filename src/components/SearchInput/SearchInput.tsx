@@ -1,15 +1,19 @@
 'use client';
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useRef, useState } from "react";
 
 import clsx from "clsx";
 
 export default function SearchInput() {
-  const [searchValue, setSearchValue] = useState('');
+  const searchParams = useSearchParams();
+  const text = searchParams.get('text');
+
+  const [searchValue, setSearchValue] = useState(text || '');
   const router = useRouter();
-  const href = searchValue !== '' ? `/search?text=${searchValue}` : '/';
+  const href = searchValue !== '' ? `/search?text=${searchValue}&order=price_asc` : '/';
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +21,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="flex gap-3 grow max-w-[800px]">
+    <div className="flex gap-3 grow max-w-[800px] transition-all duration-300">
       <div className="w-full relative">
         <div className="transition-[background-color] duration-300 rounded-md flex relative border border-white border-opacity-30 focus-within:bg-white focus-within:text-gray-400">
           <input
@@ -38,6 +42,7 @@ export default function SearchInput() {
             className="transition-all duration-300 bg-transparent text-white focus:text-black w-full text-sm p-3 outline-none placeholder:text-white focus:placeholder:text-gray-400"
           />
           <button
+            disabled={!searchValue}
             onClick={() => {
               setSearchValue('');
               inputRef.current!.focus();
@@ -51,7 +56,7 @@ export default function SearchInput() {
           >
             <CrossIcon />
           </button>
-          <Link 
+          <Link
             href={href}
             className="shrink-0 p-3 text-inherit transition-all duration-300 hover:text-black"
             title="Поиск"

@@ -38,6 +38,9 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
         setCart(JSON.parse(cartString));
       }
     }
+
+    // fetch products based on cartItems and update the state
+    // you have to try to fetch products after this useEffect has worked.
   }, []);
 
   useEffect(() => {

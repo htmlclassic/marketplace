@@ -2,7 +2,7 @@
 
 import { createReview } from "./createReview";
 import { useEffect, useState } from "react";
-import Rating from "../Rating";
+import Rating from "../../../../../../components/Rating";
 import { ReviewType } from "..";
 
 interface Props {

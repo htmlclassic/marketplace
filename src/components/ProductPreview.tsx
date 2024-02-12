@@ -8,7 +8,10 @@ interface ProductProps {
 
 export default function ProductPreview({ product }: ProductProps) {
   return (
-    <Link href={`/products/${product.id}`} className="group/parent overflow-hidden space-y-2">
+    <Link
+      href={`/products/${product.id}`}
+      className="group/parent overflow-hidden space-y-2"
+    >
       <div className="relative aspect-square">
         <Image
           src={product.img_urls ? product.img_urls[0] : ImgPlaceholder}
