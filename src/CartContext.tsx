@@ -30,18 +30,25 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
   const [cart, setCart] = useState<CartItem[]>(initialCart);
 
   useEffect(() => {
-    // try to fetch cart from local storage if cart from supabase is empty or doesn't exist at all
-    if (!uid || cart.length === 0) {
+    if (!uid) {
       const cartString = localStorage.getItem('cart');
 
       if (cartString) {
         setCart(JSON.parse(cartString));
       }
+    } else if (initialCart !== cart) {
+      setCart(initialCart);
     }
-  }, []);
+  }, [initialCart]);
 
   useEffect(() => {
-    saveCartToLocalStorage(cart);
+    // saveCartToLocalStorage is throttled, so I have to use this setCart updater
+    // to save the latest state value (after useEffect above changes state)
+    setCart(cart => {
+      saveCartToLocalStorage(cart);
+
+      return cart;
+    });
   }, [cart]);
 
   const addItem = (item: CartItem) => {
