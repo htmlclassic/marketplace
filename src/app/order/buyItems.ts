@@ -24,7 +24,7 @@ export default async function buyItems(
   if (address === '') throw new Error(Errors.EMPTY_ADDRESS);
   if (cart.length === 0) throw new Error(Errors.EMPTY_CART);
   
-  const products = await getProductsByIds(cart.map(item => item.product_id));
+  const products = await getProductsByIds(cart.map(item => item.product.id));
   let orderId: number | undefined;
 
   if (products) {
@@ -55,7 +55,7 @@ export default async function buyItems(
       for (const cartItem of cart) {
         // what if cart been populated somehow with fake product ids?
         // it'll cause the script to fall. stop using this fucking '!' everywhere
-        const product = products.find(pr => pr.id === cartItem.product_id)!;
+        const product = products.find(pr => pr.id === cartItem.product.id)!;
         const price = cartItem.quantity * product.price;
 
         const seller = (await supabase
@@ -132,9 +132,9 @@ export default async function buyItems(
     return products;
   }
 
-  function checkProductsAvailability(cartItems: Cart[], products: Product[]) {
+  function checkProductsAvailability(cartItems: CartItem[], products: Product[]) {
     for (const item of cartItems) {
-      const product = products.find(pr => pr.id === item.product_id)!;
+      const product = products.find(pr => pr.id === item.product.id)!;
 
       if (item.quantity > product.quantity) return false;
     }
@@ -142,9 +142,9 @@ export default async function buyItems(
     return true;
   }
 
-  function getSumToPay(cartItems: Cart[], products: Product[]) {
+  function getSumToPay(cartItems: CartItem[], products: Product[]) {
     const total = cartItems.reduce((acc, cartItem) => {
-      const product = products.find(pr => pr.id === cartItem.product_id)!;
+      const product = products.find(pr => pr.id === cartItem.product.id)!;
 
       return cartItem.quantity * product.price + acc;
     }, 0);

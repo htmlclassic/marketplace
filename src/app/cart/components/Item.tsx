@@ -5,13 +5,11 @@ import Link from "next/link";
 
 interface Props {
   cartItem: CartItem;
-  product: Product;
   removeCartItem: () => void;
   setItemQuantity: (newQuantity: number) => void;
 }
 
 export default function Item({
-  product,
   cartItem,
   removeCartItem,
   setItemQuantity
@@ -29,27 +27,28 @@ export default function Item({
         }
       }}
       className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-      key={product.id}
+      key={cartItem.product.id}
     >
       <Link
-        href={`/products/${product.id}`}
+        href={`/products/${cartItem.product.id}`}
         className="flex items-center gap-6"
       >
-        <Image
-          src={product.img_urls![0]}
-          alt="product photo"
-          width={150}
-          height={150}
-          className="rounded-md"
-        />
+        <div className="relative w-[150px] h-[150px]">
+          <Image
+            src={cartItem.product.img_urls?.[0] || ''}
+            alt={`Photo of a product with title: ${cartItem.product.title}`}
+            fill
+            className="rounded-md object-cover"
+          />
+        </div>
         <div className="max-w-lg flex flex-col justify-center gap-3">
-          <div className="line-clamp-4 [overflow-wrap:anywhere]">{product.title}</div>
-          <div className="font-semibold line-clamp-1">{product.price} ₽</div>
+          <div className="line-clamp-4 [overflow-wrap:anywhere]">{cartItem.product?.title}</div>
+          <div className="font-semibold line-clamp-1">{cartItem.product?.price} ₽</div>
         </div>
       </Link>
       <CartItemControls
         quantity={cartItem.quantity}
-        maxQuantity={cartItem.maxQuantity}
+        maxQuantity={cartItem.product.quantity}
         setItemQuantity={setItemQuantity}
         removeCartItem={removeCartItem}
       />

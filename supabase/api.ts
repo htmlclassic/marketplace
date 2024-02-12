@@ -138,7 +138,7 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       if (uid) {
         const productsInCart = await this.getCartItems();
 
-        if (productsInCart && productsInCart.find(item => item.product_id === productId)) return true;
+        if (productsInCart && productsInCart.find(item => item.product.id === productId)) return true;
 
         await supabase
           .from('cart')
@@ -188,11 +188,11 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       if (uid) {
         const { data } = await supabase
           .from('cart')
-          .select('product_id, quantity')
+          .select('quantity, product(*)')
           .eq('user_id', uid)
           .order('product_id', { ascending: false });
 
-        if (data?.length) return data as Cart[];
+        if (data?.length) return data as CartItem[];
       }
 
       return null;

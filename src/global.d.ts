@@ -8,15 +8,12 @@ declare global {
   type RawProfile = Database['public']['Tables']['profile']['Row'];
   type Chat = Database['public']['Tables']['chat']['Row'];
   type Review = Database['public']['Tables']['review']['Row'];
-  type Cart = Omit<Database['public']['Tables']['cart']['Row'], 'id' | 'user_id'>;
+  type Cart = Database['public']['Tables']['cart']['Row'];
   type RawMessage = Database['public']['Tables']['chat_message']['Row'];
 
   type Profile = Omit<RawProfile, 'id' | 'balance'>;
 
-  type CartItem = Cart & {
-    price: number;
-    maxQuantity: number;
-  };
+  type CartItem = Omit<Cart, 'id' | 'user_id' | 'product_id'> & { product: Product };
 
   interface OrderItem {
     price: number;

@@ -6,17 +6,13 @@ import EmptyCart from "./components/EmptyCart";
 import { CartContext } from "@/src/CartContext";
 import Link from "next/link";
 
-interface Props {
-  uid: string | null;
-}
-
-export default function PageClient({ uid }: Props) {
+export default function PageClient() {
   const { cart, removeItem, setItemQuantity } = useContext(CartContext);
 
   if (!cart.length) return <EmptyCart />
   
   const itemsTotalCount = cart.reduce((acc, item) => item.quantity + acc, 0)
-  const total = cart.reduce((acc, item) => item.quantity * item.price + acc, 0)
+  const total = cart.reduce((acc, item) => item.quantity * item.product.price + acc, 0)
 
   return (
     <div className="relative grow flex flex-col xl:flex-row gap-5 xl:gap-20 side-padding top-margin">

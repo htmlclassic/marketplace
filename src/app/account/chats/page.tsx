@@ -20,6 +20,9 @@ interface ChatI {
 
 export type ChatsT = ChatI[] | null;
 
+// refactored to make less requests than it was before, but two things need to be made better:
+// 1) types are difficult. wtf is ChatI?
+// 2) i dont like making a request to get other user name on every loop iteration
 export default async function Page() {
   const supabase = createServerComponentSupabaseClient();
   const api = getAPI(supabase);
@@ -29,19 +32,10 @@ export default async function Page() {
 
   const { data: chats } = await supabase
     .from('chat')
-    .select()
-    .or(`customer_id.eq.${uid},seller_id.eq.${uid}`);
+    .select('*, chat_message(*), product(*)');
 
   if (chats?.length) {
     for (const chat of chats) {
-      const chat_id = chat.id;
-  
-      let { data: messages } = await supabase
-        .from('chat_message')
-        .select()
-        .eq('chat_id', chat_id)
-        .order('created_at', { ascending: false });
-  
       let filteredMessages: Message[] | null = null;
       let anotherPersonName: string;
   
@@ -51,10 +45,8 @@ export default async function Page() {
         anotherPersonName = (await getUserName(chat.customer_id)) || 'other guy';
       }
   
-      const relatedProduct = (await api.getProducts([ chat.product_id ]))!;
-  
-      if (messages?.length) {
-        filteredMessages = messages.map(message => ({
+      if (chat.chat_message?.length) {
+        filteredMessages = chat.chat_message.map(message => ({
           createdAt: message.created_at!,
           text: message.text,
           author_id: message.author_id
@@ -67,7 +59,7 @@ export default async function Page() {
           messages: filteredMessages,
           anotherPersonName,
           userName,
-          product: relatedProduct[0],
+          product: chat.product!,
           creatorId: chat.customer_id
       });
     }

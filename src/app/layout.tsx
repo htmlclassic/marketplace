@@ -36,31 +36,20 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   let initialCart: CartItem[] = [];
 
   if (cartItems) {
-    const productIds = cartItems.map(item => item.product_id);
+    initialCart = cartItems.map(item => {
+      const isProductQuantityLessThanInCart = item.product.quantity < item.quantity;
+      const quantity = isProductQuantityLessThanInCart ? item.product.quantity : item.quantity;
 
-    const { data } = await supabase
-      .from('product')
-      .select('quantity, id, price')
-      .in('id', productIds);
-
-    if (data) {
-      initialCart = cartItems.map(item => {
-        const product = data.find(el => el.id === item.product_id)!;
-        const quantity = product.quantity < item.quantity ? product.quantity : item.quantity;
-
-        // set new quantity in db
-        if (product.quantity < item.quantity) {
-          api.setCartItemQuantity(product.id, product.quantity);
-        }
-        
-        return {
-          quantity,
-          maxQuantity: product.quantity,
-          product_id: item.product_id,
-          price: product.price
-        };
-      });
-    }
+      // set new quantity in db
+      if (isProductQuantityLessThanInCart) {
+        api.setCartItemQuantity(item.product.id, item.product.quantity);
+      }
+      
+      return {
+        ...item,
+        quantity,
+      };
+    });
   }
 
   return (

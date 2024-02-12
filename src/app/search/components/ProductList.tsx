@@ -80,9 +80,7 @@ export default function ProductList({ products }: Props) {
                 <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between py-2 gap-3 shrink-0 sm:w-[180px]">
                   <div className="flex-shrink-0">{pr.price} ₽</div>
                   <AddToCartButton
-                    productId={pr.id}
-                    productPrice={pr.price}
-                    maxQuantity={pr.quantity}
+                    product={pr}
                     className="text-sm py-2 px-4 max-w-[180px]"
                   />
                 </div>

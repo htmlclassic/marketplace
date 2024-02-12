@@ -38,9 +38,6 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
         setCart(JSON.parse(cartString));
       }
     }
-
-    // fetch products based on cartItems and update the state
-    // you have to try to fetch products after this useEffect has worked.
   }, []);
 
   useEffect(() => {
@@ -49,7 +46,7 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
 
   const addItem = (item: CartItem) => {
     if (uid) {
-      api.addToCart(item.product_id, item.quantity);
+      api.addToCart(item.product.id, item.quantity);
     }
 
     setCart([
@@ -64,7 +61,7 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
     }
 
     setCart(
-      cart.filter(item => item.product_id !== productId)
+      cart.filter(item => item.product.id !== productId)
     );
   };
 
@@ -83,7 +80,7 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
 
     setCart(
       cart.map(item => {
-        if (item.product_id !== productId) return item;
+        if (item.product.id !== productId) return item;
 
         return {
           ...item,

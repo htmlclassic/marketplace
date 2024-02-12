@@ -63,9 +63,7 @@ export default function Product({
         </div>
         <div className="side-padding order-2 flex-col items-center gap-3 sm:flex-row flex">
           <AddToCartButton
-            productId={product.id}
-            productPrice={product.price}
-            maxQuantity={product.quantity}
+            product={product}
           />
           <ChatButton
             uid={uid}

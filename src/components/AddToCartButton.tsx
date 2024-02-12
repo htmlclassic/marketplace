@@ -7,22 +7,18 @@ import { useContext, useState } from "react";
 import clsx from "clsx";
 
 interface Props {
-  productId: string;
-  productPrice: number;
-  maxQuantity: number;
+  product: Product;
   className?: string;
 }
 
 export default function AddToCartButton({
-  productId,
-  productPrice,
-  maxQuantity,
+  product,
   className = ''
 }: Props) {
   const cartContext = useContext(CartContext);
   const router = useRouter();
 
-  const itemInCartInitial = Boolean( cartContext.cart.find(item => item.product_id === productId) );
+  const itemInCartInitial = Boolean( cartContext.cart.find(item => item.product.id === product.id) );
   const [inCart, setInCart] = useState(itemInCartInitial);
 
   const handleClick = () => {
@@ -30,10 +26,8 @@ export default function AddToCartButton({
       router.push('/cart');
     } else {
       cartContext.addItem({
-        product_id: productId,
-        price: productPrice,
         quantity: 1,
-        maxQuantity
+        product: product
       });
 
       setInCart(true);
@@ -58,7 +52,7 @@ export default function AddToCartButton({
                 onClick={e => {
                   e.stopPropagation();
 
-                  cartContext.removeItem(productId);
+                  cartContext.removeItem(product.id);
                   setInCart(false);
                 }}
                 title="Удалить из корзины"
