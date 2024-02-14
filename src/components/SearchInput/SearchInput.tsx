@@ -21,49 +21,49 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="flex gap-3 grow max-w-[800px] transition-all duration-300">
-      <div className="w-full relative">
-        <div className="transition-[background-color] duration-300 rounded-md flex relative border border-white border-opacity-30 focus-within:bg-white focus-within:text-gray-400">
-          <input
-            ref={inputRef}
-            type="text"
-            value={searchValue}
-            onChange={handleChange}
-            onKeyUp={e => {
-              if (e.key === 'Escape') {
-                setSearchValue('');
-              }
-              else if (e.key === 'Enter') {
-                inputRef.current!.blur();
-                router.push(href);
-              };
-            }}
-            placeholder="Искать на Marketplace"
-            className="transition-all duration-300 bg-transparent text-white focus:text-black w-full text-sm p-3 outline-none placeholder:text-white focus:placeholder:text-gray-400"
-          />
-          <button
-            disabled={!searchValue}
-            onClick={() => {
+    <div className="grow max-w-[800px]">
+      <div className="group w-0 sm:w-full transition-all duration-300 rounded-md flex sm:border border-white border-opacity-30 focus-within:w-full focus-within:bg-white focus-within:text-gray-400">
+        <input
+          ref={inputRef}
+          type="text"
+          value={searchValue}
+          onChange={handleChange}
+          onKeyUp={e => {
+            if (e.key === 'Escape') {
               setSearchValue('');
-              inputRef.current!.focus();
-            }}
-            className={clsx({
-              "p-1 flex justify-center items-center text-gray-400 transition-all duration-300 hover:text-black": true,
-              "scale-0": !searchValue,
-              "scale-100": searchValue
-            })}
-            title="Очистить поле для поиска"
-          >
-            <CrossIcon />
-          </button>
-          <Link
-            href={href}
-            className="shrink-0 p-3 text-inherit transition-all duration-300 hover:text-black"
-            title="Поиск"
-          >
-            <SearchIcon />
-          </Link>
-        </div>
+            }
+            else if (e.key === 'Enter') {
+              inputRef.current!.blur();
+              router.push(href);
+            };
+          }}
+          placeholder="Искать на Marketplace"
+          className="group-has-[:focus-within]:w-full group-has-[:focus-within]:p-3 group-has-[:focus-within]:text-black transition-all duration-300 bg-transparent w-0 sm:w-full sm:p-3 text-sm outline-none placeholder:text-white group-has-[:focus-within]:placeholder:text-gray-400"
+        />
+        <button
+          disabled={!searchValue}
+          onClick={() => {
+            setSearchValue('');
+            inputRef.current!.focus();
+          }}
+          className={clsx({
+            "w-0 sm:w-auto sm:p-1 group-has-[:focus-within]:w-auto group-has-[:focus-within]:p-1 flex justify-center items-center text-gray-400 transition-all duration-300 hover:text-black": true,
+            "scale-0": !searchValue,
+            "scale-100": searchValue
+          })}
+          title="Очистить поле для поиска"
+        >
+          <CrossIcon />
+        </button>
+        
+        {/* Next.js <Link> doesn't work when it overflowed its parent where overflow is set to visible */}
+        <Link
+          href={href}
+          className="shrink-0 p-3 text-white group-has-[:focus-within]:text-black sm:text-inherit transition-all duration-300 hover:text-black"
+          title="Поиск"
+        >
+          <SearchIcon />
+        </Link>
       </div>
     </div>
   );

@@ -24,15 +24,25 @@ export default function EditProfile({
     <div
       onClick={() => setShow(false)}
       className={clsx({
-        "flex justify-center items-center cursor-pointer fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 z-40": true,
-        "visible": show,
-        "invisible": !show,
+        "flex fixed top-0 left-0 w-screen h-screen z-40 justify-center items-center cursor-pointer": true,
+        "pointer-events-none": !show,
       })}
     >
+      <div
+        className={clsx({
+          "fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50": true,
+          "block": show,
+          "hidden": !show
+        })}
+      ></div>
       <form
         onClick={e => e.stopPropagation()}
         action={editProfileAction}
-        className="relative flex flex-col gap-3 p-5 sm:p-10 rounded-lg w-[90vw] max-w-[500px] bg-white z-50 cursor-default"
+        className={clsx({
+          "relative flex flex-col gap-3 p-5 sm:p-10 rounded-lg w-[90vw] max-w-[500px] bg-white z-50 cursor-default transition-all": true,
+          "scale-50 opacity-0": !show,
+          "scale-100 opacity-100": show
+        })}
       >
         <label className="flex flex-col gap-2">
           <span className="font-bold">Имя: </span>
