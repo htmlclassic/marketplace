@@ -5,6 +5,7 @@ import ItemList from "./components/ItemList";
 import EmptyCart from "./components/EmptyCart";
 import { CartContext } from "@/src/CartContext";
 import Link from "next/link";
+import { numberWithSpaces } from "@/src/utils";
 
 export default function PageClient() {
   const { cart, removeItem, setItemQuantity } = useContext(CartContext);
@@ -30,7 +31,7 @@ export default function PageClient() {
         >Перейти к оформлению</Link>
         <div>
           <h2 className="font-semibold text-lg mb-3">Ваша корзина</h2>
-          <div>Сумма к оплате: {total} ₽</div>
+          <div>Сумма к оплате: {numberWithSpaces(total)} ₽</div>
           <div>Количество товаров: {itemsTotalCount}</div>
         </div>
       </div>

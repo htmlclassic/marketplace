@@ -9,7 +9,7 @@ export default async function Catalog() {
     .from('product')
     .select()
     .limit(LIMIT)
-    .order('created_at', { ascending: true });
+    .order('created_at', { ascending: false });
 
   return (
     <>

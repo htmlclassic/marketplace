@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import CartItemControls from "./CartItemControls/CartItemControls";
 import Link from "next/link";
+import { numberWithSpaces } from "@/src/utils";
 
 interface Props {
   cartItem: CartItem;
@@ -43,7 +44,7 @@ export default function Item({
         </div>
         <div className="max-w-lg flex flex-col justify-center gap-3">
           <div className="line-clamp-4 [overflow-wrap:anywhere]">{cartItem.product?.title}</div>
-          <div className="font-semibold line-clamp-1">{cartItem.product?.price} ₽</div>
+          <div className="font-semibold line-clamp-1">{numberWithSpaces(cartItem.product?.price)} ₽</div>
         </div>
       </Link>
       <CartItemControls

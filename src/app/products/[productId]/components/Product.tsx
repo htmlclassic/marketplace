@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ChatButton from './ChatButton';
 import AddToCartButton from '../../../../components/AddToCartButton';
 import ManageFavoriteButton from '../../../../components/ManageFavoriteButton';
+import { numberWithSpaces } from '@/src/utils';
 
 interface ProductProps {
   product: Product;
@@ -73,7 +74,7 @@ export default function Product({
         </div>
       </div>
       <div className="side-padding flex flex-col gap-5 order-2">
-        <p className="text-lg font-bold text-sky-600">{product.price} ₽</p>
+        <p className="text-lg font-bold text-sky-600">{numberWithSpaces(product.price)} ₽</p>
         <p className="flex gap-5 items-center">
           Категория:
           <Link
