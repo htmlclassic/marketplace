@@ -57,6 +57,7 @@ export default function SearchInput() {
         </button>
         
         {/* Next.js <Link> doesn't work when it overflowed its parent where overflow is set to visible */}
+        {/* If it's true, it might be a bug here when nextjs updates */}
         <Link
           href={href}
           className="shrink-0 p-3 text-white group-has-[:focus-within]:text-black sm:text-inherit transition-all duration-300 hover:text-black"

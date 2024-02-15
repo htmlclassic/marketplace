@@ -1,16 +1,15 @@
-import { revalidate } from '@/src/utils';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import throttle from 'lodash/throttle';
 
-// I cant figure out now how to type 'this' when function is wrapped in throttle()
 const THROTTLE_MS = 1000;
 
-// if you query data from some table and you don't pass RLS policies conditions,
-// supabase returns an empty array
 function removeArrayDuplicates<T>(arr: T[]) {
   return Array.from(new Set<T>(arr));
 }
+
+// if you query data from some table and you don't pass RLS policies conditions,
+// supabase returns an empty array
 
 export function getAPI(supabase: SupabaseClient<Database>) {
   const api =  {

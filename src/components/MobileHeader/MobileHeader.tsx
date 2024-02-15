@@ -6,7 +6,11 @@ export default function MobileHeader() {
     <div
       className="service_header_class sticky top-0 left-0 z-10 gap-0 flex justify-between items-center w-full h-[70px] side-padding pr-[5px] bg-black bg-opacity-80 backdrop-blur-md text-white sm:hidden"
     >
-      <div className="text-2xl font-medium mr-4">M</div>
+      <Link
+        href="/"
+        className="text-2xl font-medium mr-4"
+      >
+      M</Link>
       <SearchInput />
       <Link href="/account/chats" className="py-[15px] px-[15px] shrink-0">
         <MessageIcon />
