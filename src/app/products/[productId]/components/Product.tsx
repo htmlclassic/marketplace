@@ -55,7 +55,7 @@ export default function Product({
       <h1 className="side-padding font-semibold text-xl max-w-6xl order-1 sm:mb-3 sm:order-none">{product.title}</h1>
       {
         uid &&
-          <div className="side-padding">
+          <div className="side-padding px-4">
             <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
           </div>
       }
@@ -88,13 +88,13 @@ export default function Product({
             {product.category}
           </Link>
         </p>
-        <p>Продавец: <span className="font-bold">{sellerName}</span></p>
+        <p>Продавец: <span className="font-semibold">{sellerName}</span></p>
       </div>
       <div className="side-padding order-last flex flex-col gap-5">
         <h2 className="font-semibold text-xl">Описание</h2>
-        <p className="flex flex-col gap-3 max-w-6xl border-b pb-5">
-          <span>{product.description}</span>
-        </p>
+        <div className="flex flex-col gap-3 max-w-6xl border-b pb-5 whitespace-pre">
+          {product.description}
+        </div>
         { Reviews }
       </div>
     </div>

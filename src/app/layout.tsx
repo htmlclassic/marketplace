@@ -10,6 +10,15 @@ import ClientWrapper from './ClientWrapper';
 import Navbar from '../components/Navbar';
 import MobileMenu from '../components/MobileMenu/MobileMenu';
 import MobileHeader from '../components/MobileHeader/MobileHeader';
+import MainLoadingSpinner from '../components/MainLoadingSpinner';
+
+// import type { Viewport } from 'next'
+ 
+// export const viewport: Viewport = {
+//   themeColor: [
+//     { color: 'lightblue' },
+//   ],
+// }
 
 export const metadata: Metadata = {
   title: 'Marketplace',
@@ -54,7 +63,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html className={inter.className} lang='ru'>
-      <body className="flex flex-col pb-20 sm:pb-6 min-h-screen max-w-[1920px] mx-auto">
+      <body className="flex flex-col pb-[calc(var(--mobile-menu-height))] sm:pb-6 min-h-screen max-w-[1920px] mx-auto">
         <ClientWrapper initialCart={initialCart} uid={uid}>
           <Navbar />
           <MobileHeader />

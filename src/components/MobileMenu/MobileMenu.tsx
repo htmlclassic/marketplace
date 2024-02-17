@@ -34,12 +34,12 @@ export default function MobileMenu() {
 
   return (
     <div
-      className="bg-white fixed z-30 bottom-0 left-0 w-full px-[15px] flex justify-between items-center sm:hidden"
+      className="bg-white fixed z-30 bottom-0 left-0 w-full px-[15px] flex justify-between items-center sm:hidden  h-[var(--mobile-menu-height)]"
     >
       <Link
         href="/"
         className={clsx({
-          "py-[15px] px-[15px] transition-all duration-300": true,
+          "p-4 transition-all duration-300": true,
           "text-black": path === '/',
           "text-gray-400": path !== '/'
         })}
@@ -49,7 +49,7 @@ export default function MobileMenu() {
       {
         links.map(link =>
           <Link key={link.href} href={link.href} className={clsx({
-            "py-[15px] px-[15px] transition-all duration-300": true,
+            "p-4 transition-all duration-300": true,
             "text-gray-400": !path.startsWith(link.href),
             "text-black": path.startsWith(link.href)
           })}>

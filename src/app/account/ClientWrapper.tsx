@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Nav from './Nav';
+import Nav from './components/Nav';
 import clsx from 'clsx';
 import { throttle } from 'lodash';
 
@@ -12,26 +12,41 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
   const [showMenu, setShowMenu] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const toggleMenu = () => {
+    const closeMenu = () => {
       const isMobile = window.innerWidth < 640;
 
-      if (!isMobile) setShowMenu(true)
+      if (isMobile) {
+        setShowMenu(false);
+      }
     };
 
-    toggleMenu();
+    const openMenu = () => {
+      const isDesktop = window.innerWidth >= 640;
 
-    const toggleMenuHandler = throttle(toggleMenu, 300);
+      if (isDesktop) setShowMenu(true)
+    };
+
+    openMenu();
+
+    const toggleMenuHandler = throttle(openMenu, 300);
 
     window.addEventListener('resize', toggleMenuHandler);
+    window.addEventListener('click', closeMenu);
 
-    return () => window.removeEventListener('resize', toggleMenuHandler);
+    return () => {
+      window.removeEventListener('resize', toggleMenuHandler);
+      window.removeEventListener('click', closeMenu);
+    };
   }, []);
 
   return (
     <div className="relative side-padding grow overflow-hidden pt-20 sm:pt-6 max-w-[1600px] mx-auto">
       <div className="absolute w-full left-0 top-[-1px] sm:hidden">
         <button
-          onClick={() => setShowMenu(!showMenu)}
+          onClick={e => {
+            e.stopPropagation();
+            setShowMenu(!showMenu);
+          }}
           className="w-full flex items-center gap-2 p-3 fixed bg-white z-30 border"
         >
           <span className={clsx({
@@ -44,7 +59,11 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
         </button>
       </div>
       <div className="flex gap-3 h-full">
-        <Nav show={showMenu} width={NAVBAR_WIDTH} />
+        <Nav
+          show={showMenu}
+          hide={() => setShowMenu(false)}
+          width={NAVBAR_WIDTH}
+        />
         <div
           className={clsx({
             "flex grow transition-all pl-0 sm:pl-[270px]": true,

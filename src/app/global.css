@@ -34,6 +34,7 @@
 @layer base {
   :root {
     --header-height: 4.375rem;
+    --mobile-menu-height: 3.75rem;
   }
 
   body {

@@ -1,19 +1,25 @@
 'use client';
 
 import clsx from "clsx";
-import { throttle } from "lodash";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
   {
-    text: 'Личная информация',
-    href: '/account/profile'
+    text: 'Аккаунт',
+    href: '/account'
   },
   {
     text: 'Заказы',
     href: '/account/orders'
+  },
+  {
+    text: 'Избранное',
+    href: '/account/favorites'
+  },
+  {
+    text: 'Сообщения',
+    href: '/account/chats'
   },
   {
     text: 'Продать товар',
@@ -23,22 +29,15 @@ const LINKS = [
     text: 'Статистика продаж',
     href: '/account/sales'
   },
-  {
-    text: 'Сообщения',
-    href: '/account/chats'
-  },
-  {
-    text: 'Избранное',
-    href: '/account/favorites'
-  }
 ];
 
 interface Props {
   show: boolean | null;
+  hide: () => void;
   width: number;
 }
 
-export default function Nav({ show, width }: Props) {
+export default function Nav({ show, hide, width }: Props) {
   const path = usePathname();
 
   return (
@@ -52,6 +51,7 @@ export default function Nav({ show, width }: Props) {
       style={{
         width
       }}
+      onClick={e => e.stopPropagation()}
     >
       {
         LINKS.map(link =>
@@ -61,6 +61,13 @@ export default function Nav({ show, width }: Props) {
             className={clsx({
               "transition-all py-3 text-nowrap p-2 rounded-md hover:bg-gray-100": true,
             })}
+            onClick={() => {
+              const isMobile = window.innerWidth < 640;
+
+              if (isMobile) {
+                hide();
+              }
+            }}
           >
             <span
               className={clsx({
