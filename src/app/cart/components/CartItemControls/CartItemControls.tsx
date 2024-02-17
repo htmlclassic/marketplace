@@ -33,6 +33,7 @@ export default function CartItemControls({
         <button
           onClick={handleDecreaseItemQuantity}
           disabled={quantity === 1}
+          title="Уменьшить количество"
           className="disabled:text-gray-300 text-2xl select-none px-4 transition-all duration-300"
         >-</button>
         <Input
@@ -43,6 +44,7 @@ export default function CartItemControls({
         <button
           onClick={handleIncreaseItemQuantity}
           disabled={quantity === maxQuantity}
+          title="Увеличить количество"
           className="disabled:text-gray-300 text-2xl select-none px-4 transition-all duration-300"
         >+</button>
       </div>

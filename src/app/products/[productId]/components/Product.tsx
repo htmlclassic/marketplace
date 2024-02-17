@@ -8,6 +8,7 @@ import ChatButton from './ChatButton';
 import AddToCartButton from '../../../../components/AddToCartButton';
 import ManageFavoriteButton from '../../../../components/ManageFavoriteButton';
 import { numberWithSpaces } from '@/src/utils';
+import clsx from 'clsx';
 
 interface ProductProps {
   product: Product;
@@ -62,7 +63,10 @@ export default function Product({
         <div className='sm:side-padding'>
           <Slider>{ imageList }</Slider>
         </div>
-        <div className="side-padding order-2 flex-col items-center gap-3 sm:flex-row flex">
+        <div className={clsx({
+          "side-padding order-2 flex-col items-center gap-3 sm:flex-row flex": true,
+          "max-w-[400px]": !uid
+        })}>
           <AddToCartButton
             product={product}
           />

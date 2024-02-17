@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@/src/components/Button';
-import LoadingSpinner from '@/src/components/LoadingSpinner';
 import { createClientSupabaseClient } from '@/supabase/utils_client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

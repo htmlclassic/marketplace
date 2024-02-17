@@ -32,6 +32,10 @@
 }
 
 @layer base {
+  :root {
+    --header-height: 4.375rem;
+  }
+
   body {
     overflow-y: scroll;
   }
@@ -44,7 +48,3 @@
     -moz-appearance: textfield !important;
   }
 }
-
-/*
-  .service_header_class is only needed for my React component to get computed height of an element
-*/

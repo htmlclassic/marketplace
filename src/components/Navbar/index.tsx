@@ -24,7 +24,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="service_header_class min-h-[70px] transform-gpu sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center bg-black bg-opacity-80 backdrop-blur-md text-white z-20">
+    <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center bg-black bg-opacity-80 backdrop-blur-md text-white z-20">
       <button
         ref={ref}
         onClick={() => setShowCatalog(!showCatalog)}

@@ -34,7 +34,7 @@ export default function Item({
         href={`/products/${cartItem.product.id}`}
         className="flex items-center gap-6"
       >
-        <div className="relative w-[150px] h-[150px]">
+        <div className="relative w-[150px] h-[150px] shrink-0">
           <Image
             src={cartItem.product.img_urls?.[0] || ''}
             alt={`Photo of a product with title: ${cartItem.product.title}`}

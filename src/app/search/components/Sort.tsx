@@ -24,26 +24,9 @@ interface Props {
 export default function Sort({ setShowFilters }: Props) {
   const [showSelector, setShowSelector] = useState(false);
   const [sortState, setSortState] = useState<OrderSearchParam>('price_asc');
-  const ref = useRef<HTMLDivElement | null>(null);
 
   const searchParams = useSearchParams();
   const router = useRouter();
-
-  // calculates div's top. top = headerHeight
-  useEffect(() => {
-    const headers = document.querySelectorAll('.service_header_class');
-
-    // I have two separate headers for mobile and desktop. Maybe merge them into one?
-    for (const header of Array.from(headers)) {
-      const headerHeight = window.getComputedStyle(header).height;
-      const isVisible = window.getComputedStyle(header).display !== 'none';
-
-      if (isVisible) {
-        ref.current!.style.top = headerHeight;
-        break;
-      }
-    }
-  }, []);
 
   useEffect(() => {
     const params = insertSearchParams(searchParams, { order: sortState });
@@ -53,8 +36,7 @@ export default function Sort({ setShowFilters }: Props) {
 
   return (
     <div
-      ref={ref}
-      className="bg-white sticky select-none mb-3 py-3"
+      className="bg-white select-none mb-3 py-3 sticky top-[var(--header-height)]"
     >
       <div className="relative flex justify-between gap-3">
         <div className="static sm:relative">

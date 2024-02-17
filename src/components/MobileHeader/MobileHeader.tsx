@@ -4,7 +4,7 @@ import SearchInput from "../SearchInput/SearchInput";
 export default function MobileHeader() {
   return (
     <div
-      className="service_header_class sticky top-0 left-0 z-10 gap-0 flex justify-between items-center w-full h-[70px] side-padding pr-[5px] bg-black bg-opacity-80 backdrop-blur-md text-white sm:hidden"
+      className="sticky top-0 left-0 z-10 gap-0 flex justify-between items-center w-full h-[var(--header-height)] side-padding pr-[5px] bg-black bg-opacity-80 backdrop-blur-md text-white sm:hidden"
     >
       <Link
         href="/"
