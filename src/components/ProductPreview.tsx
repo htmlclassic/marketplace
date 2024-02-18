@@ -37,7 +37,7 @@ export default function ProductPreview({ product }: ProductProps) {
                 transform: `translateX(${i * 100}%)`,
                 width: `${100 / arr.length}%`
               }}
-              className="absolute top-0 left-0 h-full z-20 flex justify-center items-end pb-3"
+              className="absolute top-0 left-0 h-full z-10 flex justify-center items-end pb-3"
               onMouseEnter={() => setImgIndex(i)}
               key={i}
             >

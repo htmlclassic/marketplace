@@ -92,7 +92,7 @@ export default function Product({
       </div>
       <div className="side-padding order-last flex flex-col gap-5">
         <h2 className="font-semibold text-xl">Описание</h2>
-        <div className="flex flex-col gap-3 max-w-6xl border-b pb-5 whitespace-pre">
+        <div className="flex flex-col gap-3 max-w-6xl border-b pb-5 whitespace-pre-wrap">
           {product.description}
         </div>
         { Reviews }
