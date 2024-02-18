@@ -1,71 +1,87 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import ProductPreview from "../components/ProductPreview";
 import { createClientSupabaseClient } from "@/supabase/utils_client";
-import { motion, useInView } from "framer-motion";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import LoadingSpinner from "../components/LoadingSpinner";
+import clsx from "clsx";
 
 interface Props {
   products: Product[];
   offsetStart: number;
 }
 
-export default function ProductList({ products: productsInitial, offsetStart: offsetStartInitial }: Props) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(ref);
-
+export default function ProductList({
+  products: productsInitial,
+  offsetStart: offsetStartInitial
+}: Props) {
   const [products, setProducts] = useState(productsInitial)
+  const { scrollYProgress } = useScroll()
   const [offsetStart, setOffsetStart] = useState(offsetStartInitial);
-  const COUNT = 25;
+  const [shouldLoad, setShouldLoadMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const COUNT = offsetStartInitial;
 
   let itemList: React.ReactNode = <p>No items on sale yet.</p>;
+
+  useMotionValueEvent(scrollYProgress, 'change', (scrollProgress) => {
+    if (shouldLoad && !loading && scrollProgress > 0.8) {
+      handleLoadMoreProducts();
+    }
+  })
 
   if (products.length) {
     const productsInStock = products.filter(pr => pr.quantity > 0);
 
-    itemList = productsInStock.map((product, index) =>
-      <motion.div
-        key={product.id}
-        initial={{
-          scale: index > offsetStartInitial - 1 ? 0 : 1
-        }}
-        animate={{
-          scale: 1
-        }}
-      >
+    itemList = productsInStock.map((product) =>
+      <div key={product.id}>
         <ProductPreview key={product.id} product={product} />
-      </motion.div>
+      </div>
     );
   }
 
   const handleLoadMoreProducts = async () => {
+    setLoading(true);
+
     const supabase = createClientSupabaseClient();
 
-    let { data: newProducts } = await supabase
+    let { data: nextProducts } = await supabase
       .from('product')
       .select()
-      .order('created_at', { ascending: true })
-      .range(offsetStart, offsetStart + COUNT);
+      .order('created_at', { ascending: false })
+      .range(offsetStart, offsetStart + COUNT - 1);
 
-    newProducts = newProducts ?? [];
+    nextProducts = nextProducts ?? [];
 
     setOffsetStart(offsetStart + COUNT + 1);
     setProducts([
       ...products,
-      ...newProducts
+      ...nextProducts
     ]);
-  };
+    setLoading(false);
 
-  useEffect(() => {
-    if (isInView) {
-      handleLoadMoreProducts();
+    if (nextProducts.length < COUNT) {
+      setShouldLoadMore(false);
     }
-  }, [isInView])
+  };
 
   return (
     <>
       {itemList}
-      <div ref={ref}></div>
+      <div className={clsx({
+        "my-10": true,
+        "hidden": !loading
+      })}></div>
+      <div
+        className={clsx({
+          "absolute bottom-5 left-1/2 -translate-x-1/2 w-8 h-8 text-sky-400": true,
+          "hidden": !loading,
+        })}
+        title="Ещё больше товаров сейчас загружается"
+      >
+        <LoadingSpinner />
+      </div>
     </>
   );
 }
