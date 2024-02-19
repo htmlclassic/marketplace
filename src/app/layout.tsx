@@ -4,7 +4,8 @@ import './global.css'
 import { createServerComponentSupabaseClient } from '../../supabase/utils_server';
 import { getAPI } from '../../supabase/api';
 
-import { Inter } from 'next/font/google';
+// import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
  
 import ClientWrapper from './ClientWrapper';
 import Navbar from '../components/Navbar';
@@ -24,9 +25,9 @@ export const metadata: Metadata = {
   title: 'Marketplace',
 }
 
-const inter = Inter({
+const inter = Roboto({
   subsets: ['latin', 'cyrillic'],
-  display: 'swap',
+  weight: ['400', '500', '700']
 });
 
 interface RootLayoutProps {
@@ -67,7 +68,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <ClientWrapper initialCart={initialCart} uid={uid}>
           <Navbar />
           <MobileHeader />
-          <main className="grow flex">
+          <main className="w-full grow flex max-w-[1400px] mx-auto">
             {children}
           </main>
           <MobileMenu />

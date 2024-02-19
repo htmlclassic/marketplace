@@ -18,7 +18,7 @@ export default function ProductPreview({ product }: ProductProps) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="group/parent overflow-hidden space-y-2"
+      className="relative group/parent overflow-hidden space-y-2 hover:z-10"
       onMouseLeave={() => setImgIndex(0)}
     >
       <div className="relative aspect-square group overflow-hidden rounded-lg">
@@ -28,7 +28,7 @@ export default function ProductPreview({ product }: ProductProps) {
           sizes='600px'
           alt="Product picture"
           placeholder={ImageShimmer(300, 300)}
-          className="object-cover transition-all duration-300 group-hover:scale-105"
+          className="object-cover"
         />
         {
           product.img_urls?.map((el, i, arr) =>
@@ -53,7 +53,7 @@ export default function ProductPreview({ product }: ProductProps) {
           )
         }
       </div>
-      <div className="line-clamp-1 font-bold transition group-hover/parent:text-sky-500">
+      <div className="line-clamp-1 font-bold text-lg transition group-hover/parent:text-sky-500">
         {numberWithSpaces(product.price)} ₽
       </div>
       <div className="line-clamp-2 break-words transition group-hover/parent:text-sky-500">{product.title}</div>
