@@ -41,7 +41,7 @@ export default function ManageFavoriteButton({
     >
       <button
         className={clsx({
-          "p-3 flex items-center justify-center": true,
+          "p-3 pl-0 flex items-center justify-center": true,
           "text-red-400": isFavorite,
           "text-transparent": !isFavorite
         })}

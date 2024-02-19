@@ -55,7 +55,7 @@ export default function Product({
       <h1 className="side-padding font-semibold text-xl max-w-6xl order-1 sm:mb-3 sm:order-none">{product.title}</h1>
       {
         uid &&
-          <div className="side-padding px-4">
+          <div className="side-padding">
             <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
           </div>
       }

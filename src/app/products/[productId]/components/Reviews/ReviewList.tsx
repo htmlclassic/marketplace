@@ -36,15 +36,7 @@ export default function ReviewList({
       className="flex flex-col"
     >
       <h2 className="font-semibold text-xl mb-7">Отзывы</h2>
-      {
-        canReview &&   
-          <CreateReview
-            productId={productId}
-            addOptimisticReview={addOptimisticReview}
-            currentUserName={currentUserName}
-          />
-      }
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-5">
         {
           reviews.length
             ?
@@ -53,6 +45,14 @@ export default function ReviewList({
               )
             :
               <div>Никто пока что не оценил этот товар.</div>
+        }
+        {
+        canReview &&   
+          <CreateReview
+            productId={productId}
+            addOptimisticReview={addOptimisticReview}
+            currentUserName={currentUserName}
+          />
         }
       </div>
     </motion.div>
