@@ -122,7 +122,7 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
         />
       </MuiButton>
       {
-        imgs?.length !== 0 &&
+        imgs && imgs.length !== 0 &&
           <p className="text-sm text-center mt-5">Нажмите на изображение, чтобы сделать его основным для вашего товара.</p>
       }
       <div className="flex flex-wrap justify-center gap-3">
@@ -131,9 +131,9 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
             <div
               onClick={() => setPrimaryImgName(img.name)}
               className={clsx({
-                "relative aspect-square w-[30%] border-4 rounded-lg overflow-hidden cursor-pointer": true,
-                "border-sky-400": primaryImgName === img.name,
-                "border-transparent": primaryImgName !== img.name
+                "relative aspect-square w-[30%] outline outline-3 outline-offset-4 rounded-lg overflow-hidden cursor-pointer transition-all duration-300": true,
+                "outline-sky-400": primaryImgName === img.name,
+                "outline-transparent": primaryImgName !== img.name
               })}
               title="Нажмите на изображение, чтобы сделать его основным."
               key={img.name}
