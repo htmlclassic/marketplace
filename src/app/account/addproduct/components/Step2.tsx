@@ -5,9 +5,10 @@ import { getAPI } from "@/supabase/api";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
-import Button from "@mui/material/Button";
+import MuiButton from "@mui/material/Button";
 
 import type { Form } from "../types";
+import Button from "@/src/components/Button";
 
 export interface Props {
   form: Form;
@@ -26,9 +27,12 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
 
   const [imgs, setImgs] = useState<({ name: string; src: string; })[] | null>(null);
   const [primaryImgName, setPrimaryImgName] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setSubmitting(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
     const images = formData.getAll('images');
@@ -98,12 +102,12 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
         "hidden": !show
       })}
     >
-      <Button
+      <MuiButton
         component="label"
         role={undefined}
         variant="contained"
         tabIndex={-1}
-        className="w-max mb-3 flex gap-3 self-center"
+        className="w-max flex gap-3 self-center"
       >
         <Icon /> Загрузить изображения
         <input
@@ -114,32 +118,54 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
           multiple
           name="images"
           className="[clip:rect(0_0_0_0)] [clipPath:inset(50%)] h-[1] w-[1] overflow-hidden absolute bottom-0 left-0 whitespace-nowrap"
+          disabled={submitting}
         />
-      </Button>
+      </MuiButton>
       {
-        imgs &&
-          <p className="text-sm">Можно выбрать основное изображение для вашего товара, просто нажав на него.</p>
+        imgs?.length !== 0 &&
+          <p className="text-sm text-center mt-5">Нажмите на изображение, чтобы сделать его основным для вашего товара.</p>
       }
-      <div className="flex flex-wrap gap-3">
-        {Array.from(imgs ?? []).map(img => <div
-          onClick={() => setPrimaryImgName(img.name)}
-          className={clsx({
-            "relative h-40 w-40 border-4 rounded-lg overflow-hidden cursor-pointer": true,
-            "border-sky-400": primaryImgName === img.name,
-            "border-transparent": primaryImgName !== img.name
-          })}
-          key={img.name}
-        >
-          <Image
-            src={img.src}
-            alt="alt"
-            fill
-            className="object-cover" />
-        </div>
+      <div className="flex flex-wrap justify-center gap-3">
+        {
+          Array.from(imgs ?? []).map(img =>
+            <div
+              onClick={() => setPrimaryImgName(img.name)}
+              className={clsx({
+                "relative aspect-square w-[30%] border-4 rounded-lg overflow-hidden cursor-pointer": true,
+                "border-sky-400": primaryImgName === img.name,
+                "border-transparent": primaryImgName !== img.name
+              })}
+              title="Нажмите на изображение, чтобы сделать его основным."
+              key={img.name}
+            >
+              <Image
+                src={img.src}
+                alt="alt"
+                fill
+                className="object-cover" />
+            </div>
         )}
       </div>
-      <button className="border w-full px-3 py-3 mt-3 self-center hover:border-sky-400 transition-all duration-300">Загрузить товар</button>
-      <button className="border w-full px-3 py-3 mt-3 self-center hover:border-sky-400 transition-all duration-300" type="button" onClick={goToPrevStep}>Назад</button>
+      <Button
+        className={clsx({
+          "bg-sky-400 mt-5": true,
+          "animate-pulse": submitting
+        })}
+        disabled={submitting}
+      >
+        {
+          submitting ? 'Загружаем ваш товар' : 'Загрузить товар'
+        }
+      </Button>
+      <Button
+        type="button"
+        onClick={goToPrevStep}
+        className={clsx({
+          "bg-slate-400": true,
+          "animate-pulse": submitting
+        })}
+        disabled={submitting}
+      >Назад</Button>
     </form>
   );
 }

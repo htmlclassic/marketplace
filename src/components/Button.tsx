@@ -7,10 +7,18 @@ interface Props {
   className?: string;
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 // add loading state
-export default function Button({ children, onClick, className = '' }: Props) {
+export default function Button({
+  children,
+  onClick,
+  type,
+  disabled,
+  className = ''
+}: Props) {
   const mergedClassName = clsx({
     'button': true,
     [className]: className
@@ -39,8 +47,15 @@ export default function Button({ children, onClick, className = '' }: Props) {
     <motion.button
       onClick={onClick}
       className={mergedClassName}
-      whileHover={[ 'scaleInner', 'scaleCircle' ]}
+      whileHover={disabled ? undefined : [ 'scaleInner', 'scaleCircle' ]}
+      type={type}
+      disabled={disabled}
     >
+      <div className={clsx({
+        "absolute w-full h-full z-[5] bg-black top-0 left-0 bg-opacity-20 rounded-[inherit] transition-all duration-300": true,
+        "opacity-0": !disabled,
+        "opacity-100": disabled
+      })}></div>
       <motion.div
         variants={scaleInner}
         className="bg-inherit rounded-[inherit] absolute top-0 left-0 w-full h-full z-[1] overflow-hidden"

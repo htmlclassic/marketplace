@@ -3,6 +3,7 @@ import type { Form } from "../types";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import clsx from "clsx";
+import Button from "@/src/components/Button";
 
 interface Props {
   form: Form;
@@ -112,7 +113,7 @@ export default function Step1({
         name="quantity"
         required
       />
-      <button className="border w-full px-3 py-3 mt-3 self-center hover:border-sky-400 transition-all duration-300">Далее</button>
+      <Button className="bg-sky-400">Далее</Button>
     </form>
   );
 }
