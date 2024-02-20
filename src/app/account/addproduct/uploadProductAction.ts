@@ -1,21 +1,21 @@
 'use server';
 
+import type { Form } from "./types";
 import { getAPI } from "@/supabase/api";
 import { createOtherSupabaseClient } from "@/supabase/utils_server";
 
-export async function addProduct(formData: FormData) {
+export default async function uploadProductAction(form: Form) {
   const supabase = createOtherSupabaseClient();
   const api = getAPI(supabase);
   const uid = await api.getCurrentUserId();
 
   if (!uid) throw new Error('Current user not authorized');
 
-  const title = String(formData.get('title'));
-  const description = String(formData.get('description'));
-  const category = String(formData.get('category'));
-  const price = Number(formData.get('price'));
-  const quantity = Number(formData.get('quantity'));
-  // const files = formData.getAll('files');
+  const title = form.title;
+  const description = form.description;
+  const category = form.category;
+  const price = Number(form.price);
+  const quantity = Number(form.quantity);
 
   const { data: product, error: addProductError } = await supabase
     .from('product')

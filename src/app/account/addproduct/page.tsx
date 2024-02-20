@@ -1,5 +1,5 @@
 import { createServerComponentSupabaseClient } from "@/supabase/utils_server";
-import AddProduct from "./AddProduct";
+import Form from "./components/Form";
 
 export default async function Page() {
   const supabase = createServerComponentSupabaseClient();
@@ -9,6 +9,6 @@ export default async function Page() {
     .select();
 
   return (
-    <AddProduct categories={categories!.map(catName => catName.name)}/>
+    <Form categories={categories!.map(catName => catName.name)}/>
   );
 }
