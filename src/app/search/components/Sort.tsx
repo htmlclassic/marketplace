@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Dispatch, SetStateAction } from "react";
 import { useSearchParams, useRouter, ReadonlyURLSearchParams } from "next/navigation";
 import { OrderSearchParam } from "../types";
-import { insertSearchParams } from "../utils_client";
+import { insertSearchParams } from "../utils";
 
 type DictionaryType = {
   [K in OrderSearchParam]: string;
@@ -17,26 +17,24 @@ const dict: DictionaryType = {
   'rating_desc': 'сначала с лучшей оценкой'
 };
 
-interface Props {
-  setShowFilters: Dispatch<SetStateAction<boolean | null>>;
-}
-
-export default function Sort({ setShowFilters }: Props) {
-  const [showSelector, setShowSelector] = useState(false);
-  const [sortState, setSortState] = useState<OrderSearchParam>('price_asc');
-
+export default function Sort() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const sortStateInitial = searchParams.get('order') as OrderSearchParam | null;
+
+  const [showSelector, setShowSelector] = useState(false);
+  const [sortState, setSortState] = useState<OrderSearchParam>(sortStateInitial || 'price_asc');
 
   useEffect(() => {
     const params = insertSearchParams(searchParams, { order: sortState });
 
-    router.push(`/search?${params}`);
+    router.replace(`/search?${params}`);
+    router.refresh();
   }, [sortState]);
 
   return (
     <div
-      className="bg-white select-none mb-3 py-3 sticky top-[var(--header-height)]"
+      className="bg-white select-none mb-3 py-3 sticky top-[calc(var(--menu-height)+var(--header-height))] sm:top-[var(--header-height)]"
     >
       <div className="relative flex justify-between gap-3">
         <div className="static sm:relative">
@@ -65,14 +63,6 @@ export default function Sort({ setShowFilters }: Props) {
                   sortState={sortState}
                 />
             }
-          </div>
-          <div className="lg:hidden">
-            <button
-              onClick={() => setShowFilters(prev => !prev)}
-              className="border px-2"
-            >
-              F
-            </button>
           </div>
       </div>
     </div>

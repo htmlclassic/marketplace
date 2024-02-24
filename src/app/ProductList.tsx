@@ -6,6 +6,7 @@ import { createClientSupabaseClient } from "@/supabase/utils_client";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import LoadingSpinner from "../components/LoadingSpinner";
 import clsx from "clsx";
+import { useLazyLoad } from "./hooks";
 
 interface Props {
   products: Product[];
@@ -17,19 +18,12 @@ export default function ProductList({
   offsetStart: offsetStartInitial
 }: Props) {
   const [products, setProducts] = useState(productsInitial)
-  const { scrollYProgress } = useScroll()
   const [offsetStart, setOffsetStart] = useState(offsetStartInitial);
   const [shouldLoad, setShouldLoadMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const COUNT = offsetStartInitial;
 
   let itemList: React.ReactNode = <p>No items on sale yet.</p>;
-
-  useMotionValueEvent(scrollYProgress, 'change', (scrollProgress) => {
-    if (shouldLoad && !loading && scrollProgress > 0.8) {
-      handleLoadMoreProducts();
-    }
-  })
 
   if (products.length) {
     const productsInStock = products.filter(pr => pr.quantity > 0);
@@ -42,6 +36,8 @@ export default function ProductList({
   }
 
   const handleLoadMoreProducts = async () => {
+    if (!shouldLoad || loading) return;
+
     setLoading(true);
 
     const supabase = createClientSupabaseClient();
@@ -59,12 +55,15 @@ export default function ProductList({
       ...products,
       ...nextProducts
     ]);
+
     setLoading(false);
 
     if (nextProducts.length < COUNT) {
       setShouldLoadMore(false);
     }
   };
+
+  useLazyLoad(handleLoadMoreProducts);
 
   return (
     <>
@@ -78,7 +77,7 @@ export default function ProductList({
           "absolute bottom-5 left-1/2 -translate-x-1/2 w-8 h-8 text-sky-400": true,
           "hidden": !loading,
         })}
-        title="Ещё больше товаров сейчас загружается"
+        title="Загружаем товары"
       >
         <LoadingSpinner />
       </div>

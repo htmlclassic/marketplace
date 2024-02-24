@@ -1,18 +1,22 @@
+import { createServerComponentSupabaseClient } from '@/supabase/utils_server';
 import PageClient from './PageClient';
-import { getProducts } from './utils_server';
-
-type Params = 'text' | 'order' | 'price_from' | 'price_to';
+import { SearchParams } from './types';
+import { loadProducts } from './utils';
 
 interface PageProps {
-  searchParams: { [Key in Params]: string | undefined };
+  searchParams: SearchParams;
 }
 
 export default async function Page({ searchParams }: PageProps) {  
-  const text = searchParams.text;
-  const priceFrom = searchParams.price_from;
-  const priceTo = searchParams.price_to;
+  const supabase = createServerComponentSupabaseClient();
+  const OFFSET = 19;
 
-  const products = await getProducts(text, priceFrom, priceTo);
+  const products = await loadProducts(supabase, searchParams, 0, OFFSET);
 
-  return <PageClient products={products} />
+  return (
+    <PageClient
+      products={products}
+      rangeFrom={OFFSET + 1}
+    />
+  );
 }

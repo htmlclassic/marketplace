@@ -1,28 +1,64 @@
 'use client';
 
-import { getProducts } from "./utils_server";
 import Filters from './components/Filters';
 import ProductList from './components/ProductList';
 import Sort from './components/Sort';
-import { useState } from "react";
-
-type ProductsWithRating = Awaited<ReturnType<typeof getProducts>>;
+import { useEffect, useState } from "react";
+import { throttle } from "lodash";
+import clsx from "clsx";
+import { ProductsT } from './types';
 
 interface Props {
-  products: ProductsWithRating;
+  products: ProductsT;
+  rangeFrom: number;
 }
 
-export default function PageClient({ products }: Props) {
+export default function PageClient({
+  products, 
+  rangeFrom,
+}: Props) {
   const [showFilters, setShowFilters] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const handleResize = throttle(() => {
+      if (!showFilters && window.innerWidth > 640) {
+        setShowFilters(true);
+      }
+    }, 500);
+
+    window.addEventListener('resize', handleResize);
+
+    if (window.innerWidth > 640) setShowFilters(true);
+    else setShowFilters(false);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div
-      className="grow mx-auto flex justify-center items-start max-w-[1600px]"
+      className="relative grow mx-auto flex flex-col max-w-[1600px] [--menu-height:2rem]"
     >
-      <Filters show={showFilters} />
-      <div className="p-3 pt-0">
-        <Sort setShowFilters={setShowFilters} />
-        <ProductList products={products} />
+      <div 
+        onClick={() => {
+          
+          setShowFilters(!showFilters);
+        }}
+        className="sm:hidden h-[--menu-height] sticky top-[var(--header-height)] bg-white z-10 cursor-pointer flex gap-3 items-center side-padding"
+      >
+        <span className={clsx({
+          "transition-all text-2xl": true,
+          "rotate-90": showFilters,
+          "rotate-0": !showFilters
+        })}>
+          ≡
+        </span><span>Меню</span>
+      </div>
+      <div className="flex">
+        <Filters show={showFilters} />
+        <div className="p-3 pt-0 w-full">
+          <Sort />
+          <ProductList products={products} rangeFrom={rangeFrom} />
+        </div>
       </div>
     </div>
   );
