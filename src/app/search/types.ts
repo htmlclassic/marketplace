@@ -9,18 +9,8 @@ export interface SearchParams {
   price_to?: string;
 }
 
-export type ProductsT = {
-  category: string;
-  created_at: string | null;
-  description: string;
-  id: string;
-  img_urls: string[] | null;
-  owner: string;
-  price: number;
-  quantity: number;
-  title: string;
-  avg_rating: number | null;
+export type ProductsWithRating = (Product & {
   review: {
       rating: number;
-  }[] | null;
-}[] | null;
+  }[];
+})[] | null;

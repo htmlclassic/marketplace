@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { ProductsT, SearchParams } from "./types";
+import { ProductsWithRating, SearchParams } from "./types";
 
 // 1) inserts search params into params string
 // 2) replaces old params if old params are present
@@ -43,28 +43,29 @@ export async function loadProducts(
 
   if (order === 'rating_desc') {
     const { data: products } = await supabase
-      .rpc('get_test', {
-        price_from: priceFrom, 
-        price_to: priceTo, 
-        search_text: text
-      })
-      .range(from, to);
+      .rpc('get_most_rated_products')
+      .textSearch('title', `${text}`)
+      .gte('price', priceFrom)
+      .lte('price', priceTo)
+      .range(from, to)
+      .order('created_at', { ascending: true }); // avoid showing the same products on lazy load
 
-    return products as ProductsT;
+    return products as ProductsWithRating;
   }
 
-  const priceOrder = order === 'price_asc' || false;
+  const ascendingPriceOrder = order === 'price_asc' || false;
 
   const { data: products } = await supabase
     .from('product')
     .select('*, review(rating)')
     .textSearch('title', `${text}`)
-    .gte('price', priceFrom || 0)
-    .lte('price', priceTo || 1000000000)
+    .gte('price', priceFrom)
+    .lte('price', priceTo)
     .range(from, to)
-    .order('price', { ascending: priceOrder })
+    .order('price', { ascending: ascendingPriceOrder })
+    .order('created_at', { ascending: true }) // avoid showing the same products on lazy load
 
-  return products as ProductsT;
+  return products as ProductsWithRating;
 };
 
 export type ProductsWithRatingType = Awaited<ReturnType<typeof loadProducts>>;

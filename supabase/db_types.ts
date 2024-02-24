@@ -490,11 +490,7 @@ export type Database = {
     }
     Functions: {
       get_most_rated_products: {
-        Args: {
-          search_text: string
-          price_from: number
-          price_to: number
-        }
+        Args: Record<PropertyKey, never>
         Returns: {
           id: string
           title: string
@@ -505,27 +501,6 @@ export type Database = {
           owner: string
           created_at: string
           img_urls: string[]
-          avg_rating: number
-          reviews: Json[]
-        }[]
-      }
-      get_test: {
-        Args: {
-          search_text: string
-          price_from: number
-          price_to: number
-        }
-        Returns: {
-          id: string
-          title: string
-          description: string
-          price: number
-          quantity: number
-          category: string
-          owner: string
-          created_at: string
-          img_urls: string[]
-          avg_rating: number
           review: Json[]
         }[]
       }

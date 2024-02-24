@@ -10,19 +10,25 @@ interface Props {
 }
 
 export default function Filters({ show }: Props) {
-  const [priceFrom, setPriceFrom] = useState(0);
-  const [priceTo, setPriceTo] = useState(1_000_000_000);
+  const DEFAULT_FROM = 0;
+  const DEFAULT_TO = 1_000_000_000;
+
+  const [priceFrom, setPriceFrom] = useState(DEFAULT_FROM);
+  const [priceTo, setPriceTo] = useState(DEFAULT_TO);
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const newParams = insertSearchParams(searchParams, {
-      price_from: priceFrom,
-      price_to: priceTo
-    });
-
-    router.push(`/search?${newParams}`);
+    if (priceFrom !== DEFAULT_FROM && priceTo !== DEFAULT_TO) {
+      const newParams = insertSearchParams(searchParams, {
+        price_from: priceFrom,
+        price_to: priceTo
+      });
+  
+      router.replace(`/search?${newParams}`);
+      router.refresh();
+    }
   }, [priceFrom, priceTo]);
 
   return (

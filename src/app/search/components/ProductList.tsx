@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { OrderSearchParam, ProductsT, SearchParams } from "../types";
+import { OrderSearchParam, ProductsWithRating, SearchParams } from "../types";
 import Rating from "@/src/components/Rating";
 import AddToCartButton from "@/src/components/AddToCartButton";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { loadProducts } from "../utils";
 import { useLazyLoad } from "../../hooks";
 
 interface Props {
-  products: ProductsT;
+  products: ProductsWithRating;
   rangeFrom: number;
 }
 
@@ -30,7 +30,7 @@ export default function ProductList({
   };
 
   const [products, setProducts] = useState(productsInitial || []);
-  const [rangeFrom, setOffset] = useState(rangefromInitial);
+  const [rangeFrom, setRangeFrom] = useState(rangefromInitial);
   const [shouldLoad, setShouldLoad] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -50,17 +50,19 @@ export default function ProductList({
       if (nextProducts.length < ITEMS_TO_FETCH_COUNT) setShouldLoad(false);
     }
     
-    setOffset(rangeTo + 1);
+    setRangeFrom(rangeTo + 1);
     setLoading(false);
   };
 
-  // useLazyLoad(loadMoreProducts);
+  useLazyLoad(loadMoreProducts);
 
   useEffect(() => {
     if (products !== productsInitial && productsInitial) {
       setProducts(productsInitial);
-      setOffset(rangefromInitial);
+      setRangeFrom(rangefromInitial);
       setShouldLoad(true);
+
+      console.log(123);
     }
   }, [productsInitial]);
 
@@ -73,24 +75,24 @@ export default function ProductList({
   return(
     <div className="flex flex-col gap-7">
       { 
-        products.map(pr => {
-          const reviews = pr.review ?? [];
+        products.map(product => {
+          const reviews = product.review ?? [];
 
-          const avgRating = pr.avg_rating ??
+          const avgRating =
             (( reviews.reduce((acc, review) => review.rating + acc, 0) / reviews.length ) || 0)
 
           return (
             <div 
               className="flex flex-col sm:flex-row gap-5 justify-between"
-              key={pr.id}
+              key={product.id}
             >
               <div className="flex gap-5 flex-grow">
                 <Link
-                  href={`/products/${pr.id}`}
+                  href={`/products/${product.id}`}
                   className="shrink-0"
                 >
                   <Image
-                    src={pr.img_urls?.[0] || ''}
+                    src={product.img_urls?.[0] || ''}
                     alt=""
                     width={130}
                     height={130}
@@ -100,7 +102,7 @@ export default function ProductList({
                 <div className="flex flex-col py-2 gap-3 justify-between flex-grow">
                   <div className="line-clamp-3 text-sm sm:text-base"
                   >
-                    {pr.title}</div>
+                    {product.title}</div>
                   <div className="flex items-center gap-3">
                     <Rating value={avgRating} readonly />
                     <span className="text-sm">{reviews.length}</span>
@@ -108,9 +110,9 @@ export default function ProductList({
                 </div>
               </div>
               <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between py-2 gap-3 shrink-0 sm:w-[180px]">
-                <div className="flex-shrink-0">{pr.price} ₽</div>
+                <div className="flex-shrink-0">{product.price} ₽</div>
                 <AddToCartButton
-                  product={pr}
+                  product={product}
                   className="text-sm py-2 px-4 max-w-[180px]"
                 />
               </div>

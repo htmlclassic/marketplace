@@ -26,10 +26,12 @@ export default function Sort() {
   const [sortState, setSortState] = useState<OrderSearchParam>(sortStateInitial || 'price_asc');
 
   useEffect(() => {
-    const params = insertSearchParams(searchParams, { order: sortState });
+    if (sortState !== sortStateInitial) {
+      const params = insertSearchParams(searchParams, { order: sortState });
 
-    router.replace(`/search?${params}`);
-    router.refresh();
+      router.replace(`/search?${params}`);
+      router.refresh();
+    }
   }, [sortState]);
 
   return (
