@@ -504,6 +504,21 @@ export type Database = {
           review: Json[]
         }[]
       }
+      get_products_with_avg_rating: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          title: string
+          description: string
+          price: number
+          quantity: number
+          category: string
+          owner: string
+          created_at: string
+          img_urls: string[]
+          avg_rating: number
+        }[]
+      }
       get_user_name: {
         Args: {
           userid: string

@@ -6,10 +6,10 @@ import Sort from './components/Sort';
 import { useEffect, useState } from "react";
 import { throttle } from "lodash";
 import clsx from "clsx";
-import { ProductsWithRating } from './types';
+import { ProductsWithAvgRating } from './types';
 
 interface Props {
-  products: ProductsWithRating;
+  products: ProductsWithAvgRating;
   rangeFrom: number;
 }
 

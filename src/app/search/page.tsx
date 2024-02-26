@@ -1,17 +1,22 @@
-import { Suspense } from 'react';
+import { createServerComponentSupabaseClient } from '@/supabase/utils_server';
 import { SearchParams } from './types';
-import Fetch from './Fetch';
+import { loadProducts } from './utils';
+import PageClient from './PageClient';
 
 interface PageProps {
   searchParams: SearchParams;
 }
 
 export default async function Page({ searchParams }: PageProps) {  
-  const key = Object.entries(searchParams).join('');
+  const supabase = createServerComponentSupabaseClient();
+  const OFFSET = 19;
+
+  const products = await loadProducts(supabase, searchParams, 0, OFFSET);
   
   return (
-    <Suspense fallback={<p>...Loading</p>} key={key}>
-      <Fetch searchParams={searchParams} />
-    </Suspense>
+    <PageClient
+      products={products}
+      rangeFrom={OFFSET + 1}
+    />
   );
 }

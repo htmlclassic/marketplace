@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { Dispatch, SetStateAction } from "react";
-import { useSearchParams, useRouter, ReadonlyURLSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { OrderSearchParam } from "../types";
 import { insertSearchParams } from "../utils";
 
@@ -30,7 +30,6 @@ export default function Sort() {
       const params = insertSearchParams(searchParams, { order: sortState });
 
       router.replace(`/search?${params}`);
-      router.refresh();
     }
   }, [sortState]);
 

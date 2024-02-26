@@ -1,6 +1,6 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { QueryData, SupabaseClient } from "@supabase/supabase-js";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { ProductsWithRating, SearchParams } from "./types";
+import { SearchParams } from "./types";
 
 // 1) inserts search params into params string
 // 2) replaces old params if old params are present
@@ -28,8 +28,6 @@ export function insertSearchParams(currentParams: ReadonlyURLSearchParams, param
   return newParams;
 }
 
-// idk how to order by review.rating
-// im stuck here if i wanna sort by most rated
 export async function loadProducts(
   supabase: SupabaseClient<Database>,
   searchParams: SearchParams,
@@ -41,31 +39,39 @@ export async function loadProducts(
   const priceFrom = Number(searchParams.price_from) || 0;
   const priceTo = Number(searchParams.price_to) || 1_000_000_000;
 
-  if (order === 'rating_desc') {
-    const { data: products } = await supabase
-      .rpc('get_most_rated_products')
-      .textSearch('title', `${text}`)
-      .gte('price', priceFrom)
-      .lte('price', priceTo)
-      .range(from, to)
-      .order('created_at', { ascending: true }); // avoid showing the same products on lazy load
+  const ascendingPriceOrder = order === 'price_asc' || false;
+  let orderColumn = 'price';
 
-    return products as ProductsWithRating;
+  interface OrderOptions {
+    ascending: boolean;
+    nullsFirst?: boolean;
+  }
+  let orderOptions: OrderOptions = { ascending: ascendingPriceOrder };
+
+  if (order === 'rating_desc') {
+    orderColumn = 'avg_rating';
+    orderOptions = { ascending: false, nullsFirst: false };
   }
 
-  const ascendingPriceOrder = order === 'price_asc' || false;
-
-  const { data: products } = await supabase
-    .from('product')
-    .select('*, review(rating)')
+  const query = supabase
+    .rpc('get_products_with_avg_rating')
     .textSearch('title', `${text}`)
     .gte('price', priceFrom)
     .lte('price', priceTo)
     .range(from, to)
-    .order('price', { ascending: ascendingPriceOrder })
-    .order('created_at', { ascending: true }) // avoid showing the same products on lazy load
+    .order(orderColumn, orderOptions)
+    .order('created_at', { ascending: true }); // avoid showing the same products on lazy load
+  
+  const { data: products } = await query;
+  
+  // supabase gen ts types setting avg_rating to number. but it's actually number | null
+  // I change this type manually here
+  type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+  type T = QueryData<typeof query>
+  type ProductsWithAvgRating =
+    (Omit<ArrayElement<T>, 'avg_rating'> & { avg_rating: number | null })[] | null
 
-  return products as ProductsWithRating;
+  return products as ProductsWithAvgRating;
 };
 
-export type ProductsWithRatingType = Awaited<ReturnType<typeof loadProducts>>;
+export type ProductsWithAvgRating = Awaited<ReturnType<typeof loadProducts>>;

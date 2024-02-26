@@ -27,7 +27,6 @@ export default function Filters({ show }: Props) {
       });
   
       router.replace(`/search?${newParams}`);
-      router.refresh();
     }
   }, [priceFrom, priceTo]);
 
