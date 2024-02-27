@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { Dispatch, SetStateAction } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, ReadonlyURLSearchParams } from "next/navigation";
 import { OrderSearchParam } from "../types";
 import { insertSearchParams } from "../utils";
 
@@ -19,19 +19,8 @@ const dict: DictionaryType = {
 
 export default function Sort() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const sortStateInitial = searchParams.get('order') as OrderSearchParam | null;
-
+  const sortValue = searchParams.get('order') as OrderSearchParam | null || 'price_asc';
   const [showSelector, setShowSelector] = useState(false);
-  const [sortState, setSortState] = useState<OrderSearchParam>(sortStateInitial || 'price_asc');
-
-  useEffect(() => {
-    if (sortState !== sortStateInitial) {
-      const params = insertSearchParams(searchParams, { order: sortState });
-
-      router.replace(`/search?${params}`);
-    }
-  }, [sortState]);
 
   return (
     <div
@@ -44,10 +33,13 @@ export default function Sort() {
             >
               Сортировка:</span>
             <button
-              onClick={() => setShowSelector(!showSelector)}
+              onClick={e => {
+                e.stopPropagation();
+                setShowSelector(!showSelector);
+              }}
               className="text-sm text-blue-900 underline-offset-2 hover:underline"
             >
-              {dict[sortState]}
+              {dict[sortValue]}
               <span 
                 className={clsx({
                   "ml-1 inline-block transition-all": true,
@@ -59,9 +51,9 @@ export default function Sort() {
             {
               showSelector &&
                 <Selector
-                  setSortState={setSortState}
                   setShowSelector={setShowSelector}
-                  sortState={sortState}
+                  sortValue={sortValue}
+                  searchParams={searchParams}
                 />
             }
           </div>
@@ -71,46 +63,58 @@ export default function Sort() {
 }
 
 interface SelectorProps {
-  setSortState: Dispatch<SetStateAction<OrderSearchParam>>;
   setShowSelector: Dispatch<SetStateAction<boolean>>;
-  sortState: OrderSearchParam;
+  sortValue: OrderSearchParam;
+  searchParams: ReadonlyURLSearchParams;
 }
 
-function Selector({ setSortState, setShowSelector, sortState }: SelectorProps) {
+function Selector({ setShowSelector, sortValue, searchParams }: SelectorProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleCloseSelector = () => {
+      setShowSelector(false);
+    };
+
+    window.addEventListener('click', handleCloseSelector);
+
+    return () => window.removeEventListener('click', handleCloseSelector);
+  }, []);
+
   return (
     <div className="flex flex-col overflow-hidden min-w-72 bg-white border rounded-lg absolute left-1/2 bottom-[-10px] -translate-x-1/2 translate-y-full">
         <label
           onClick={() => {
-            setShowSelector(false);
-            setSortState('price_asc');
+            const params = insertSearchParams(searchParams, { order: 'price_asc' });
+            router.replace(`/search?${params}`);
           }}
           className="cursor-pointer p-2 flex items-center gap-3 transition-all hover:bg-sky-100"
         >
-          <input type="radio" name="sort_option" defaultChecked={sortState === 'price_asc'} />
+          <input type="radio" name="sort_option" defaultChecked={sortValue === 'price_asc'} />
           <span>
             { capitalizeFirstLetter(dict.price_asc) }
           </span>
         </label>
         <label
           onClick={() => {
-            setShowSelector(false);
-            setSortState('price_desc');
+            const params = insertSearchParams(searchParams, { order: 'price_desc' });
+            router.replace(`/search?${params}`);
           }}
           className="cursor-pointer p-2 flex items-center gap-3 transition-all hover:bg-sky-100"
         >
-          <input type="radio" name="sort_option" defaultChecked={sortState === 'price_desc'} />
+          <input type="radio" name="sort_option" defaultChecked={sortValue === 'price_desc'} />
           <span>
             { capitalizeFirstLetter(dict.price_desc) }
           </span>
         </label>
         <label
           onClick={() => {
-            setShowSelector(false);
-            setSortState('rating_desc');
+            const params = insertSearchParams(searchParams, { order: 'rating_desc' });
+            router.replace(`/search?${params}`);
           }}
           className="cursor-pointer p-2 flex items-center gap-3 transition-all hover:bg-sky-100"
         >
-          <input type="radio" name="sort_option" defaultChecked={sortState === 'rating_desc'} />
+          <input type="radio" name="sort_option" defaultChecked={sortValue === 'rating_desc'} />
           <span>
             { capitalizeFirstLetter(dict.rating_desc) }
           </span>

@@ -1,10 +1,16 @@
 import { QueryData, SupabaseClient } from "@supabase/supabase-js";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { SearchParams } from "./types";
+import { OrderSearchParam, SearchParams } from "./types";
+
+interface ParamsToInsert {
+  order?: OrderSearchParam;
+  price_from?: number;
+  price_to?: number;
+}
 
 // 1) inserts search params into params string
 // 2) replaces old params if old params are present
-export function insertSearchParams(currentParams: ReadonlyURLSearchParams, paramToInsert: Object) {
+export function insertSearchParams(currentParams: ReadonlyURLSearchParams, paramToInsert: ParamsToInsert) {
   let newParams = '';
 
   const entries = Object.entries(paramToInsert);
@@ -64,12 +70,12 @@ export async function loadProducts(
   
   const { data: products } = await query;
   
-  // supabase gen ts types setting avg_rating to number. but it's actually number | null
+  // Supabase gen ts types setting avg_rating to number. but it's actually number | null
   // I change this type manually here
   type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
-  type T = QueryData<typeof query>
+  type T = QueryData<typeof query>;
   type ProductsWithAvgRating =
-    (Omit<ArrayElement<T>, 'avg_rating'> & { avg_rating: number | null })[] | null
+    (Omit<ArrayElement<T>, 'avg_rating'> & { avg_rating: number | null })[] | null;
 
   return products as ProductsWithAvgRating;
 };

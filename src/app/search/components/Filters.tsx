@@ -10,25 +10,14 @@ interface Props {
 }
 
 export default function Filters({ show }: Props) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
   const DEFAULT_FROM = 0;
   const DEFAULT_TO = 1_000_000_000;
 
-  const [priceFrom, setPriceFrom] = useState(DEFAULT_FROM);
-  const [priceTo, setPriceTo] = useState(DEFAULT_TO);
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    if (priceFrom !== DEFAULT_FROM && priceTo !== DEFAULT_TO) {
-      const newParams = insertSearchParams(searchParams, {
-        price_from: priceFrom,
-        price_to: priceTo
-      });
-  
-      router.replace(`/search?${newParams}`);
-    }
-  }, [priceFrom, priceTo]);
+  const priceFrom = Number(searchParams.get('price_from')) || DEFAULT_FROM;
+  const priceTo = Number(searchParams.get('price_to')) || DEFAULT_TO;
 
   return (
     <div className={clsx({
@@ -47,14 +36,20 @@ export default function Filters({ show }: Props) {
             <div className="mb-2 text-sm font-semibold">Цена</div>
             <div className="flex gap-3">
               <input
-                onBlur={e => setPriceFrom(+e.target.value)}
+                onBlur={e => {
+                  const params = insertSearchParams(searchParams, { price_from: +e.target.value });
+                  router.replace(`/search?${params}`);
+                }}
                 defaultValue={priceFrom}
                 className="w-full border rounded p-1" 
                 type="number" 
                 placeholder="от"
               />
               <input
-                onBlur={e => setPriceTo(+e.target.value)}
+                onBlur={e => {
+                  const params = insertSearchParams(searchParams, { price_to: +e.target.value });
+                  router.replace(`/search?${params}`);
+                }}
                 defaultValue={priceTo}
                 className="w-full border rounded p-1" 
                 type="number" 

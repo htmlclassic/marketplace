@@ -9,14 +9,14 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {  
   const supabase = createServerComponentSupabaseClient();
-  const OFFSET = 19;
+  const FETCH_COUNT = 20;
 
-  const products = await loadProducts(supabase, searchParams, 0, OFFSET);
+  const products = await loadProducts(supabase, searchParams, 0, FETCH_COUNT - 1);
   
   return (
     <PageClient
       products={products}
-      rangeFrom={OFFSET + 1}
+      rangeFrom={FETCH_COUNT}
     />
   );
 }
