@@ -37,7 +37,14 @@ export default function Filters({ show }: Props) {
             <div className="flex gap-3">
               <input
                 onBlur={e => {
-                  const params = insertSearchParams(searchParams, { price_from: +e.target.value });
+                  let value = +e.target.value;
+
+                  if (value < 0) {
+                    value = DEFAULT_FROM;
+                    e.target.value = value.toString();
+                  }
+
+                  const params = insertSearchParams(searchParams, { price_from: value });
                   router.replace(`/search?${params}`);
                 }}
                 defaultValue={priceFrom}
@@ -47,7 +54,14 @@ export default function Filters({ show }: Props) {
               />
               <input
                 onBlur={e => {
-                  const params = insertSearchParams(searchParams, { price_to: +e.target.value });
+                  let value = +e.target.value;
+
+                  if (value <= 0) {
+                    value = DEFAULT_TO;
+                    e.target.value = value.toString();
+                  }
+
+                  const params = insertSearchParams(searchParams, { price_to: value });
                   router.replace(`/search?${params}`);
                 }}
                 defaultValue={priceTo}

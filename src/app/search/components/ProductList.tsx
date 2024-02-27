@@ -37,7 +37,7 @@ export default function ProductList({
   const [firstBatchLoading, setFirstBatchLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const loadMoreProducts = async () => {
+  const handleLoadProducts = async () => {
     if (!shouldLoad || loadingMore) return;
 
     setLoadingMore(true);
@@ -57,7 +57,7 @@ export default function ProductList({
     setLoadingMore(false);
   };
 
-  useLazyLoad(loadMoreProducts);
+  useLazyLoad(handleLoadProducts);
 
   useEffect(() => {
     if (initialSearchParams.current === searchParams) return;
@@ -103,14 +103,13 @@ export default function ProductList({
             <div className="flex gap-5 flex-grow">
               <Link
                 href={`/products/${product.id}`}
-                className="shrink-0"
+                className="relative shrink-0 w-[130px] h-[130px]"
               >
                 <Image
                   src={product.img_urls?.[0] || ''}
                   alt=""
-                  width={130}
-                  height={130}
-                  className="rounded-lg"
+                  fill
+                  className="rounded-lg object-cover"
                 />
               </Link>
               <div className="flex flex-col py-2 gap-3 justify-between flex-grow">
