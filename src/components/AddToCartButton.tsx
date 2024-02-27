@@ -49,14 +49,14 @@ export default function AddToCartButton({
             <div className="w-full flex items-center justify-center gap-5">
               <span>В корзине</span>
               <span
-                onClick={e => {
+                onClick={ e => {
                   e.stopPropagation();
 
                   cartContext.removeItem(product.id);
                   setInCart(false);
                 }}
                 title="Удалить из корзины"
-                className="h-full transition-all hover:bg-opacity-20 hover:bg-white scale-[1.2]"
+                className="h-full transition-all hover:bg-opacity-20 hover:bg-white scale-[1.2] border border-transparent hover:border-white"
               ><TrashIcon /></span>
             </div>
           :

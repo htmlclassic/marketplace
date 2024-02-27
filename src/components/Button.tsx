@@ -70,7 +70,7 @@ export default function Button({
           className="w-0 aspect-square bg-inherit after:block after:rounded-[inherit] after:w-full after:h-full after:bg-black after:bg-opacity-5 absolute z-[2] rounded-full top-1/2 left-1/2"
         ></motion.div>
       </motion.div>
-      <span className="relative z-[3]">{ children }</span>
+      <span className="relative z-[6]">{ children }</span>
     </motion.button>
   );
 }
