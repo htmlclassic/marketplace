@@ -103,13 +103,13 @@ export default function ProductList({
             <div className="flex gap-5 flex-grow">
               <Link
                 href={`/products/${product.id}`}
-                className="relative shrink-0 w-[130px] h-[130px]"
+                className="relative shrink-0 w-[130px] h-[130px] -z-10"
               >
                 <Image
                   src={product.img_urls?.[0] || ''}
                   alt=""
                   fill
-                  className="rounded-lg object-cover -z-10"
+                  className="rounded-lg object-cover"
                 />
               </Link>
               <div className="flex flex-col py-2 gap-3 justify-between flex-grow">
