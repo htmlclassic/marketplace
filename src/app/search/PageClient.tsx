@@ -39,7 +39,7 @@ export default function PageClient({
       className="relative grow mx-auto flex flex-col max-w-[1600px] [--menu-height:2rem]"
     >
       <div 
-        onClick={() => {/*setShowFilters(!showFilters)*/}}
+        onClick={() => setShowFilters(!showFilters)}
         className="sm:hidden h-[--menu-height] sticky top-[var(--header-height)] bg-white z-10 cursor-pointer flex gap-3 items-center side-padding"
       >
         <span className={clsx({
@@ -50,9 +50,9 @@ export default function PageClient({
           ≡
         </span><span>Меню</span>
       </div>
-      <div className="flex">
+      <div className="flex p-2">
         <Filters show={showFilters} />
-        <div className="p-3 pt-0 w-full">
+        <div className="pt-0 w-full">
           <Sort />
           <ProductList products={products} rangeFrom={rangeFrom} />
         </div>

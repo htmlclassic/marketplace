@@ -109,7 +109,7 @@ export default function ProductList({
                   src={product.img_urls?.[0] || ''}
                   alt=""
                   fill
-                  className="rounded-lg object-cover"
+                  className="rounded-lg object-cover -z-10"
                 />
               </Link>
               <div className="flex flex-col py-2 gap-3 justify-between flex-grow">
