@@ -11,6 +11,7 @@ import { createClientSupabaseClient } from "@/supabase/utils_client";
 import { loadProducts } from "../utils";
 import { useLazyLoad } from "../../hooks";
 import LoadingSpinner from "@/src/components/LoadingSpinner";
+import MainLoadingSpinner from "@/src/components/MainLoadingSpinner";
 
 interface Props {
   products: ProductsWithAvgRating;
@@ -85,9 +86,7 @@ export default function ProductList({
   if (firstBatchLoading) {
     return (
       <div className="h-full flex justify-center items-center">
-        <div className="w-10 h-10 text-sky-400">
-          <LoadingSpinner />
-        </div>
+        <MainLoadingSpinner />
       </div>
     );
   }
