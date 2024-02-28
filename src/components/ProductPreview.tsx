@@ -21,15 +21,25 @@ export default function ProductPreview({ product }: ProductProps) {
       className="relative group/parent overflow-hidden space-y-2"
       onMouseLeave={() => setImgIndex(0)}
     >
-      <div className="relative aspect-square group overflow-hidden rounded-lg">
-        <Image
-          src={product.img_urls ? product.img_urls[imgIndex] : ImgPlaceholder}
-          fill
-          sizes='600px'
-          alt="Product picture"
-          placeholder={ImageShimmer(300, 300)}
-          className="object-cover"
-        />
+      <div
+        className="relative aspect-square group overflow-hidden rounded-lg"
+      >
+        {
+          product.img_urls?.map((url, i) =>
+            <Image
+              src={url}
+              fill
+              sizes='600px'
+              alt="Product picture"
+              placeholder={ImageShimmer(300, 300)}
+              className={clsx({
+                "object-cover": true,
+                "hidden": imgIndex !== i
+              })}
+              key={url}
+            />
+          )
+        }
         {
           product.img_urls?.map((el, i, arr) =>
             <div
