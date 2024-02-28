@@ -5,9 +5,6 @@ import Nav from './components/Nav';
 import clsx from 'clsx';
 import { throttle } from 'lodash';
 
-// if you change this value, you have to change tailwind class manually
-const NAVBAR_WIDTH = 270; // px
-
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
   const [showMenu, setShowMenu] = useState<boolean | null>(null);
 
@@ -58,16 +55,15 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
           </span><span>Меню</span>
         </button>
       </div>
-      <div className="flex gap-3 h-full">
+      <div className="flex gap-3 h-full [--nav-width:230px]">
         <Nav
           show={showMenu}
           hide={() => setShowMenu(false)}
-          width={NAVBAR_WIDTH}
         />
         <div
           className={clsx({
-            "flex grow transition-all pl-0 sm:pl-[270px]": true,
-            "pl-[270px]": showMenu === true,
+            "flex grow transition-all pl-0 sm:pl-[--nav-width]": true,
+            "pl-[--nav-width]": showMenu === true,
             "pl-0": showMenu === false
           })}
         >

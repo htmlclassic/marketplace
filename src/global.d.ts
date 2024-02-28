@@ -1,9 +1,11 @@
 import { Database as DB } from "@/supabase/db_types";
 
-type OrderBase = Database['public']['Tables']['order']['Row'];
-
 declare global {
   type Database = DB;
+
+  type OrderDetails = Database['public']['Tables']['order']['Row'];
+  type PaymentDetails = Database['public']['Tables']['order_payment_details']['Row'];
+
   type Product = Database['public']['Tables']['product']['Row'];
   type RawProfile = Database['public']['Tables']['profile']['Row'];
   type Chat = Database['public']['Tables']['chat']['Row'];
@@ -21,16 +23,6 @@ declare global {
     quantity: number;
   }
 
-  interface Order {
-    id: number;
-    createdAt: string;
-    deliveryDate: string;
-    address: string;
-    receiver: string;
-    status: 'seller' | 'courier' | 'done';
-    items: OrderItem[];
-  }
-
   interface SellerStatistics {
     product: Product;
     soldCount: number;
@@ -38,4 +30,6 @@ declare global {
   }
 
   type SearchFilter = 'price_asc' | 'price_desc' | 'rating_desc';
+
+  type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 }

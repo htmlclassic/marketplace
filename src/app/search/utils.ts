@@ -72,7 +72,6 @@ export async function loadProducts(
   
   // Supabase gen ts types setting avg_rating to number. but it's actually number | null
   // I change this type manually here
-  type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
   type T = QueryData<typeof query>;
   type ProductsWithAvgRating =
     (Omit<ArrayElement<T>, 'avg_rating'> & { avg_rating: number | null })[] | null;

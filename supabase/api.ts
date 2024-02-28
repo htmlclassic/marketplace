@@ -217,73 +217,42 @@ export function getAPI(supabase: SupabaseClient<Database>) {
           .eq('id', uid);
     },
 
-    async getOrders() {
-      const uid = await this.getCurrentUserId();
-
-      if (uid) {
-        let ordersResult: Order[] = [];
-
-        // get name of a receiver
-        const { first_name, last_name } = (await this.getCurrentUserProfileData())!;
-        let receiver = first_name + ' ' + last_name;
-
-        const {error: fetchOrdersError, data: orders } = await supabase
-          .from('order_details')
-          .select()
-          .eq('user_id', uid)
-          .order('created_at', { ascending: false });
-
-        if (fetchOrdersError) throw new Error('Couldnt fetch orders: ' + fetchOrdersError.message);
-        if (!orders.length) return null;
-
-        const { error: fetchOrderItemsError, data: orderItems } = await supabase
-          .from('order_items')
-          .select()
-          .filter('order_id', 'in', `(${orders.map(order => order.id).join()})`);
-
-        if (fetchOrderItemsError) throw new Error('Couldnt fetch orders: ' + fetchOrderItemsError.message);
-
-        const productIds = orderItems.map(orderItem => orderItem.product_id);
-        const products = (await this.getProducts(productIds));
-
-        if (!products) throw new Error('Coudnt fetch products');
-
-        for (const order of orders) {
-          const filteredOrderItems = orderItems.filter(orderItem => orderItem.order_id === order.id);
-
-          const items: OrderItem[] = filteredOrderItems.map(orderItem => {
-            const product = products.find(pr => pr.id === orderItem.product_id)!;
-
-            return {
-              price: orderItem.price,
-              quantity: orderItem.quantity,
-              product
-            };
-          });
-
-          // set fake delivery status
-          let status: 'seller' | 'courier' | 'done';
-          const dateDiff = dayjs(order.delivery_date).diff(dayjs(), 'day', true);
-
-          if (dateDiff <= 0) status = 'done';
-          else if (dateDiff < 2) status = 'courier';
-          else status = 'seller';
-
-          ordersResult.push({
-            id: order.id,
-            deliveryDate: order.delivery_date,
-            address: order.address,
-            createdAt: order.created_at,
-            status,
-            receiver,
-            items
-          });
-        }
-
-        return ordersResult.length ? ordersResult : null;
-      }
-
-      return null;
+    async getOrders(from: number, to: number) {
+      const { data: orders } = await supabase
+        .from('order')
+        .select
+          (`id,
+            delivery_date,
+            address,
+            created_at,
+            phone_number,
+            email,
+            receiver_name,
+      
+            order_items(
+              id, 
+              quantity, 
+              price, 
+              product(
+                id,
+                title,
+                description,
+                category,
+                img_urls
+              )
+            ),
+      
+            order_payment_details(
+              payment_type,
+              is_paid
+            )`
+          )
+        .order('created_at', { ascending: false })
+        .order('created_at', { referencedTable: 'order_items', ascending: true })
+        .order('created_at', { referencedTable: 'order_payment_details', ascending: true })
+        .range(from, to);
+      
+      return orders?.length ? orders : null;
     },
 
     async getSellerStatistics() {

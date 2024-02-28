@@ -12,12 +12,12 @@ export async function createReview(product_id: string, formData: FormData) {
 
   const { data: product } = await supabase
     .from('order_items')
-    .select('order_details(user_id)')
+    .select('order(user_id)')
     .eq('product_id', product_id)
     .limit(1)
     .single();
 
-  const userBoughtProduct = Boolean(product?.order_details?.user_id);
+  const userBoughtProduct = Boolean(product?.order?.user_id);
   
   if (!userBoughtProduct) throw new Error('You cant review a product you havent bought')
 

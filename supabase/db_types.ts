@@ -192,26 +192,35 @@ export type Database = {
           }
         ]
       }
-      order_details: {
+      order: {
         Row: {
           address: string
           created_at: string
           delivery_date: string
+          email: string
           id: number
+          phone_number: string | null
+          receiver_name: string
           user_id: string | null
         }
         Insert: {
           address: string
           created_at?: string
           delivery_date: string
+          email: string
           id?: number
+          phone_number?: string | null
+          receiver_name: string
           user_id?: string | null
         }
         Update: {
           address?: string
           created_at?: string
           delivery_date?: string
+          email?: string
           id?: number
+          phone_number?: string | null
+          receiver_name?: string
           user_id?: string | null
         }
         Relationships: [
@@ -254,7 +263,7 @@ export type Database = {
             foreignKeyName: "order_items_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
-            referencedRelation: "order_details"
+            referencedRelation: "order"
             referencedColumns: ["id"]
           },
           {
@@ -262,6 +271,38 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "product"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      order_payment_details: {
+        Row: {
+          created_at: string
+          id: number
+          is_paid: boolean
+          order_id: number | null
+          payment_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_paid?: boolean
+          order_id?: number | null
+          payment_type: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_paid?: boolean
+          order_id?: number | null
+          payment_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_order_payment_details_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "order"
             referencedColumns: ["id"]
           }
         ]

@@ -34,23 +34,19 @@ const LINKS = [
 interface Props {
   show: boolean | null;
   hide: () => void;
-  width: number;
 }
 
-export default function Nav({ show, hide, width }: Props) {
+export default function Nav({ show, hide }: Props) {
   const path = usePathname();
 
   return (
     <div
       className={clsx({
-        "flex flex-col flex-shrink-0 z-10 pr-10 overflow-hidden transition-all h-screen bg-white fixed": true,
+        "flex flex-col w-[--nav-width] flex-shrink-0 z-10 pr-10 overflow-hidden transition-all h-screen bg-white fixed": true,
         "-translate-x-[150%] sm:translate-x-0": show === null,
         "translate-x-0": show === true,
         "-translate-x-[150%]": show === false
       })}
-      style={{
-        width
-      }}
       onClick={e => e.stopPropagation()}
     >
       {

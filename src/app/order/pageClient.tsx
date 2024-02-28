@@ -89,7 +89,13 @@ export default function PageClient({ uid }: Props) {
 
   const handleBuy = async () => {
     try {
-      const orderId = await buyItems(uid, paymentType, address, cart);
+      const orderId = await buyItems(uid, {
+        paymentType: PaymentType.bank_card,
+        address: 'repino',
+        email: 'htmlclassic@gmail.com',
+        receiverName: 'Dmitry Fateev'
+        // phoneNumber
+      }, cart);
 
       if (!uid) {
         sendEmail(orderId, email);

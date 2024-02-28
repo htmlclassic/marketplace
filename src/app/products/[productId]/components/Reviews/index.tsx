@@ -29,12 +29,12 @@ export default async function Index({ productId }: { productId: string; }) {
   
   const { data: product } = await supabase
     .from('order_items')
-    .select('order_details(user_id)')
+    .select('order(user_id)')
     .eq('product_id', productId)
     .limit(1)
     .single();
 
-  const userBoughtProduct = Boolean(product?.order_details?.user_id);
+  const userBoughtProduct = Boolean(product?.order?.user_id);
 
   let { data } = await supabase
     .from('review')

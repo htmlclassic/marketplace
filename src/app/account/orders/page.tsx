@@ -2,19 +2,16 @@ import { getAPI } from "@/supabase/api";
 import { createServerComponentSupabaseClient } from "@/supabase/utils_server";
 import OrderList from "./OrderList";
 
+export type Orders = Awaited<ReturnType<ReturnType<typeof getAPI>['getOrders']>>;
+export type Order = ArrayElement<NonNullable<Orders>>;
+
 export default async function Orders() {
   const api = getAPI(createServerComponentSupabaseClient());
-  const orders = await api.getOrders();
+  const orders = await api.getOrders(0, 20);
   
   return (
     <div className="grow">
-      {
-        orders ? <OrderList orders={orders} />
-        : 
-          <div className="h-full flex items-center justify-center text-center">
-            <p>Вы ещё ничего не заказывали</p>
-          </div>
-      }
+      <OrderList orders={orders} />
     </div>
   )
 }

@@ -10,10 +10,17 @@ import { unstable_noStore } from "next/cache";
 
 dayjs.extend(customParseFormat);
 
+interface OrderDetails {
+  paymentType: PaymentType;
+  address: string;
+  email: string;
+  receiverName: string;
+  phoneNumber?: string;
+}
+
 export default async function buyItems(
   uid: string | null,
-  paymentType: PaymentType,
-  address: string,
+  orderDetails: OrderDetails,
   cart: CartItem[]
 ) {
   unstable_noStore();
@@ -21,7 +28,7 @@ export default async function buyItems(
   const supabase = createServiceSupabaseClient();
   const api = getAPI(supabase);
 
-  if (address === '') throw new Error(Errors.EMPTY_ADDRESS);
+  if (orderDetails.address === '') throw new Error(Errors.EMPTY_ADDRESS);
   if (cart.length === 0) throw new Error(Errors.EMPTY_CART);
   
   const products = await getProductsByIds(cart.map(item => item.product.id));
@@ -33,17 +40,20 @@ export default async function buyItems(
       let customerBalance = (await api.getCurrentUserProfileData(uid))?.balance ?? 0;
       const totalSumToPay = getSumToPay(cart, products);
 
-      if (paymentType === PaymentType.marketplace_account && customerBalance < totalSumToPay) {
+      if (orderDetails.paymentType === PaymentType.marketplace_account && customerBalance < totalSumToPay) {
         throw new Error(Errors.LOW_BALANCE);
       }
 
       // create order and get its id
-      const { data: order, error } = await supabase
-        .from('order_details')
+      const { data: order } = await supabase
+        .from('order')
         .insert({
           user_id: uid,
           delivery_date: dayjs().add(4, 'day').format('YYYY-MM-DD'),
-          address
+          address: orderDetails.address,
+          receiver_name: orderDetails.receiverName,
+          email: orderDetails.email,
+          phone_number: orderDetails.phoneNumber
         })
         .select('id')
         .single();
@@ -51,6 +61,16 @@ export default async function buyItems(
       orderId = order?.id;
 
       if (!orderId) throw new Error(Errors.CREATE_ORDER_ERROR);
+
+      // create payment_details record
+      await supabase
+        .from('order_payment_details')
+        .insert({
+          order_id: orderId,
+          payment_type: PaymentType[orderDetails.paymentType],
+          is_paid: PaymentType.marketplace_account === orderDetails.paymentType
+            ? true : false
+        });
 
       for (const cartItem of cart) {
         // what if cart been populated somehow with fake product ids?
@@ -67,7 +87,7 @@ export default async function buyItems(
         // user buys an item from themself
         const selfBuy = uid === seller.id;
 
-        if (paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
+        if (orderDetails.paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
           customerBalance -= price;
         }
 
@@ -77,7 +97,7 @@ export default async function buyItems(
           .update({ quantity: product.quantity - cartItem.quantity})
           .eq('id', product.id);
         
-        if (paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
+        if (orderDetails.paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
           // withdraw from customer's account
           await supabase
             .from('profile')
@@ -85,7 +105,7 @@ export default async function buyItems(
             .eq('id', uid);
         }
         
-        if (paymentType === PaymentType.bank_card || !selfBuy) {
+        if (orderDetails.paymentType === PaymentType.bank_card || !selfBuy) {
           // deposit on seller's account
           await supabase
             .from('profile')
