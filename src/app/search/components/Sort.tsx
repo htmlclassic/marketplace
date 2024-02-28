@@ -24,7 +24,7 @@ export default function Sort() {
 
   return (
     <div
-      className="bg-white select-none mb-3 py-3 sticky top-[calc(var(--menu-height)+var(--header-height))] sm:top-[var(--header-height)]"
+      className="bg-white z-50 select-none mb-3 py-3 sticky top-[calc(var(--menu-height)+var(--header-height))] sm:top-[var(--header-height)]"
     >
       <div className="relative flex justify-between gap-3">
         <div className="static sm:relative">

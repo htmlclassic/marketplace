@@ -6,7 +6,7 @@ import MenuIcon from './assets/menu-icon.svg';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import SearchInput from '../SearchInput/SearchInput';
+import SearchInput from '../SearchInput';
 
 export default function Navbar() {
   const [showCatalog, setShowCatalog] = useState(false);

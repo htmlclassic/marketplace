@@ -36,11 +36,11 @@ export default function PageClient({
 
   return (
     <div
-      className="relative grow mx-auto flex flex-col max-w-[1600px] [--menu-height:2rem]"
+      className="relative grow mx-auto flex flex-col max-w-[1600px] [--menu-height:3rem]"
     >
       <div 
         onClick={() => setShowFilters(!showFilters)}
-        className="sm:hidden h-[--menu-height] sticky top-[var(--header-height)] bg-white z-10 cursor-pointer flex gap-3 items-center side-padding"
+        className="sm:hidden h-[--menu-height] sticky top-[var(--header-height)] bg-white z-50 cursor-pointer flex gap-3 items-center side-padding"
       >
         <span className={clsx({
           "transition-all text-2xl": true,

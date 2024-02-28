@@ -1,16 +1,22 @@
 'use client';
 
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
+import { throttle } from "lodash";
+
+function isMobile() {
+  return window.innerWidth < 640;
+}
 
 export default function SearchInput() {
   const searchParams = useSearchParams();
   const text = searchParams.get('text');
 
   const [searchValue, setSearchValue] = useState(text || '');
+  const [maximized, setMaximized] = useState<boolean | null>(null);
+
   const router = useRouter();
   const href = searchValue !== '' ? `/search?text=${searchValue}&order=price_asc` : '/';
 
@@ -20,51 +26,102 @@ export default function SearchInput() {
     setSearchValue(e.target.value);
   };
 
+  useEffect(() => {
+    if (isMobile()) setMaximized(false);
+    else setMaximized(true);
+  }, []);
+
+  useEffect(() => {
+    const handleMinimizeOnClick = () => {
+      if (isMobile()) {
+        setMaximized(false)
+      }
+    };
+
+    const handleResize = throttle(() => {
+      if (!isMobile()) setMaximized(true)
+      else if (inputRef.current !== document.activeElement) {
+        setMaximized(false);
+      }
+    }, 300);
+
+    window.addEventListener('click', handleMinimizeOnClick);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('click', handleMinimizeOnClick);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <div className="grow max-w-[800px]">
-      <div className="group w-0 sm:w-full transition-all duration-300 rounded-md flex sm:border border-white border-opacity-30 focus-within:w-full focus-within:bg-white focus-within:text-gray-400">
+    <div
+      className="grow max-w-[800px]"
+      onClick={e => e.stopPropagation()}
+    >
+      <div className={clsx({
+        "overflow-hidden group transition-all duration-300 ease-in-out rounded-md flex sm:border border-white border-opacity-30 focus-within:bg-white focus-within:text-gray-400": true,
+        "w-12 sm:w-full": maximized === null,
+        "w-full": maximized === true,
+        "w-12": maximized === false
+      })}>
         <input
           ref={inputRef}
           type="text"
           value={searchValue}
           onChange={handleChange}
           onKeyUp={e => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' || e.key === 'Delete') {
               setSearchValue('');
             }
             else if (e.key === 'Enter') {
-              inputRef.current!.blur();
+              inputRef.current?.blur();
               router.push(href);
+
+              if (isMobile()) setMaximized(false);
             };
           }}
           placeholder="Искать на Marketplace"
-          className="group-has-[:focus-within]:w-full group-has-[:focus-within]:p-3 group-has-[:focus-within]:text-black transition-all duration-300 bg-transparent w-0 sm:w-full sm:p-3 text-sm outline-none placeholder:text-white group-has-[:focus-within]:placeholder:text-gray-400"
+          className={clsx({
+            "transition-all duration-300 order-1 group-has-[:focus-within]:text-black bg-transparent w-full text-sm outline-none placeholder:text-white group-has-[:focus-within]:placeholder:text-gray-400": true,
+            "p-2": maximized === true,
+            "sm:p-2": maximized === null,
+            "opacity-0": maximized === false
+          })}
         />
         <button
           disabled={!searchValue}
           onClick={() => {
             setSearchValue('');
-            inputRef.current!.focus();
+            inputRef.current?.focus();
           }}
           className={clsx({
-            "w-0 sm:w-auto sm:p-1 group-has-[:focus-within]:w-auto group-has-[:focus-within]:p-1 flex justify-center items-center text-gray-400 transition-all duration-300 hover:text-black": true,
+            "group-has-[:focus-within]:order-2 sm:order-2 order-3 shrink-0 w-12 h-12 flex justify-center items-center text-gray-300 transition-all duration-300 hover:text-black": true,
             "scale-0": !searchValue,
-            "scale-100": searchValue
+            "scale-100": searchValue,
+            "opacity-0": maximized === false
           })}
           title="Очистить поле для поиска"
         >
           <CrossIcon />
         </button>
-        
-        {/* Next.js <Link> doesn't work when it overflowed its parent where overflow is set to visible */}
-        {/* If it's true, it might be a bug here when nextjs updates */}
-        <Link
-          href={href}
-          className="shrink-0 p-3 text-white group-has-[:focus-within]:text-black sm:text-inherit transition-all duration-300 hover:text-black"
+        <button
+          onClick={() => {
+            if (maximized) {
+              inputRef.current?.blur();
+              router.push(href);
+
+              if (isMobile()) setMaximized(false);
+            } else {
+              setMaximized(true);
+              inputRef.current?.focus();
+            };
+          }}
+          className="group-has-[:focus-within]:order-3 order-2 sm:order-3 shrink-0 w-12 h-12 flex justify-center items-center text-gray-300 group-has-[:focus-within]:transition-all group-has-[:focus-within]:duration-300 group-has-[:focus-within]:hover:text-black"
           title="Поиск"
         >
           <SearchIcon />
-        </Link>
+        </button>
       </div>
     </div>
   );

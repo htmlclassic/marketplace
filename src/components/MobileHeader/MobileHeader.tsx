@@ -1,5 +1,5 @@
 import Link from "next/link";
-import SearchInput from "../SearchInput/SearchInput";
+import SearchInput from "../SearchInput";
 
 export default function MobileHeader() {
   return (

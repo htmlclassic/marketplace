@@ -18,7 +18,7 @@ export default function ProductPreview({ product }: ProductProps) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="relative group/parent overflow-hidden space-y-2 hover:z-10"
+      className="relative group/parent overflow-hidden space-y-2"
       onMouseLeave={() => setImgIndex(0)}
     >
       <div className="relative aspect-square group overflow-hidden rounded-lg">
