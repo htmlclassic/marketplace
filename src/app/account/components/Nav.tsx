@@ -42,7 +42,7 @@ export default function Nav({ show, hide }: Props) {
   return (
     <div
       className={clsx({
-        "flex flex-col w-[--nav-width] flex-shrink-0 z-10 pr-10 overflow-hidden transition-all h-screen bg-white fixed": true,
+        "flex flex-col w-[--nav-width] h-[calc(100vh-var(--header-height)-var(--menu-height)-var(--top-padding))] sm:h-[calc(100vh-var(--header-height)-var(--top-padding))] flex-shrink-0 z-10 overflow-auto transition-all bg-white fixed": true,
         "-translate-x-[150%] sm:translate-x-0": show === null,
         "translate-x-0": show === true,
         "-translate-x-[150%]": show === false

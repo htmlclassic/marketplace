@@ -91,10 +91,10 @@ export default function PageClient({ uid }: Props) {
     try {
       const orderId = await buyItems(uid, {
         paymentType: PaymentType.bank_card,
-        address: 'repino',
+        address: 'Санкт-Петербург, п. Комарово, Приморское шоссе д. 135, корп. 1, кв. 65',
         email: 'htmlclassic@gmail.com',
-        receiverName: 'Dmitry Fateev'
-        // phoneNumber
+        receiverName: 'Дмитрий Фатеев',
+        phoneNumber: '8-921-655-22-31'
       }, cart);
 
       if (!uid) {

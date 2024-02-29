@@ -37,14 +37,14 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
   }, []);
 
   return (
-    <div className="relative side-padding grow overflow-hidden pt-20 sm:pt-6 max-w-[1600px] mx-auto">
+    <div className="[--menu-height:3.5rem] [--top-padding:calc(var(--menu-height)+1.5rem)] relative side-padding grow overflow-hidden pt-[--top-padding] sm:pt-6 max-w-[1600px] mx-auto">
       <div className="absolute w-full left-0 top-[-1px] sm:hidden">
         <button
           onClick={e => {
             e.stopPropagation();
             setShowMenu(!showMenu);
           }}
-          className="w-full flex items-center gap-2 p-3 fixed bg-white z-30 border"
+          className="w-full h-[--menu-height] px-3 flex items-center gap-2 fixed bg-white z-30 border"
         >
           <span className={clsx({
             "transition-all text-2xl": true,
@@ -62,8 +62,8 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
         />
         <div
           className={clsx({
-            "flex grow transition-all pl-0 sm:pl-[--nav-width]": true,
-            "pl-[--nav-width]": showMenu === true,
+            "flex grow transition-all pl-0 sm:pl-[calc(var(--nav-width)+1rem)]": true,
+            "pl-[calc(var(--nav-width)+1rem)]": showMenu === true,
             "pl-0": showMenu === false
           })}
         >
