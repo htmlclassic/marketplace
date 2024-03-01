@@ -31,5 +31,7 @@ declare global {
 
   type SearchFilter = 'price_asc' | 'price_desc' | 'rating_desc';
 
+  type PaymentType = 'marketplace' | 'bank_card';
+
   type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 }

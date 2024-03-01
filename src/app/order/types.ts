@@ -7,11 +7,6 @@ export enum Errors {
   CREATE_ORDER_ERROR = 'Couldn\'t create an order'
 };
 
-export enum PaymentType {
-  'marketplace_account' = 0,
-  'bank_card' = 1
-};
-
 export interface BankCardData {
   cardNumber: string;
   expDate: string;

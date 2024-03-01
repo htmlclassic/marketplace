@@ -5,7 +5,7 @@ import { createServiceSupabaseClient } from "@/supabase/utils_server";
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Errors, PaymentType } from "./types";
+import { Errors } from "./types";
 import { unstable_noStore } from "next/cache";
 
 dayjs.extend(customParseFormat);
@@ -40,7 +40,7 @@ export default async function buyItems(
       let customerBalance = (await api.getCurrentUserProfileData(uid))?.balance ?? 0;
       const totalSumToPay = getSumToPay(cart, products);
 
-      if (orderDetails.paymentType === PaymentType.marketplace_account && customerBalance < totalSumToPay) {
+      if (orderDetails.paymentType === 'marketplace' && customerBalance < totalSumToPay) {
         throw new Error(Errors.LOW_BALANCE);
       }
 
@@ -67,9 +67,8 @@ export default async function buyItems(
         .from('order_payment_details')
         .insert({
           order_id: orderId,
-          payment_type: PaymentType[orderDetails.paymentType],
-          is_paid: PaymentType.marketplace_account === orderDetails.paymentType
-            ? true : false
+          payment_type: orderDetails.paymentType,
+          is_paid: orderDetails.paymentType === 'marketplace'
         });
 
       for (const cartItem of cart) {
@@ -87,7 +86,7 @@ export default async function buyItems(
         // user buys an item from themself
         const selfBuy = uid === seller.id;
 
-        if (orderDetails.paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
+        if (orderDetails.paymentType === 'marketplace' && uid && !selfBuy) {
           customerBalance -= price;
         }
 
@@ -97,7 +96,7 @@ export default async function buyItems(
           .update({ quantity: product.quantity - cartItem.quantity})
           .eq('id', product.id);
         
-        if (orderDetails.paymentType === PaymentType.marketplace_account && uid && !selfBuy) {
+        if (orderDetails.paymentType === 'marketplace' && uid && !selfBuy) {
           // withdraw from customer's account
           await supabase
             .from('profile')
@@ -105,7 +104,7 @@ export default async function buyItems(
             .eq('id', uid);
         }
         
-        if (orderDetails.paymentType === PaymentType.bank_card || !selfBuy) {
+        if (orderDetails.paymentType === 'bank_card' || !selfBuy) {
           // deposit on seller's account
           await supabase
             .from('profile')

@@ -10,7 +10,7 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import clsx from "clsx";
 import { Timer } from "./Timer";
 import { numberWithSpaces } from "@/src/utils";
-import { useState } from "react";
+
 dayjs.extend(updateLocale);
 
 dayjs.updateLocale('en', {
@@ -29,6 +29,8 @@ interface Props {
 export default function Order({ order, isActive, onClick }: Props) {
   const total = order.order_items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const isOrderPaid = order.order_payment_details[0].is_paid;
+  const paymentType = order.order_payment_details[0].payment_type as PaymentType === 'bank_card'
+    ? 'Банковская карта' : 'Кошелёк Marketplace';
 
   // set fake order status
   let status: 'В сборке у продавца' | 'У курьера' | 'Доставлено' | 'Ожидает оплаты' | 'Отменён';
@@ -149,7 +151,7 @@ export default function Order({ order, isActive, onClick }: Props) {
 
             <div className="flex flex-col gap-1">
               <h3 className="font-semibold mb-2 flex gap-3 items-center whitespace-nowrap"><PaymentIcon />Способ оплаты</h3>
-              <div>{order.order_payment_details[0].payment_type}</div>
+              <div>{paymentType}</div>
             </div>
           </div>
 

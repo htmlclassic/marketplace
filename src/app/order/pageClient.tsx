@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { useContext, useState } from "react";
 import Card from "./Card";
-import { BankCardData, PaymentType } from "./types";
+import { BankCardData } from "./types";
 import buyItems from "./buyItems";
 import { CartContext } from "@/src/CartContext";
 
