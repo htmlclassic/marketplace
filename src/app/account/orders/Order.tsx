@@ -174,8 +174,8 @@ export default function Order({ order, isActive, onClick }: Props) {
                     />
                   </div>
                   <div className="max-w-[600px] line-clamp-4">{orderItem.product?.title}</div>
-                  <div className="whitespace-nowrap">{numberWithSpaces(orderItem.price)} ₽</div>
-                  <div className="justify-self-end whitespace-nowrap">{orderItem.quantity} шт</div>
+                  <div className="justify-self-start min-[450px]:justify-self-center whitespace-nowrap">{numberWithSpaces(orderItem.price)} ₽</div>
+                  <div className="justify-self-end min-[450px]:justify-self-center whitespace-nowrap">{orderItem.quantity} шт</div>
                 </Link>
               )
             }
