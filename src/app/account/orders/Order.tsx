@@ -53,8 +53,8 @@ export default function Order({ order, isActive, onClick }: Props) {
         onClick();
       }}
       className={clsx({
-        "p-3 rounded-lg border transition-all duration-300 hover:border-slate-400 cursor-pointer": true,
-        "border-slate-400": isActive
+        "p-3 rounded-lg border transition-all duration-300 sm:hover:border-slate-400 cursor-pointer": true,
+        "border-black sm:border-slate-400": isActive
       })}
     >
       <div className="space-y-5">
