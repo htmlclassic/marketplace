@@ -161,7 +161,7 @@ export default function Order({ order, isActive, onClick }: Props) {
               order.order_items.map(orderItem =>
                 <Link
                   href={`/products/${orderItem.product?.id}`}
-                  className="grid grid-cols-[1fr_4fr] grid-rows-[1fr_max-content] min-[450px]:grid-rows-[1fr] min-[450px]:grid-cols-[max-content_4fr_1fr_1fr] items-center gap-3 transition-all border hover:bg-gray-100 p-3 rounded-md"
+                  className="grid grid-cols-[1fr_4fr] grid-rows-[1fr_max-content] min-[450px]:grid-rows-[1fr] min-[450px]:grid-cols-[max-content_4fr_1fr_1fr] items-center gap-x-3 gap-y-6 transition-all border hover:bg-gray-100 p-3 rounded-md"
                   key={orderItem.id}
                   title="Перейти на страницу товара"
                 > 
@@ -174,8 +174,8 @@ export default function Order({ order, isActive, onClick }: Props) {
                     />
                   </div>
                   <div className="max-w-[600px] line-clamp-4">{orderItem.product?.title}</div>
-                  <div className="justify-self-center whitespace-nowrap">{numberWithSpaces(orderItem.price)} ₽</div>
-                  <div className="justify-self-center whitespace-nowrap">{orderItem.quantity} шт</div>
+                  <div className="whitespace-nowrap">{numberWithSpaces(orderItem.price)} ₽</div>
+                  <div className="justify-self-end whitespace-nowrap">{orderItem.quantity} шт</div>
                 </Link>
               )
             }
