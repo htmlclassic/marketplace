@@ -131,7 +131,7 @@ export default function Order({ order, isActive, onClick }: Props) {
         "grid-rows-[1fr]": isActive,
       })}>
         <div className={clsx({
-          "flex flex-col gap-10 transition-all duration-300 overflow-hidden": true,
+          "flex flex-col gap-5 transition-all duration-300 overflow-hidden": true,
           "mt-0": !isActive,
           "mt-16": isActive
         })}
@@ -156,7 +156,7 @@ export default function Order({ order, isActive, onClick }: Props) {
           </div>
 
           <div className="flex flex-col gap-3 text-sm">
-          <h3 className="font-semibold mb-2 flex gap-3 items-center whitespace-nowrap"><BagIcon />Купленные товары</h3>
+            <h3 className="font-semibold mb-2 flex gap-3 items-center whitespace-nowrap"><BagIcon />Купленные товары</h3>
             {
               order.order_items.map(orderItem =>
                 <Link
