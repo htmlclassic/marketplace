@@ -48,8 +48,8 @@ export default function PageClient({ uid }: Props) {
   const [showCard, setShowCard] = useState(false);
   const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
-  const [paymentType, setPaymentType] = useState(
-    uid ? PaymentType.marketplace_account : PaymentType.bank_card
+  const [paymentType, setPaymentType] = useState<PaymentType>(
+    uid ? 'marketplace' : 'bank_card'
   );
   const [orderId, setOrderId] = useState<number | null>(null);
   const [bankCardData, setBankCardData] = useState(initialBankCardData);
@@ -90,7 +90,7 @@ export default function PageClient({ uid }: Props) {
   const handleBuy = async () => {
     try {
       const orderId = await buyItems(uid, {
-        paymentType: PaymentType.bank_card,
+        paymentType: 'bank_card',
         address: 'Санкт-Петербург, п. Комарово, Приморское шоссе д. 135, корп. 1, кв. 65',
         email: 'htmlclassic@gmail.com',
         receiverName: 'Дмитрий Фатеев',
@@ -125,9 +125,9 @@ export default function PageClient({ uid }: Props) {
         onSubmit={e => {
           e.preventDefault();
 
-          if (paymentType === PaymentType.bank_card) {
+          if (paymentType === 'bank_card') {
             setShowCard(true);
-          } else if (paymentType === PaymentType.marketplace_account) {
+          } else if (paymentType === 'marketplace') {
             handleBuy();
           }
         }}
@@ -160,20 +160,20 @@ export default function PageClient({ uid }: Props) {
                 type="button"
                 className={clsx({
                   "border w-40 h-20 rounded-md transition-all": true,
-                  "bg-green-300": paymentType === PaymentType.marketplace_account
+                  "bg-green-300": paymentType === 'marketplace'
                 })}
-                onClick={() => setPaymentType(PaymentType.marketplace_account)}
+                onClick={() => setPaymentType('marketplace')}
               >
-                M Счёт
+                Marketplace счёт
               </button>
           }
           <button
             type="button"
             className={clsx({
               "border w-40 h-20 rounded-md transition-all": true,
-              "bg-green-300": paymentType === PaymentType.bank_card
+              "bg-green-300": paymentType === 'bank_card'
             })}
-            onClick={() => setPaymentType(PaymentType.bank_card)}
+            onClick={() => setPaymentType('bank_card')}
           >
             Банковская карта
           </button>
