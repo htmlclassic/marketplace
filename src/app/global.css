@@ -27,7 +27,7 @@
   }
 
   .button {
-    @apply bg-[rgba(172,86,245)] text-white rounded-lg px-8 py-4 relative font-semibold min-w-max w-full;
+    @apply bg-indigo-400 text-white rounded-lg px-8 py-4 relative font-semibold min-w-max w-full;
   }
 }
 

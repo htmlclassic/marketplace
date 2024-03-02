@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.3.4",
     "@mui/material": "^5.14.8",
     "@mui/x-date-pickers": "^6.13.0",
     "@supabase/ssr": "latest",
@@ -20,11 +21,14 @@
     "dayjs": "^1.11.9",
     "embla-carousel-react": "^8.0.0-rc13",
     "framer-motion": "^10.16.16",
+    "libphonenumber-js": "^1.10.57",
     "lodash": "^4.17.21",
     "next": "latest",
     "react": "^18",
     "react-dom": "^18",
-    "sharp": "latest"
+    "react-hook-form": "^7.51.0",
+    "sharp": "latest",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",

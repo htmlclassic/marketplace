@@ -18,6 +18,8 @@ interface OrderDetails {
   phoneNumber?: string;
 }
 
+// phone numbers can be in different formats. format them, before putting in db
+
 export default async function buyItems(
   uid: string | null,
   orderDetails: OrderDetails,
