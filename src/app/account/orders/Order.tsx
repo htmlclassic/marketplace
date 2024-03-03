@@ -10,6 +10,7 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import clsx from "clsx";
 import { Timer } from "./Timer";
 import { numberWithSpaces } from "@/src/utils";
+import { useState } from "react";
 
 dayjs.extend(updateLocale);
 
@@ -26,6 +27,8 @@ interface Props {
   onClick: () => void;
 }
 
+type Status = 'В сборке у продавца' | 'У курьера' | 'Доставлено' | 'Ожидает оплаты' | 'Отменён';
+
 export default function Order({ order, isActive, onClick }: Props) {
   const total = order.order_items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const isOrderPaid = order.order_payment_details[0].is_paid;
@@ -33,20 +36,22 @@ export default function Order({ order, isActive, onClick }: Props) {
     ? 'Банковская карта' : 'Кошелёк Marketplace';
 
   // set fake order status
-  let status: 'В сборке у продавца' | 'У курьера' | 'Доставлено' | 'Ожидает оплаты' | 'Отменён';
+  let statusInitial: Status;
   const dateDiff = dayjs(order.delivery_date).diff(dayjs(), 'day', true);
   const minutesPassed = dayjs().diff(dayjs(order.created_at), 'minute');
 
   if (minutesPassed < 30 && !isOrderPaid) {
-    status = 'Ожидает оплаты'
+    statusInitial = 'Ожидает оплаты'
   }
   else if (minutesPassed >= 30 && !isOrderPaid) {
-    status = 'Отменён';
+    statusInitial = 'Отменён';
   } else {
-    if (dateDiff <= 0) status = 'Доставлено';
-    else if (dateDiff < 2) status = 'У курьера';
-    else status = 'В сборке у продавца';
+    if (dateDiff <= 0) statusInitial = 'Доставлено';
+    else if (dateDiff < 2) statusInitial = 'У курьера';
+    else statusInitial = 'В сборке у продавца';
   }
+
+  const [status, setStatus] = useState(statusInitial);
 
   return (
     <div
@@ -60,14 +65,14 @@ export default function Order({ order, isActive, onClick }: Props) {
       })}
     >
       <div className="space-y-5">
-        <div className="flex gap-2 items-baseline justify-between">
+        <div className="flex gap-5 items-baseline justify-between">
           <div className="space-y-1">
             <div className="font-semibold text-lg">
               Заказ от {dayjs(order.created_at).format('D MMMM YYYY')}
             </div>
             <div>Номер заказа: <span>{order.id}</span></div>
           </div>
-          <div className="text-sm flex flex-wrap items-center h-max gap-1 justify-end">
+          <div className="text-sm flex flex-wrap items-center text-right h-max gap-1 justify-end">
             {
               isOrderPaid
                 ? <>
@@ -79,7 +84,11 @@ export default function Order({ order, isActive, onClick }: Props) {
                       status === 'Отменён'
                         ? 'не оплачено'
                         : <>
-                            Осталось времени для оплаты: <Timer startTime={order.created_at} />
+                            Осталось времени для оплаты:
+                            <Timer
+                              startTime={order.created_at}
+                              onTimeUp={() => setStatus('Отменён')} 
+                            />
                           </>
                     }
                   </span>
@@ -89,7 +98,7 @@ export default function Order({ order, isActive, onClick }: Props) {
         <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-5">
           <div className="flex flex-col gap-3 text-sm">
             <div className="flex gap-2 items-center min-w-max">
-              Статус доставки:
+              Статус:
               <span className={clsx({
                 "rounded-full px-2 py-[0.1rem]": true,
                 "bg-sky-300": status === 'В сборке у продавца',
@@ -104,7 +113,7 @@ export default function Order({ order, isActive, onClick }: Props) {
             </div>
             <div>Дата доставки: {dayjs(order.delivery_date).format('DD MMMM YYYY')}</div>
           </div>
-          <ul className="overflow-x-auto flex max-w-96">
+          <ul className="overflow-x-auto flex gap-1 max-w-96">
             {
               order.order_items.slice(0, 4).map(item =>
                 <li

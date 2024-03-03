@@ -3,7 +3,12 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-export function Timer({ startTime } : { startTime: string }) {
+interface Props {
+  onTimeUp: () => void;
+  startTime: string;
+}
+
+export function Timer({ startTime, onTimeUp } : Props) {
   const [time, setTime] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,6 +23,7 @@ export function Timer({ startTime } : { startTime: string }) {
       if (timeLeft <= 0) {
         clearInterval(intervalId);
         setTime('00:00');
+        onTimeUp();
         return;
       }
 

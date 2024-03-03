@@ -5,32 +5,33 @@ import { createServiceSupabaseClient } from "@/supabase/utils_server";
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Errors } from "./types";
+import { Errors, FormDataType, FormDataZodSchema, Inputs, StrippedCartItem } from "./types";
 import { unstable_noStore } from "next/cache";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 dayjs.extend(customParseFormat);
 
-interface OrderDetails {
-  paymentType: PaymentType;
-  address: string;
-  email: string;
-  receiverName: string;
-  phoneNumber?: string;
-}
-
-// phone numbers can be in different formats. format them, before putting in db
-
 export default async function buyItems(
   uid: string | null,
-  orderDetails: OrderDetails,
-  cart: CartItem[]
+  data: Inputs,
+  cart: StrippedCartItem[]
 ) {
   unstable_noStore();
+
+  const isValid = FormDataZodSchema.safeParse(data).success;
+  let formData: FormDataType;
+
+  if (isValid) formData = data as FormDataType;
+  else throw new Error('Couldnt validate form data');
+
+  // format phone number to (+7 222-22-22)
+  const parsedPhoneNumber = parsePhoneNumber(formData.phoneNumber, 'RU');
+  const formattedPhoneNumber = parsedPhoneNumber.formatInternational();
+  formData.phoneNumber = formattedPhoneNumber;
 
   const supabase = createServiceSupabaseClient();
   const api = getAPI(supabase);
 
-  if (orderDetails.address === '') throw new Error(Errors.EMPTY_ADDRESS);
   if (cart.length === 0) throw new Error(Errors.EMPTY_CART);
   
   const products = await getProductsByIds(cart.map(item => item.product.id));
@@ -42,7 +43,7 @@ export default async function buyItems(
       let customerBalance = (await api.getCurrentUserProfileData(uid))?.balance ?? 0;
       const totalSumToPay = getSumToPay(cart, products);
 
-      if (orderDetails.paymentType === 'marketplace' && customerBalance < totalSumToPay) {
+      if (formData.paymentType === 'marketplace' && customerBalance < totalSumToPay) {
         throw new Error(Errors.LOW_BALANCE);
       }
 
@@ -52,10 +53,10 @@ export default async function buyItems(
         .insert({
           user_id: uid,
           delivery_date: dayjs().add(4, 'day').format('YYYY-MM-DD'),
-          address: orderDetails.address,
-          receiver_name: orderDetails.receiverName,
-          email: orderDetails.email,
-          phone_number: orderDetails.phoneNumber
+          address: formData.address,
+          receiver_name: formData.receiverName,
+          email: formData.email,
+          phone_number: formData.phoneNumber
         })
         .select('id')
         .single();
@@ -69,8 +70,8 @@ export default async function buyItems(
         .from('order_payment_details')
         .insert({
           order_id: orderId,
-          payment_type: orderDetails.paymentType,
-          is_paid: orderDetails.paymentType === 'marketplace'
+          payment_type: formData.paymentType,
+          is_paid: formData.paymentType === 'marketplace'
         });
 
       for (const cartItem of cart) {
@@ -88,7 +89,7 @@ export default async function buyItems(
         // user buys an item from themself
         const selfBuy = uid === seller.id;
 
-        if (orderDetails.paymentType === 'marketplace' && uid && !selfBuy) {
+        if (formData.paymentType === 'marketplace' && uid && !selfBuy) {
           customerBalance -= price;
         }
 
@@ -98,7 +99,7 @@ export default async function buyItems(
           .update({ quantity: product.quantity - cartItem.quantity})
           .eq('id', product.id);
         
-        if (orderDetails.paymentType === 'marketplace' && uid && !selfBuy) {
+        if (formData.paymentType === 'marketplace' && uid && !selfBuy) {
           // withdraw from customer's account
           await supabase
             .from('profile')
@@ -106,7 +107,7 @@ export default async function buyItems(
             .eq('id', uid);
         }
         
-        if (orderDetails.paymentType === 'bank_card' || !selfBuy) {
+        if (formData.paymentType === 'bank_card' || !selfBuy) {
           // deposit on seller's account
           await supabase
             .from('profile')
@@ -137,23 +138,17 @@ export default async function buyItems(
 
   // helper functions
   async function getProductsByIds(ids: string[]) {
-    const products: Product[] = [];
-
-    for (const id of ids) {
-      const { data } = await supabase
-        .from('product')
-        .select()
-        .eq('id', id);
-      
-      if (!data) return null;
-
-      products.push(data[0] as Product);
-    }
+    const { data: products } = await supabase
+      .from('product')
+      .select('id, price, quantity, owner')
+      .filter('id', 'in', `(${ids.join(',')})`);
 
     return products;
   }
 
-  function checkProductsAvailability(cartItems: CartItem[], products: Product[]) {
+  type StrippedProducts = NonNullable<Awaited<ReturnType<typeof getProductsByIds>>>;
+
+  function checkProductsAvailability(cartItems: StrippedCartItem[], products: StrippedProducts) {
     for (const item of cartItems) {
       const product = products.find(pr => pr.id === item.product.id)!;
 
@@ -163,7 +158,7 @@ export default async function buyItems(
     return true;
   }
 
-  function getSumToPay(cartItems: CartItem[], products: Product[]) {
+  function getSumToPay(cartItems: StrippedCartItem[], products: StrippedProducts) {
     const total = cartItems.reduce((acc, cartItem) => {
       const product = products.find(pr => pr.id === cartItem.product.id)!;
 

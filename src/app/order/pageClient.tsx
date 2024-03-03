@@ -3,63 +3,19 @@
 import clsx from "clsx";
 import { useContext, useState } from "react";
 import Card from "./Card";
-import { BankCardData } from "./types";
+import { BankCardData, FormDataZodSchema, Inputs, StrippedCartItem } from "./types";
 import buyItems from "./buyItems";
 import { CartContext } from "@/src/CartContext";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@/src/components/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { isValidPhoneNumber, AsYouType, parsePhoneNumber } from 'libphonenumber-js'
+import { AsYouType } from 'libphonenumber-js'
 
 interface Props {
   uid: string | null;
 }
-
-interface Inputs {
-  paymentType: string;
-  address: string;
-  email: string;
-  receiverName: string;
-  phoneNumber: string;
-}
-
-const FormDataSchema: ZodType<Inputs> = z.object({
-  paymentType: z.enum(['bank_card', 'marketplace'], {
-    errorMap: () => ({ message: 'Выберите способ оплаты' })
-  }),
-
-  address: z.string()
-    .min(1, { message: 'Адрес должен содержать хотя бы один символ' })
-    .max(300, { message: 'Длина адреса не должна превышать 300 символов' }),
-
-  email: z.string().email({ message: 'Неверная почта' }),
-
-  receiverName: z.string()
-    .min(2, { message: 'Длина имени не должна быть меньше 2 символов' })
-    .max(30, { message: 'Длина имени не должна превышать 30 символов' }),
-
-  phoneNumber: z.string().refine(phoneNumber => {
-    // make phone number optional
-    if (phoneNumber === '') return true;
-
-    let formattedNumber: string = phoneNumber;
-
-    // idk why, but isValidPhoneNumber() returns true for number like '8 (921) 622-25-1'
-    // if number starts with +7 everything works fine
-    if (formattedNumber[0] === '8') {
-      formattedNumber = '+7' + formattedNumber.slice(1);
-    }
-
-    return isValidPhoneNumber(formattedNumber, 'RU');
-  }, {
-    message: 'Неверный номер телефона'
-  })
-});
-
-type Schema = z.infer<typeof FormDataSchema>;
 
 function sendEmail(
   orderId: number,
@@ -91,15 +47,37 @@ export default function PageClient({ uid }: Props) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {
+      errors,
+      isSubmitting
+    },
   } = useForm<Inputs>({
-    resolver: zodResolver(FormDataSchema)
+    resolver: zodResolver(FormDataZodSchema)
   });
-
-  const onSubmit: SubmitHandler<Inputs> = (data: Schema) => console.log(data);
 
   const { cart, clearCart } = useContext(CartContext);
   const [orderId, setOrderId] = useState<number | null>(null);
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const strippedCart: StrippedCartItem[] = cart.map(item => ({
+      quantity: item.quantity,
+      product: {
+        id: item.product.id,
+        quantity: item.product.quantity,
+        price: item.product.price
+      }
+    }));
+
+    try {
+      const orderId = await buyItems(uid, data, strippedCart);
+
+      sendEmail(orderId, data.receiverName);
+      clearCart();
+      setOrderId(orderId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (orderId) {
     return (
@@ -130,6 +108,7 @@ export default function PageClient({ uid }: Props) {
           {...register('receiverName', {
             required: true
           })}
+          disabled={isSubmitting}
         />
         <TextField
           error={!!errors.address}
@@ -139,6 +118,7 @@ export default function PageClient({ uid }: Props) {
           })}
           label="Адрес"
           variant="outlined"
+          disabled={isSubmitting}
         />
         <TextField
           error={!!errors.email}
@@ -148,6 +128,7 @@ export default function PageClient({ uid }: Props) {
           })}
           label="Электронная почта"
           variant="outlined"
+          disabled={isSubmitting}
         />
         <TextField
           error={!!errors.phoneNumber}
@@ -163,6 +144,7 @@ export default function PageClient({ uid }: Props) {
           })}
           label="Номер телефона"
           variant="outlined"
+          disabled={isSubmitting}
         />
         <TextField
           error={!!errors.paymentType}
@@ -173,6 +155,7 @@ export default function PageClient({ uid }: Props) {
           defaultValue=""
           label="Способ оплаты"
           select
+          disabled={isSubmitting}
         >
           <MenuItem
             value="bank_card"
@@ -182,17 +165,25 @@ export default function PageClient({ uid }: Props) {
               Банковская карта
             </div>
           </MenuItem>
-          <MenuItem
-            value="marketplace"
-            className="flex gap-3"
-          >
-            <div className="flex gap-3">
-              <WalletIcon />
-              Marketplace кошелёк
-            </div>
-          </MenuItem>
+          {
+            uid &&
+              <MenuItem
+                value="marketplace"
+                className="flex gap-3"
+              >
+                <div className="flex gap-3">
+                  <WalletIcon />
+                  Marketplace кошелёк
+                </div>
+              </MenuItem>
+          }
         </TextField>
-        <Button>Перейти к оплате</Button>
+        <Button 
+          disabled={isSubmitting}
+          className={clsx({
+            "animate-pulse": isSubmitting
+          })}
+        >Перейти к оплате</Button>
       </form>
     </div>
   );
@@ -208,11 +199,11 @@ function CardIcon() {
       viewBox="0 0 24 24"
     >
       <path
-        fill="#292D32"
+        fill="currentColor"
         d="M22 9.25H2c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h20c.41 0 .75.34.75.75s-.34.75-.75.75zM8 17.25H6c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h2c.41 0 .75.34.75.75s-.34.75-.75.75zM14.5 17.25h-4c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h4c.41 0 .75.34.75.75s-.34.75-.75.75z"
       ></path>
       <path
-        fill="#292D32"
+        fill="currentColor"
         d="M17.56 21.25H6.44c-3.98 0-5.19-1.2-5.19-5.14V7.89c0-3.94 1.21-5.14 5.19-5.14h11.11c3.98 0 5.19 1.2 5.19 5.14v8.21c.01 3.95-1.2 5.15-5.18 5.15zm-11.12-17c-3.14 0-3.69.54-3.69 3.64v8.21c0 3.1.55 3.64 3.69 3.64h11.11c3.14 0 3.69-.54 3.69-3.64V7.89c0-3.1-.55-3.64-3.69-3.64H6.44z"
       ></path>
     </svg>
@@ -229,19 +220,19 @@ function WalletIcon() {
       viewBox="0 0 24 24"
     >
       <path
-        fill="#292D32"
+        fill="currentColor"
         d="M7.17 22.75c-2.38 0-4.33-1.73-4.33-3.86v-2.04c0-.41.34-.75.75-.75s.75.34.75.75c0 1.25 1.21 2.19 2.83 2.19S10 18.1 10 16.85c0-.41.34-.75.75-.75s.75.34.75.75v2.04c0 2.13-1.94 3.86-4.33 3.86zM4.6 19.87c.44.82 1.43 1.38 2.57 1.38s2.13-.57 2.57-1.38c-.71.43-1.59.68-2.57.68-.98 0-1.86-.25-2.57-.68z"
       ></path>
       <path
-        fill="#292D32"
+        fill="currentColor"
         d="M7.17 17.8c-1.64 0-3.11-.75-3.84-1.94-.32-.52-.49-1.13-.49-1.75 0-1.05.46-2.03 1.3-2.76 1.62-1.42 4.41-1.42 6.04-.01.84.74 1.31 1.72 1.31 2.77 0 .62-.17 1.23-.49 1.75-.72 1.19-2.19 1.94-3.83 1.94zm0-6.05c-.78 0-1.5.26-2.04.73-.51.44-.79 1.02-.79 1.63 0 .35.09.67.27.97.46.76 1.44 1.23 2.56 1.23s2.1-.47 2.55-1.22c.18-.29.27-.62.27-.97 0-.61-.28-1.19-.79-1.64-.53-.47-1.25-.73-2.03-.73z"
       ></path>
       <path
-        fill="#292D32"
+        fill="currentColor"
         d="M7.17 20.55c-2.47 0-4.33-1.59-4.33-3.69v-2.75c0-2.13 1.94-3.86 4.33-3.86 1.13 0 2.21.39 3.02 1.09.84.74 1.31 1.72 1.31 2.77v2.75c0 2.1-1.86 3.69-4.33 3.69zm0-8.8c-1.56 0-2.83 1.06-2.83 2.36v2.75c0 1.25 1.21 2.19 2.83 2.19S10 18.11 10 16.86v-2.75c0-.61-.28-1.19-.79-1.64-.54-.46-1.26-.72-2.04-.72zM19.04 14.8c-1.51 0-2.79-1.12-2.91-2.56-.08-.83.22-1.64.82-2.23.5-.52 1.21-.81 1.96-.81H21c.99.03 1.75.81 1.75 1.77v2.06c0 .96-.76 1.74-1.72 1.77h-1.99zm1.93-4.1h-2.05c-.35 0-.67.13-.9.37-.29.28-.43.66-.39 1.04.05.66.69 1.19 1.41 1.19H21c.13 0 .25-.12.25-.27v-2.06c0-.15-.12-.26-.28-.27z"
       ></path>
       <path
-        fill="#292D32"
+        fill="currentColor"
         d="M16 21.25h-2.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75H16c2.58 0 4.25-1.67 4.25-4.25v-.7h-1.21c-1.51 0-2.79-1.12-2.91-2.56-.08-.83.22-1.64.82-2.23.5-.52 1.21-.81 1.96-.81h1.33v-.7c0-2.34-1.37-3.95-3.59-4.21-.24-.04-.45-.04-.66-.04h-9c-.24 0-.47.02-.7.05-2.2.28-3.55 1.88-3.55 4.2v2c0 .41-.34.75-.75.75s-.75-.34-.75-.75v-2c0-3.08 1.9-5.31 4.85-5.68.27-.04.58-.07.9-.07h9c.24 0 .55.01.87.06 2.95.34 4.88 2.58 4.88 5.69v1.45c0 .41-.34.75-.75.75h-2.08c-.35 0-.67.13-.9.37-.29.28-.43.66-.39 1.04.05.66.69 1.19 1.41 1.19H21c.41 0 .75.34.75.75v1.45c0 3.44-2.31 5.75-5.75 5.75z"
       ></path>
     </svg>
