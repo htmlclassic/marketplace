@@ -75,23 +75,29 @@ export type Database = {
         Row: {
           created_at: string | null
           customer_id: string
+          customer_name: string
           id: number
           product_id: string
           seller_id: string
+          seller_name: string
         }
         Insert: {
           created_at?: string | null
           customer_id: string
+          customer_name: string
           id?: number
           product_id: string
           seller_id: string
+          seller_name: string
         }
         Update: {
           created_at?: string | null
           customer_id?: string
+          customer_name?: string
           id?: number
           product_id?: string
           seller_id?: string
+          seller_name?: string
         }
         Relationships: [
           {
@@ -199,7 +205,7 @@ export type Database = {
           delivery_date: string
           email: string
           id: number
-          phone_number: string | null
+          phone_number: string
           receiver_name: string
           user_id: string | null
         }
@@ -209,7 +215,7 @@ export type Database = {
           delivery_date: string
           email: string
           id?: number
-          phone_number?: string | null
+          phone_number: string
           receiver_name: string
           user_id?: string | null
         }
@@ -219,7 +225,7 @@ export type Database = {
           delivery_date?: string
           email?: string
           id?: number
-          phone_number?: string | null
+          phone_number?: string
           receiver_name?: string
           user_id?: string | null
         }

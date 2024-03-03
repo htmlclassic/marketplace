@@ -2,23 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Chat from "./Chat";
-import { ChatsT, Message } from "./page";
+import { Chats, Message } from "./page";
 import clsx from "clsx";
 import { createClientSupabaseClient } from "@/supabase/utils_client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
-  chats: ChatsT;
+  chats: Chats;
 }
 
 export default function ChatList({ chats: chatsInitial }: Props) {
-  if (!chatsInitial) return null;
-
   const supabase = createClientSupabaseClient();
   const router = useRouter();
 
-  const [chats, setChats] = useState(chatsInitial);
-  // const [showPreviews, setShowPreviews] = useState(false);
+  const [chats, setChats] = useState(chatsInitial || []);
 
   const searchParams = useSearchParams();
   const activeChatIdParam = searchParams.get('activeChatId');
@@ -50,7 +47,7 @@ export default function ChatList({ chats: chatsInitial }: Props) {
         addMessage({
           text: rawMessage.text,
           author_id: rawMessage.author_id,
-          createdAt: rawMessage.created_at!
+          created_at: rawMessage.created_at!
         }, rawMessage.chat_id);
       }
 
@@ -75,8 +72,8 @@ export default function ChatList({ chats: chatsInitial }: Props) {
 
   // after route is refreshed, rerender the component
   useEffect(() => {
-    if (chats.length !== chatsInitial.length) {
-      setChats(chatsInitial);
+    if (chats.length !== chatsInitial?.length) {
+      setChats(chatsInitial || []);
     }
   }, [chatsInitial]);
 
@@ -89,7 +86,7 @@ export default function ChatList({ chats: chatsInitial }: Props) {
         return {
           ...chat,
           messages: [
-            { text: message.text, author_id: message.author_id, createdAt: message.createdAt },
+            { text: message.text, author_id: message.author_id, created_at: message.created_at },
             ...oldMessages,
           ]
         };
@@ -97,18 +94,22 @@ export default function ChatList({ chats: chatsInitial }: Props) {
     );
   };
 
+  if (!chats.length) return (
+    <p>Нет чатов</p>
+  );
+
   // jsx is a little bit complicated, refactor later.
   return (
     <div className="relative border rounded-lg grow">
       <div className="absolute w-full h-full flex">
-        <div className="overflow-y-auto overflow-x-hidden rounded-tl-lg border-r md:w-[300px] shrink-0">
+        <div className="overflow-y-auto overflow-x-hidden rounded-tl-lg border-r lg:w-[300px] shrink-0">
           <div 
-            className="sticky top-0 px-3 h-16 flex items-center justify-center md:justify-between font-medium text-lg bg-white border-b border-r"
+            className="sticky top-0 px-3 h-16 flex items-center justify-center lg:justify-between font-medium text-lg bg-white border-b border-r"
           >
-            <span className="hidden md:inline">Сообщения</span>
+            <span className="hidden lg:inline">Сообщения</span>
             <div><MessageIcon /></div>
           </div>
-          <div>
+          <div className="flex flex-col gap-2 lg:gap-0">
             {
               chats.map(chat => {
                 const show = !hiddenChatIds.includes(chat.id);
@@ -119,12 +120,16 @@ export default function ChatList({ chats: chatsInitial }: Props) {
                     key={chat.id}
                     onClick={() => setActiveChatId(chat.id)}
                     className={clsx({
-                      "group flex items-center cursor-pointer transition-all hover:bg-gray-100": true,
+                      "group flex items-center cursor-pointer transition-all hover:bg-gray-100 px-1": true,
                       "bg-gray-100": chat.id === activeChat.id
                     })}
                   >
-                    <div className="text-2xl font-medium p-3">{chat.anotherPersonName[0]}</div>
-                    <div className="border-b group-last:border-none grow flex-col gap-2 p-3 hidden md:flex">
+                    <div 
+                      className="text-2xl h-14 w-14 flex justify-center items-center font-medium border border-slate-300 rounded-full"
+                    >
+                      {chat.anotherPersonName[0]}
+                    </div>
+                    <div className="border-b group-last:border-none grow flex-col gap-2 p-3 hidden lg:flex">
                       <div className="font-semibold">{chat.anotherPersonName}</div>
                       <div className="line-clamp-1">
                         {
@@ -161,7 +166,7 @@ export default function ChatList({ chats: chatsInitial }: Props) {
 
 function MessageIcon() {
   return (
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M13.1 24.2604C12.3813 24.2604 11.7042 23.8958 11.225 23.2604L9.6625 21.1771C9.63125 21.1354 9.50625 21.0833 9.45417 21.0729H8.93333C4.58958 21.0729 1.90208 19.8958 1.90208 14.0416V8.83331C1.90208 4.22915 4.32917 1.80206 8.93333 1.80206H17.2667C21.8708 1.80206 24.2979 4.22915 24.2979 8.83331V14.0416C24.2979 18.6458 21.8708 21.0729 17.2667 21.0729H16.7458C16.6625 21.0729 16.5896 21.1146 16.5375 21.1771L14.975 23.2604C14.4958 23.8958 13.8188 24.2604 13.1 24.2604ZM8.93333 3.36456C5.20417 3.36456 3.46458 5.10415 3.46458 8.83331V14.0416C3.46458 18.75 5.07917 19.5104 8.93333 19.5104H9.45417C9.98542 19.5104 10.5896 19.8125 10.9125 20.2396L12.475 22.3229C12.8396 22.8021 13.3604 22.8021 13.725 22.3229L15.2875 20.2396C15.6313 19.7812 16.1729 19.5104 16.7458 19.5104H17.2667C20.9958 19.5104 22.7354 17.7708 22.7354 14.0416V8.83331C22.7354 5.10415 20.9958 3.36456 17.2667 3.36456H8.93333Z" fill="currentColor"/>
       <path d="M13.1 13C12.5167 13 12.0583 12.5313 12.0583 11.9584C12.0583 11.3854 12.5271 10.9167 13.1 10.9167C13.6729 10.9167 14.1417 11.3854 14.1417 11.9584C14.1417 12.5313 13.6833 13 13.1 13Z" fill="currentColor"/>
       <path d="M17.2667 13C16.6833 13 16.225 12.5313 16.225 11.9584C16.225 11.3854 16.6938 10.9167 17.2667 10.9167C17.8396 10.9167 18.3083 11.3854 18.3083 11.9584C18.3083 12.5313 17.85 13 17.2667 13Z" fill="currentColor"/>

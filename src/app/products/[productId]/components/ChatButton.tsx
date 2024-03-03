@@ -33,12 +33,17 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
     if (chat) {
       router.push(`/account/chats?activeChatId=${chat.id}`);
     } else {
+      const { data: customerName } = await supabase.rpc('get_user_name', { userid: uid! });
+      const { data: sellerName } = await supabase.rpc('get_user_name', { userid: productOwnerId! });
+
       const { data: chat } = await supabase
         .from('chat')
         .insert({
           customer_id: uid!,
           seller_id: productOwnerId,
-          product_id: productId
+          customer_name: customerName!,
+          seller_name: sellerName!,
+          product_id: productId,
         })
         .select()
         .limit(1)
