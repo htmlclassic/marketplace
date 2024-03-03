@@ -21,7 +21,7 @@ function sendEmail(
   orderId: number,
   receiverName: string,
   receiverEmail: string,
-  trackLink: string = 'https://marketplace-one-hazel.vercel.app/track-order'
+  trackLink: string = `https://marketplace-one-hazel.vercel.app/track-order/${orderId}`
 ) {
   const data = {
     service_id: 'service_vndumiu',
