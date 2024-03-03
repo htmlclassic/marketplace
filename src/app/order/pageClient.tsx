@@ -19,7 +19,8 @@ interface Props {
 
 function sendEmail(
   orderId: number,
-  to: string,
+  receiverName: string,
+  receiverEmail: string,
   trackLink: string = 'https://marketplace-one-hazel.vercel.app/track-order'
 ) {
   const data = {
@@ -27,8 +28,8 @@ function sendEmail(
     template_id: 'template_dsdlu2x',
     user_id: 'A_WhdlcbVLwO1QzHP',
     template_params: {
-      hello: `Здравствуйте`,
-      to,
+      name: receiverName,
+      to: receiverEmail,
       orderId,
       trackLink
     }
@@ -71,7 +72,7 @@ export default function PageClient({ uid }: Props) {
     try {
       const orderId = await buyItems(uid, data, strippedCart);
 
-      sendEmail(orderId, data.receiverName);
+      sendEmail(orderId, data.receiverName, data.email);
       clearCart();
       setOrderId(orderId);
     } catch (error) {
