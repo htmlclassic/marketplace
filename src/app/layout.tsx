@@ -64,7 +64,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html className={inter.className} lang='ru'>
-      <body className="flex flex-col pb-[calc(var(--mobile-menu-height))] sm:pb-6 min-h-screen max-w-[1920px] mx-auto">
+      <body className="flex flex-col pb-[calc(var(--mobile-menu-height))] sm:pb-6 min-h-[100svh] max-w-[1920px] mx-auto">
         <ClientWrapper initialCart={initialCart} uid={uid}>
           <Navbar />
           <MobileHeader />
