@@ -47,8 +47,7 @@ export default async function Page() {
           creatorId: chat.customer_id
       });
     }
-  } else
-    resultedChats = null;
+  }
 
   return (
     <ChatList chats={resultedChats} />

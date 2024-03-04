@@ -12,6 +12,10 @@ interface Props {
 }
 
 export default function ChatList({ chats: chatsInitial }: Props) {
+  if (chatsInitial?.length === 0) return (
+    <p>Нет чатов</p>
+  );
+
   const supabase = createClientSupabaseClient();
   const router = useRouter();
 
@@ -93,10 +97,6 @@ export default function ChatList({ chats: chatsInitial }: Props) {
       })
     );
   };
-
-  if (!chats.length) return (
-    <p>Нет чатов</p>
-  );
 
   return (
     <div className="relative border rounded-lg w-full">
