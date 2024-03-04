@@ -100,16 +100,16 @@ export default function ChatList({ chats: chatsInitial }: Props) {
 
   // jsx is a little bit complicated, refactor later.
   return (
-    <div className="relative border rounded-lg grow">
+    <div className="relative border rounded-lg w-full">
       <div className="absolute w-full h-full flex">
-        <div className="overflow-y-auto overflow-x-hidden rounded-tl-lg border-r lg:w-[300px] shrink-0">
+        <div className="overflow-y-auto overflow-x-hidden rounded-tl-lg border-r w-full min-[900px]:w-[300px] shrink-0 bg-sky-400">
           <div 
-            className="sticky top-0 px-3 h-16 flex items-center justify-center lg:justify-between font-medium text-lg bg-white border-b border-r"
+            className="sticky top-0 px-3 h-16 flex items-center justify-between font-medium text-lg bg-white border-b border-r"
           >
-            <span className="hidden lg:inline">Сообщения</span>
+            <span className="">Сообщения</span>
             <div><MessageIcon /></div>
           </div>
-          <div className="flex flex-col gap-2 lg:gap-0">
+          <div className="flex flex-col gap-2">
             {
               chats.map(chat => {
                 const show = !hiddenChatIds.includes(chat.id);
@@ -129,7 +129,7 @@ export default function ChatList({ chats: chatsInitial }: Props) {
                     >
                       {chat.anotherPersonName[0]}
                     </div>
-                    <div className="border-b group-last:border-none grow flex-col gap-2 p-3 hidden lg:flex">
+                    <div className="border-b group-last:border-none grow flex-col gap-2 p-3 flex">
                       <div className="font-semibold">{chat.anotherPersonName}</div>
                       <div className="line-clamp-1">
                         {
@@ -148,17 +148,23 @@ export default function ChatList({ chats: chatsInitial }: Props) {
             }
           </div>
         </div>
-        {
-          !hiddenChatIds.includes(activeChatId) &&
-          <Chat
-            uid={activeChat.uid}
-            chat_id={activeChat.id}
-            messages={activeChat.messages}
-            anotherPersonName={activeChat.anotherPersonName}
-            product={activeChat.product}
-            addMessage={(message: Message) => addMessage(message, activeChat.id)}
-          />
-        }
+        <div className={clsx({
+          "flex border w-full h-full absolute left-0 top-0 min-[900px]:static bg-red-400": true,
+          "z-10": activeChatId >= 0,
+          "-z-10": activeChatId < 0
+        })}>
+          {
+            !hiddenChatIds.includes(activeChatId) &&
+            <Chat
+              uid={activeChat.uid}
+              chat_id={activeChat.id}
+              messages={activeChat.messages}
+              anotherPersonName={activeChat.anotherPersonName}
+              product={activeChat.product}
+              addMessage={(message: Message) => addMessage(message, activeChat.id)}
+            />
+          }
+        </div>
       </div>
     </div>
   );

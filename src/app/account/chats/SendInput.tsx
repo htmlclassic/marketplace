@@ -2,7 +2,7 @@
 
 import { createClientSupabaseClient } from "@/supabase/utils_client";
 import { Message } from "./page";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Button from "@/src/components/Button";
 
 interface Props {
@@ -15,22 +15,24 @@ export default function SendInput({ chat_id, author_id, addMessage }: Props) {
   const supabase = createClientSupabaseClient();
 
   const [text, setText] = useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSend = async () => {
     if (text !== '') {
+      setText('');
+
       addMessage({ text, author_id, created_at: Date.now().toString() });
 
       await supabase
         .from('chat_message')
         .insert({ author_id, chat_id, text });
-      
-      setText('');
     }
   };
 
   return (
     <div className="flex gap-3 items-center">
       <input
+        ref={inputRef}
         type="text"
         onKeyUp={e => {
           if (e.key === 'Enter') {
@@ -43,7 +45,10 @@ export default function SendInput({ chat_id, author_id, addMessage }: Props) {
         placeholder="Введите текст сообщения"
       />
       <Button
-        onClick={handleSend}
+        onClick={() => {
+          inputRef.current?.focus();
+          handleSend();
+        }}
         className="w-10 p-2 rounded-md font-normal"
       >
         <span className="hidden lg:inline">Отправить</span>
