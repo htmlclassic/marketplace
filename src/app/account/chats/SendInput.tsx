@@ -25,7 +25,7 @@ export default function SendInput({ chat_id, author_id, addMessage }: Props) {
 
       await supabase
         .from('chat_message')
-        .insert({ author_id, chat_id, text });
+        .insert({ author_id, chat_id, text: text.slice(0, 2999) });
     }
   };
 
@@ -39,6 +39,7 @@ export default function SendInput({ chat_id, author_id, addMessage }: Props) {
             handleSend();
           }
         }}
+        maxLength={3000}
         value={text}
         onChange={e => setText(e.target.value)}
         className="w-full border rounded-md p-2 outline-none transition-all duration-300 focus:border-gray-400"

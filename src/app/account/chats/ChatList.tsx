@@ -98,11 +98,10 @@ export default function ChatList({ chats: chatsInitial }: Props) {
     <p>Нет чатов</p>
   );
 
-  // jsx is a little bit complicated, refactor later.
   return (
     <div className="relative border rounded-lg w-full">
       <div className="absolute w-full h-full flex">
-        <div className="overflow-y-auto overflow-x-hidden rounded-tl-lg rounded-tr-lg min-[900px]:rounded-tr-none min-[900px]:border-r w-full min-[900px]:w-[300px] shrink-0">
+        <div className="select-none overflow-y-auto overflow-x-hidden rounded-tl-lg rounded-tr-lg min-[900px]:rounded-tr-none min-[900px]:border-r w-full min-[900px]:w-[300px] shrink-0">
           <div 
             className="sticky top-0 px-3 h-16 flex items-center justify-between font-medium text-lg bg-white border-b"
           >
@@ -125,7 +124,7 @@ export default function ChatList({ chats: chatsInitial }: Props) {
                     })}
                   >
                     <div 
-                      className="text-2xl h-14 w-14 flex justify-center items-center font-medium border border-slate-300 rounded-full"
+                      className="text-2xl h-14 w-14 flex justify-center items-center font-medium border border-slate-300 rounded-full shrink-0"
                     >
                       {chat.anotherPersonName[0]}
                     </div>

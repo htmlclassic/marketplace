@@ -29,12 +29,12 @@ export default function Chat({
 }: Props) {
   return (
     <div className="relative grow flex flex-col gap-3">
-      <div className="flex gap-5 items-center justify-between px-3 border-b">
+      <div className="flex gap-5 items-center justify-between px-3 border-b overflow-hidden">
         <Link
           href={`/products/${product.id}`}
-          className="z-10 h-16 shrink-0 flex gap-3 items-center grow"
+          className="z-10 h-16 shrink-0 flex gap-3 items-center grow max-w-[90%]"
         >
-          <div className="relative w-[40px] h-[40px]">
+          <div className="relative w-[40px] h-[40px] shrink-0">
             <Image
               src={product.img_urls![0]}
               alt='product picture'
@@ -51,7 +51,7 @@ export default function Chat({
           <CrossIcon />
         </button>
       </div>
-      <div className="relative flex flex-col-reverse gap-3 p-5 h-full overflow-auto">
+      <div className="relative w-full flex flex-col-reverse gap-3 p-5 h-full overflow-auto">
         {
           messages?.map(message =>
             <motion.div
@@ -60,7 +60,7 @@ export default function Chat({
                 scale: 1,
               }}
               className={clsx({
-                "rounded-lg p-3 min-w-[100px] max-w-max [overflow-wrap:anywhere]": true,
+                "rounded-lg p-3 w-max min-w-[100px] max-w-[300px] [overflow-wrap:anywhere]": true,
                 "self-end bg-blue-200": message.author_id === uid,
                 "bg-green-200": message.author_id !== uid
               })}
@@ -71,7 +71,7 @@ export default function Chat({
               >
                 {message.author_id === uid && 'Вы:'} {message.author_id !== uid && anotherPersonName}
               </div>
-              <div>{message.text}</div>
+              <div className="overflow-hidden">{message.text}</div>
             </motion.div>
           )
         }
