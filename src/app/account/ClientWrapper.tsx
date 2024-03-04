@@ -37,7 +37,7 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
   }, []);
 
   return (
-    <div className="[--menu-height:3.5rem] [--top-padding:calc(var(--menu-height)+1.5rem)] relative side-padding grow overflow-hidden pt-[--top-padding] sm:pt-6 max-w-[1600px] mx-auto">
+    <div className="[--menu-height:3.5rem] [--top-padding:calc(var(--menu-height)+1rem)] relative side-padding grow overflow-hidden pt-[--top-padding] sm:pt-6 max-w-[1600px] mx-auto">
       <div className="absolute w-full left-0 top-[-1px] sm:hidden">
         <button
           onClick={e => {

@@ -30,7 +30,7 @@ export default function SendInput({ chat_id, author_id, addMessage }: Props) {
   };
 
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-1">
       <input
         ref={inputRef}
         type="text"
