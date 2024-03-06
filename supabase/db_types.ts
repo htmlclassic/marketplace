@@ -572,6 +572,12 @@ export type Database = {
         }
         Returns: string
       }
+      set_order_payment_status_to_true: {
+        Args: {
+          orderid: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

@@ -13,12 +13,6 @@ export enum Errors {
 export type StrippedCartItem = Omit<CartItem, 'product'> &
   { product: Pick<Product, 'id' | 'quantity' | 'price'> };
 
-export interface BankCardData {
-  cardNumber: string;
-  expDate: string;
-  cvc: string;
-}
-
 export interface Inputs {
   paymentType: string;
   address: string;
@@ -56,5 +50,7 @@ export const FormDataZodSchema = z.object({
     message: 'Неверный номер телефона'
   })
 });
+
+export type PaymentType = 'bank_card' | 'marketplace';
 
 export type FormDataType = z.infer<typeof FormDataZodSchema>;

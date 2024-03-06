@@ -2,8 +2,7 @@
 
 import clsx from "clsx";
 import { useContext, useState } from "react";
-import Card from "./Card";
-import { BankCardData, FormDataZodSchema, Inputs, StrippedCartItem } from "./types";
+import { FormDataZodSchema, Inputs, StrippedCartItem } from "./types";
 import buyItems from "./buyItems";
 import { CartContext } from "@/src/CartContext";
 import TextField from "@mui/material/TextField";
@@ -12,42 +11,20 @@ import Button from "@/src/components/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AsYouType } from 'libphonenumber-js'
+import { numberWithSpaces } from "@/src/utils";
+import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 interface Props {
   uid: string | null;
+  marketplaceBalance: number;
 }
 
-function sendEmail(
-  orderId: number,
-  receiverName: string,
-  receiverEmail: string,
-  trackLink: string = `https://marketplace-one-hazel.vercel.app/track-order/${orderId}`
-) {
-  const data = {
-    service_id: 'service_vndumiu',
-    template_id: 'template_dsdlu2x',
-    user_id: 'A_WhdlcbVLwO1QzHP',
-    template_params: {
-      name: receiverName,
-      to: receiverEmail,
-      orderId,
-      trackLink
-    }
-  };
-
-  fetch('https://api.emailjs.com/api/v1.0/email/send', {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data)
-  });
-}
-
-export default function PageClient({ uid }: Props) {
+export default function PageClient({ uid, marketplaceBalance }: Props) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: {
       errors,
       isSubmitting
@@ -55,9 +32,22 @@ export default function PageClient({ uid }: Props) {
   } = useForm<Inputs>({
     resolver: zodResolver(FormDataZodSchema)
   });
+  const router = useRouter();
 
   const { cart, clearCart } = useContext(CartContext);
   const [orderId, setOrderId] = useState<number | null>(null);
+
+  const totalSumToPay = cart.reduce((acc, cartItem) =>
+    acc + cartItem.product.price * cartItem.quantity, 0);
+  const marketplaceAllowBuy = marketplaceBalance >= totalSumToPay;
+  const paymentType = watch('paymentType') as PaymentType;
+
+  let submitButtonContent: React.ReactNode = 'Перейти к оплате';
+
+  if (paymentType === 'marketplace' && marketplaceAllowBuy)
+    submitButtonContent = `Оплатить ${numberWithSpaces(totalSumToPay)} ₽`;
+  if (paymentType === 'marketplace' && !marketplaceAllowBuy)
+    submitButtonContent = 'Недостаточно средств';
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const strippedCart: StrippedCartItem[] = cart.map(item => ({
@@ -73,21 +63,26 @@ export default function PageClient({ uid }: Props) {
       const orderId = await buyItems(uid, data, strippedCart);
 
       sendEmail(orderId, data.receiverName, data.email);
-      clearCart();
-      setOrderId(orderId);
+      
+      if (paymentType === 'bank_card') {
+        router.push(`/fake-bank?orderid=${orderId}`);
+      } else {
+        clearCart();
+        setOrderId(orderId);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  if (!cart.length) return 'Корзина пуста';
+
   if (orderId) {
     return (
       <div className="side-padding">
-        <h2 className="font-semibold text-3xl">Трек-код для отслеживания заказа: {orderId}</h2>
-        {
-          !uid &&
-            <p className="text-sm">Мы также отправили трек-код вам на почту.</p>
-        }
+        <h2 className="font-semibold text-3xl">Заказ оформлен!</h2>
+        <p>Трек-код для отслеживания заказа: {orderId}</p>
+        <p className="text-sm">Мы также отправили трек-код вам на почту.</p>
       </div>
     );
   }
@@ -180,14 +175,52 @@ export default function PageClient({ uid }: Props) {
           }
         </TextField>
         <Button 
-          disabled={isSubmitting}
+          disabled={isSubmitting || paymentType === 'marketplace' && !marketplaceAllowBuy}
           className={clsx({
             "animate-pulse": isSubmitting
           })}
-        >Перейти к оплате</Button>
+        >
+          {submitButtonContent}
+        </Button>
+        {
+          paymentType === 'marketplace' && !marketplaceAllowBuy &&
+          <Link 
+            href="account/wallet"
+            className="text-sm text-gray-400 transition-all hover:underline hover:text-black"
+          >
+            Пополнить кошелёк
+          </Link>
+        }
       </form>
     </div>
   );
+}
+
+function sendEmail(
+  orderId: number,
+  receiverName: string,
+  receiverEmail: string,
+  trackLink: string = `https://marketplace-one-hazel.vercel.app/track-order/${orderId}`
+) {
+  const data = {
+    service_id: 'service_vndumiu',
+    template_id: 'template_dsdlu2x',
+    user_id: 'A_WhdlcbVLwO1QzHP',
+    template_params: {
+      name: receiverName,
+      to: receiverEmail,
+      orderId,
+      trackLink
+    }
+  };
+
+  fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data)
+  });
 }
 
 function CardIcon() {
