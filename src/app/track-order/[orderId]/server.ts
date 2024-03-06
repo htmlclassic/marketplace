@@ -9,7 +9,7 @@ export async function getOrderInfo(orderId: number) {
   const supabase = createServiceSupabaseClient();
 
   const { data } = await supabase
-    .from('order_details')
+    .from('order')
     .select('id,delivery_date')
     .eq('id', orderId)
     .single();

@@ -75,17 +75,27 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
     }
   };
 
-  if (!cart.length) return 'Корзина пуста';
-
   if (orderId) {
     return (
-      <div className="side-padding">
-        <h2 className="font-semibold text-3xl">Заказ оформлен!</h2>
-        <p>Трек-код для отслеживания заказа: {orderId}</p>
-        <p className="text-sm">Мы также отправили трек-код вам на почту.</p>
+      <div className="side-padding grow flex flex-col pt-10">
+        <div>
+          <h2 className="font-semibold text-3xl mb-3">Заказ оформлен!</h2>
+          <Link
+            href={`track-order/${orderId}`}
+            className="underline"
+          >Отследить заказ можно здесь.</Link>
+          <p className="text-sm text-gray-500">Мы также отправили ссылку для отслеживания заказа вам на почту.</p>
+        </div>
       </div>
     );
   }
+
+  if (!cart.length) return (
+    <div className="side-padding grow flex flex-col pt-10">
+      Невозможно оплатить пустую корзину. Как вы сюда попали?
+      <span className="text-2xl">😨</span>
+    </div>
+  );
 
   return (
     <div

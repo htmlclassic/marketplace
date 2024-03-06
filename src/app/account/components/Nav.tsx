@@ -22,6 +22,10 @@ const LINKS = [
     href: '/account/chats'
   },
   {
+    text: 'Кошелёк',
+    href: '/account/wallet'
+  },
+  {
     text: 'Продать товар',
     href: '/account/addproduct'
   },

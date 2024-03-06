@@ -11,7 +11,7 @@ export default function Client({ orderId }: { orderId: number }) {
   const router = useRouter();
 
   return (
-    <div className="grow flex justify-center items-center">
+    <div className="side-padding pt-5 grow flex justify-center items-center">
       <BankCard
         onSubmit={async () => {
           await action(orderId);
