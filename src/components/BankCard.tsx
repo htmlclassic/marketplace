@@ -15,9 +15,10 @@ import { CartContext } from "../CartContext";
 
 interface Props {
   onSubmit: (formData: Inputs) => Promise<any>;
+  sumToPay?: number;
 }
 
-export default function BankCard({ onSubmit }: Props) {
+export default function BankCard({ onSubmit, sumToPay: sumToPayInitial }: Props) {
   const {
     register,
     handleSubmit,
@@ -27,8 +28,10 @@ export default function BankCard({ onSubmit }: Props) {
     resolver: zodResolver(FormDataZodSchema),
     mode: 'onChange'
   });
-  const { cart, clearCart } = useContext(CartContext);
-  const sumToPay = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const { cart } = useContext(CartContext);
+
+  const sumToPay = 
+    sumToPayInitial || cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
   const cardNumber = watch('number');
   const possibleCardTypes = creditCardType(cardNumber);
@@ -50,7 +53,7 @@ export default function BankCard({ onSubmit }: Props) {
   return (
     <form
       onSubmit={handleSubmit(action)} 
-      className="border p-3 sm:p-6 flex flex-col gap-3 w-[400px] rounded-lg"
+      className="border p-3 sm:p-6 flex flex-col gap-3 w-full max-w-[400px] rounded-lg"
     >
       <header className="mb-5 flex gap-3 items-center">
         <BankCardIcon />

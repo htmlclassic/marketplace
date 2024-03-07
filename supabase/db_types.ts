@@ -201,6 +201,7 @@ export type Database = {
       order: {
         Row: {
           address: string
+          cancelled: boolean | null
           created_at: string
           delivery_date: string
           email: string
@@ -211,6 +212,7 @@ export type Database = {
         }
         Insert: {
           address: string
+          cancelled?: boolean | null
           created_at?: string
           delivery_date: string
           email: string
@@ -221,6 +223,7 @@ export type Database = {
         }
         Update: {
           address?: string
+          cancelled?: boolean | null
           created_at?: string
           delivery_date?: string
           email?: string
@@ -366,7 +369,6 @@ export type Database = {
       }
       profile: {
         Row: {
-          balance: number
           birthdate: string | null
           email: string
           first_name: string | null
@@ -374,7 +376,6 @@ export type Database = {
           last_name: string | null
         }
         Insert: {
-          balance?: number
           birthdate?: string | null
           email: string
           first_name?: string | null
@@ -382,7 +383,6 @@ export type Database = {
           last_name?: string | null
         }
         Update: {
-          balance?: number
           birthdate?: string | null
           email?: string
           first_name?: string | null
@@ -518,24 +518,93 @@ export type Database = {
       }
       test: {
         Row: {
+          dope: number
           id: number
-          products: Json[]
         }
         Insert: {
+          dope: number
           id?: number
-          products: Json[]
         }
         Update: {
+          dope?: number
           id?: number
-          products?: Json[]
         }
         Relationships: []
+      }
+      wallet: {
+        Row: {
+          balance: number
+          created_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_wallet_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      wallet_history: {
+        Row: {
+          action: Database["public"]["Enums"]["wallet_history_action_type"]
+          created_at: string
+          id: number
+          sum: number
+          wallet_id: number
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["wallet_history_action_type"]
+          created_at?: string
+          id?: number
+          sum: number
+          wallet_id: number
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["wallet_history_action_type"]
+          created_at?: string
+          id?: number
+          sum?: number
+          wallet_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_wallet_history_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallet"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      deposit_on_wallet: {
+        Args: {
+          wallet_id: number
+          sum: number
+          action: Database["public"]["Enums"]["wallet_history_action_type_on_deposit"]
+        }
+        Returns: undefined
+      }
       get_most_rated_products: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -578,9 +647,17 @@ export type Database = {
         }
         Returns: undefined
       }
+      withdraw_from_wallet: {
+        Args: {
+          wallet_id: number
+          sum: number
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      wallet_history_action_type: "sold_product" | "bought_product" | "deposit"
+      wallet_history_action_type_on_deposit: "sold_product" | "deposit"
     }
     CompositeTypes: {
       [_ in never]: never

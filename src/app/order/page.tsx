@@ -5,14 +5,19 @@ import PageClient from "./pageClient";
 // this route should be protected
 // you can be redirected here from /cart if your cart isnt empty, no way else
 export default async function Page() {
-  const api = getAPI(createServerComponentSupabaseClient());
+  const supabase = createServerComponentSupabaseClient();
+  const api = getAPI(supabase);
   const uid = await api.getCurrentUserId();
   let marketplaceBalance = 0;
 
   if (uid) {
-    const profileData = await api.getCurrentUserProfileData();
+    const { data } = await supabase
+      .from('wallet')
+      .select('balance')
+      .limit(1)
+      .single();
 
-    if (profileData) marketplaceBalance = profileData.balance;
+    if (data) marketplaceBalance = data.balance;
   }
 
   return (
