@@ -210,13 +210,6 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       }
     , THROTTLE_MS),
 
-    async setUserBalance(uid: string, newBalance: number) {
-      const { error } = await supabase
-          .from('profile')
-          .update({ balance: newBalance })
-          .eq('id', uid);
-    },
-
     async getSellerStatistics() {
       const uid = await this.getCurrentUserId();
 
