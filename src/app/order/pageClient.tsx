@@ -67,9 +67,10 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
       if (paymentType === 'bank_card') {
         router.push(`/transaction/${orderId}`);
       } else {
-        clearCart();
         setOrderId(orderId);
       }
+
+      clearCart();
     } catch (error) {
       console.log(error);
     }
