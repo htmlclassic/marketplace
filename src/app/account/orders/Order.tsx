@@ -83,13 +83,18 @@ export default function Order({ order, isActive, onClick }: Props) {
                     {
                       status === 'Отменён'
                         ? 'не оплачено'
-                        : <>
+                        : <div>
                             Осталось времени для оплаты:
                             <Timer
                               startTime={order.created_at}
                               onTimeUp={() => setStatus('Отменён')} 
                             />
-                          </>
+                            <Link
+                              href={`/transaction/${order.id}`}
+                              className="underline block hover:text-sky-400"
+                              onClick={e => e.stopPropagation()}
+                            >Оплатить</Link>
+                          </div>
                     }
                   </span>
             }

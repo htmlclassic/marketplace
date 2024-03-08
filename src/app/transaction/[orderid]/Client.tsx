@@ -3,11 +3,13 @@
 import BankCard from "@/src/components/BankCard";
 import { action } from "./actions";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import { CartContext } from "@/src/CartContext";
 
-export default function Client({ orderId }: { orderId: number }) {
-  const { clearCart } = useContext(CartContext);
+interface Props {
+  orderId: number;
+  sumToPay: number;
+}
+
+export default function Client({ orderId, sumToPay }: Props) {
   const router = useRouter();
 
   return (
@@ -15,9 +17,11 @@ export default function Client({ orderId }: { orderId: number }) {
       <BankCard
         onSubmit={async () => {
           await action(orderId);
-          clearCart();
+
+          router.refresh();
           router.push('/');
         }}
+        sumToPay={sumToPay}
       />
     </div>
   );

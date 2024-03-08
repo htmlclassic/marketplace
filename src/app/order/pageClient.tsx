@@ -62,10 +62,10 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
     try {
       const orderId = await buyItems(uid, data, strippedCart);
 
-      sendEmail(orderId, data.receiverName, data.email);
+      sendEmail(orderId, data.receiverName, data.email, data.paymentType as PaymentType);
       
       if (paymentType === 'bank_card') {
-        router.push(`/fake-bank?orderid=${orderId}`);
+        router.push(`/transaction/${orderId}`);
       } else {
         clearCart();
         setOrderId(orderId);
@@ -206,22 +206,38 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
   );
 }
 
+// SEND TRANSACTION LINK TOO
 function sendEmail(
   orderId: number,
   receiverName: string,
   receiverEmail: string,
-  trackLink: string = `https://marketplace-one-hazel.vercel.app/track-order/${orderId}`
+  paymentType: PaymentType
 ) {
+  const trackLink = `https://marketplace-one-hazel.vercel.app/track-order/${orderId}`;
+  const transactionLinkURL = `https://marketplace-one-hazel.vercel.app/transaction/${orderId}`;
+
+  const transactionLink = `
+    <br><br>
+      В случае, если Вы ещё не оплатили заказ, у Вас есть 30 минут для его оплаты.
+    <br>
+      Оплатить заказ можно здесь: <a href="${transactionLinkURL}">${transactionLinkURL}</a>
+  `;
+
+  const params: any = {
+    name: receiverName,
+    to: receiverEmail,
+    orderId,
+    trackLink,
+  };
+
+  if (paymentType === 'bank_card')
+    params.transactionLink = transactionLink;
+
   const data = {
     service_id: 'service_vndumiu',
     template_id: 'template_dsdlu2x',
     user_id: 'A_WhdlcbVLwO1QzHP',
-    template_params: {
-      name: receiverName,
-      to: receiverEmail,
-      orderId,
-      trackLink
-    }
+    template_params: params
   };
 
   fetch('https://api.emailjs.com/api/v1.0/email/send', {
