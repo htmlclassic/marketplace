@@ -25,13 +25,13 @@ export default function PageClient() {
           setItemQuantity={setItemQuantity}
         />
       </div>
-      <div className="transition-all duration-300 top-24 sticky shrink-0 h-max side-padding py-5 sm:p-10 bg-white sm:border border-[rgba(0,0,0,0.06)] rounded-lg flex flex-col gap-7 hover:border-[rgba(0,0,0,0.16)]">
+      <div className="text-sm sm:text-base transition-all duration-300 bottom-[calc(var(--mobile-menu-height)-1px)] sm:bottom-[-1px] top-[calc(var(--header-height)+1.5rem)] sticky shrink-0 h-max side-padding py-2 sm:p-10 bg-white sm:border border-[rgba(0,0,0,0.06)] rounded-lg hover:border-[rgba(0,0,0,0.16)]">
         <div>
-          <h2 className="font-semibold text-lg">В корзине</h2>
-          <div className="mb-5">{itemsTotalCount} {numMorph(itemsTotalCount)}</div>
+          <h2 className="font-semibold text-lg mb-1">В корзине</h2>
+          <div className="mb-2 sm:mb-5">{itemsTotalCount} {numMorph(itemsTotalCount)}</div>
           <div>Сумма к оплате: {numberWithSpaces(total)} ₽</div>
           <Button
-            className="p-0 bg-sky-500 mt-7 sm:max-w-80"
+            className="p-0 bg-sky-500 mt-3 sm:mt-7 sm:max-w-80"
           >
             <Link
               className="px-8 py-4 block"
