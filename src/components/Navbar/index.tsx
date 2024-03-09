@@ -4,9 +4,10 @@ import CartItemsCount from './CartItemsCount';
 import Link from 'next/link';
 import MenuIcon from './assets/menu-icon.svg';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import SearchInput from '../SearchInput';
+import Catalog from '../Catalog';
 
 export default function Navbar() {
   const [showCatalog, setShowCatalog] = useState(false);
@@ -24,20 +25,22 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center bg-black bg-opacity-80 backdrop-blur-md text-white z-20">
-      <button
-        ref={ref}
-        onClick={() => setShowCatalog(!showCatalog)}
-        className="lg:hidden shrink-0 p-2"
-      >
-        <Image
-          src={MenuIcon}
-          alt="Menu icon"
-          width={25}
-          height={25}
-        />
-      </button>
-      <Link href="/" className='text-2xl font-medium'>Marketplace</Link>
+    <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center before:bg-black before:bg-opacity-80 before:backdrop-hack before:backdrop-blur-md text-white z-20">
+      <div className="flex gap-3 items-center">
+        <button
+          ref={ref}
+          onClick={() => setShowCatalog(!showCatalog)}
+          className="shrink-0 p-2 text-white"
+        >
+          <Image
+            src={MenuIcon}
+            alt="Menu icon"
+            width={25}
+            height={25}
+          />
+        </button>
+        <Link href="/" className='text-2xl font-medium'>Marketplace</Link>
+      </div>  
       <SearchInput />
       <div className="flex items-center lg:gap-4 justify-between">
         <CartItemsCount />
@@ -45,6 +48,11 @@ export default function Navbar() {
           <UserIcon />
         </Link>
       </div>
+
+      <Catalog
+        show={showCatalog}
+        hide={() => setShowCatalog(false)}
+      />
     </div>
   );
 }

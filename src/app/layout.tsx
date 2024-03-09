@@ -11,7 +11,6 @@ import ClientWrapper from './ClientWrapper';
 import Navbar from '../components/Navbar';
 import MobileMenu from '../components/MobileMenu/MobileMenu';
 import MobileHeader from '../components/MobileHeader/MobileHeader';
-import MainLoadingSpinner from '../components/MainLoadingSpinner';
 
 // import type { Viewport } from 'next'
  
