@@ -9,8 +9,7 @@ import { Roboto } from 'next/font/google';
  
 import ClientWrapper from './ClientWrapper';
 import Navbar from '../components/Navbar';
-import MobileMenu from '../components/MobileMenu/MobileMenu';
-import MobileHeader from '../components/MobileHeader/MobileHeader';
+import MobileMenu from '../components/MobileMenu';
 
 // import type { Viewport } from 'next'
  
@@ -66,8 +65,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className="flex flex-col [--mobile-pb:calc(var(--mobile-menu-height)+1rem)] pb-[--mobile-pb] sm:pb-6 min-h-[100svh] max-w-[1920px] mx-auto">
         <ClientWrapper initialCart={initialCart} uid={uid}>
           <Navbar />
-          <MobileHeader />
-          <main className="w-full grow flex max-w-[1400px] mx-auto">
+          <main className="w-full grow flex max-w-[1400px] mx-auto z-10">
             {children}
           </main>
           <MobileMenu />

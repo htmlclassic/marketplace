@@ -8,6 +8,7 @@ import React, { Suspense, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import SearchInput from '../SearchInput';
 import Catalog from '../Catalog';
+import clsx from 'clsx';
 
 export default function Navbar() {
   const [showCatalog, setShowCatalog] = useState(false);
@@ -25,35 +26,52 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 hidden sm:flex gap-x-10 justify-between items-center before:bg-black before:bg-opacity-80 before:backdrop-hack before:backdrop-blur-md text-white z-20">
-      <div className="flex gap-3 items-center">
+    <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 flex gap-x-5 sm:gap-x-10 justify-between items-center before:bg-black before:bg-opacity-80 before:backdrop-hack before:backdrop-blur-md text-white z-20">
+      <div className="flex gap-7 items-center">
         <button
           ref={ref}
           onClick={() => setShowCatalog(!showCatalog)}
-          className="shrink-0 p-2 text-white"
+          className={clsx({
+            "shrink-0 text-white transition-all duration-300": true,
+          })}
         >
-          <Image
-            src={MenuIcon}
-            alt="Menu icon"
-            width={25}
-            height={25}
-          />
+          <CatalogIcon />
         </button>
-        <Link href="/" className='text-2xl font-medium'>Marketplace</Link>
+        <Link href="/" className="text-2xl font-medium hidden sm:inline">Marketplace</Link>
       </div>  
       <SearchInput />
-      <div className="flex items-center lg:gap-4 justify-between">
+      <div className="items-center lg:gap-4 justify-between hidden sm:flex">
         <CartItemsCount />
         <Link href="/account" title="Аккаунт" className="shrink-0 flex py-2 pl-4">
           <UserIcon />
         </Link>
       </div>
+      <Link href="/" className="text-2xl font-medium sm:hidden">M</Link>
 
       <Catalog
         show={showCatalog}
         hide={() => setShowCatalog(false)}
       />
     </div>
+  );
+}
+
+function CatalogIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="25"
+      height="25"
+      fill="none"
+      viewBox="0 0 30 30"
+    >
+      <path
+        fill="#fff"
+        stroke="#fff"
+        strokeLinejoin="round"
+        d="M1 .5h10c.186 0 .303.06.371.129.07.068.129.185.129.371v10c0 .186-.06.303-.129.371-.068.07-.185.129-.371.129H1c-.186 0-.303-.06-.371-.129C.559 11.303.5 11.186.5 11V1C.5.814.56.697.629.629.697.559.814.5 1 .5zM1 18.5h10c.186 0 .303.06.371.129.07.068.129.185.129.371v10c0 .186-.06.303-.129.371-.068.07-.185.129-.371.129H1c-.186 0-.303-.06-.371-.129C.559 29.303.5 29.186.5 29V19c0-.186.06-.303.129-.371.068-.07.185-.129.371-.129zM19 .5h10c.186 0 .303.06.371.129.07.068.129.185.129.371v10c0 .186-.06.303-.129.371-.068.07-.185.129-.371.129H19c-.186 0-.303-.06-.371-.129-.07-.068-.129-.185-.129-.371V1c0-.186.06-.303.129-.371.068-.07.185-.129.371-.129zM19 18.5h10c.186 0 .303.06.371.129.07.068.129.185.129.371v10c0 .186-.06.303-.129.371-.068.07-.185.129-.371.129H19c-.186 0-.303-.06-.371-.129-.07-.068-.129-.185-.129-.371V19c0-.186.06-.303.129-.371.068-.07.185-.129.371-.129z"
+      ></path>
+    </svg>
   );
 }
 
