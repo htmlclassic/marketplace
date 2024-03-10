@@ -70,5 +70,5 @@ export async function signUp(formData: FormData) {
   //   if (error) throw new Error(error.message);
   // }
 
-  redirect('/');
+  // redirect('/');
 }
