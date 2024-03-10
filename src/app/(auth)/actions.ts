@@ -81,7 +81,13 @@ export async function signInWithGoogle() {
   const supabase = createOtherSupabaseClient();
 
   const { data } = await supabase.auth.signInWithOAuth({
-    provider: 'google'
+    provider: 'google',
+    options: {
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
   });
 
   if (data.url) {
