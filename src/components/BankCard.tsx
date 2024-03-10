@@ -96,7 +96,13 @@ export default function BankCard({ onSubmit, sumToPay }: Props) {
               e.target.value = value;
 
               if (value.length === 2) {
-                value = value[0] + value[1] + '/';
+                value = value + '/';
+
+                e.target.value = value;
+              }
+
+              if (value.length === 3 && value.at(-1) !== '/') {
+                value = value[0] + value[1] + '/' + value[2];
 
                 e.target.value = value;
               }
