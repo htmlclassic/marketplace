@@ -42,33 +42,51 @@ export async function signUp(formData: FormData) {
     redirect(`/signup?error=${'Поле \'Фамилия\' пустое'}`);
   }
 
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
+  const { data: { user }, error } = await supabase.auth.signUp({
+    email,
+    password
   });
 
-  console.log('data:', data);
-  console.log('error:', error)
+  if (error) {
+    redirect(`/signup?error=${'Could not authenticate user'}`);
+  } else {
+    const uid = user!.id;
 
-  // const { data: { user }, error } = await supabase.auth.signUp({
-  //   email,
-  //   password
-  // })
+    const { error } = await supabase
+      .from('profile')
+      .update({ first_name, last_name })
+      .eq('id', uid);
 
-  // console.log(user);
-  // console.log('error: ' + error)
+    if (error) throw new Error(error.message);
+  }
 
-  // if (error) {
-  //   redirect(`/signup?error=${'Could not authenticate user'}`);
-  // } else {
-  //   const uid = user!.id;
+  redirect('/');
+}
 
-  //   const { error } = await supabase
-  //     .from('profile')
-  //     .update({ first_name, last_name })
-  //     .eq('id', uid);
+export async function signInWithGithub() {
+  const supabase = createOtherSupabaseClient();
 
-  //   if (error) throw new Error(error.message);
-  // }
+  const { data } = await supabase.auth.signInWithOAuth({
+    provider: 'github'
+  });
 
-  // redirect('/');
+  if (data.url) {
+    redirect(data.url);
+  }
+
+  redirect(`/signup?error=${'Could not sign in user via Github'}`);
+}
+
+export async function signInWithGoogle() {
+  const supabase = createOtherSupabaseClient();
+
+  const { data } = await supabase.auth.signInWithOAuth({
+    provider: 'google'
+  });
+
+  if (data.url) {
+    redirect(data.url);
+  }
+
+  redirect(`/signup?error=${'Could not sign in user via Github'}`);
 }
