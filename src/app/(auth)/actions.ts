@@ -42,23 +42,33 @@ export async function signUp(formData: FormData) {
     redirect(`/signup?error=${'Поле \'Фамилия\' пустое'}`);
   }
 
-  const { data: { user }, error } = await supabase.auth.signUp({
-    email,
-    password
-  })
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+  });
 
-  if (error) {
-    redirect(`/signup?error=${'Could not authenticate user'}`);
-  } else {
-    const uid = user!.id;
+  console.log('data:', data);
+  console.log('error:', error)
 
-    const { error } = await supabase
-      .from('profile')
-      .update({ first_name, last_name })
-      .eq('id', uid);
+  // const { data: { user }, error } = await supabase.auth.signUp({
+  //   email,
+  //   password
+  // })
 
-    if (error) throw new Error(error.message);
-  }
+  // console.log(user);
+  // console.log('error: ' + error)
+
+  // if (error) {
+  //   redirect(`/signup?error=${'Could not authenticate user'}`);
+  // } else {
+  //   const uid = user!.id;
+
+  //   const { error } = await supabase
+  //     .from('profile')
+  //     .update({ first_name, last_name })
+  //     .eq('id', uid);
+
+  //   if (error) throw new Error(error.message);
+  // }
 
   redirect('/');
 }
