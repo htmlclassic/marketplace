@@ -93,7 +93,7 @@ export default function CatalogClient({ show, hide }: Props) {
           categories.map((cat, i) =>
             <Link
               href={`/search?category=${cat.name}`}
-              className="transition-all hover:text-sky-400 hover:underline flex items-center gap-3"
+              className="transition-all hover:text-sky-400 flex items-center gap-3"
               onClick={hide}
               key={cat.id}
             >
