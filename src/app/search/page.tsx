@@ -1,6 +1,6 @@
 import { createServerComponentSupabaseClient } from '@/supabase/utils_server';
 import { SearchParams } from './types';
-import { loadProducts } from './utils';
+import { getCategories, loadProducts } from './utils';
 import PageClient from './PageClient';
 
 interface PageProps {
@@ -11,8 +11,9 @@ export default async function Page({ searchParams }: PageProps) {
   const supabase = createServerComponentSupabaseClient();
   const FETCH_COUNT = 20;
 
+  const categories = await getCategories(supabase);
   const products = await loadProducts(supabase, searchParams, 0, FETCH_COUNT - 1);
-  
+
   return (
     <PageClient
       products={products}

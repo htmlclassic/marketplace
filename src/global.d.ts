@@ -33,5 +33,6 @@ declare global {
 
   type PaymentType = 'marketplace' | 'bank_card';
 
+  // gets an array's element type
   type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 }

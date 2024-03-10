@@ -1,11 +1,9 @@
 import { QueryData, SupabaseClient } from "@supabase/supabase-js";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { OrderSearchParam, SearchParams } from "./types";
+import { SearchParams } from "./types";
 
 interface ParamsToInsert {
-  order?: OrderSearchParam;
-  price_from?: number;
-  price_to?: number;
+  [key: string]: string;
 }
 
 // 1) inserts search params into params string
@@ -40,8 +38,9 @@ export async function loadProducts(
   from: number, 
   to: number
 ) {
-  const text = searchParams.text || '';
-  const order = searchParams.order;
+  const text = searchParams.text;
+  const category = searchParams.category;
+  const order = searchParams.order || 'price_asc';
   const priceFrom = Number(searchParams.price_from) || 0;
   const priceTo = Number(searchParams.price_to) || 1_000_000_000;
 
@@ -61,12 +60,14 @@ export async function loadProducts(
 
   const query = supabase
     .rpc('get_products_with_avg_rating')
-    .textSearch('title', `${text}`)
     .gte('price', priceFrom)
     .lte('price', priceTo)
     .range(from, to)
     .order(orderColumn, orderOptions)
     .order('created_at', { ascending: true }); // avoid showing the same products on lazy load
+
+  if (text) query.textSearch('title', `${text}`);
+  if (category) query.eq('category', category);
   
   const { data: products } = await query;
   
@@ -79,4 +80,13 @@ export async function loadProducts(
   return products as ProductsWithAvgRating;
 };
 
+export async function getCategories(supabase: SupabaseClient<Database>) {
+  const { data: categories } = await supabase
+    .from('category')
+    .select('id, name');
+  
+  return categories || [];
+}
+
+export type Categories = Awaited<ReturnType<typeof getCategories>>;
 export type ProductsWithAvgRating = Awaited<ReturnType<typeof loadProducts>>;

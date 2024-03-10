@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { insertSearchParams } from "../utils";
 import clsx from "clsx";
+import type { Categories } from '../types';
 
 interface Props {
   show: boolean | null;
@@ -46,7 +46,7 @@ export default function Filters({ show }: Props) {
                     e.target.value = value.toString();
                   }
 
-                  const params = insertSearchParams(searchParams, { price_from: value });
+                  const params = insertSearchParams(searchParams, { price_from: value.toString() });
                   router.replace(`/search?${params}`);
                 }}
                 defaultValue={priceFrom}
@@ -63,7 +63,7 @@ export default function Filters({ show }: Props) {
                     e.target.value = value.toString();
                   }
 
-                  const params = insertSearchParams(searchParams, { price_to: value });
+                  const params = insertSearchParams(searchParams, { price_to: value.toString() });
                   router.replace(`/search?${params}`);
                 }}
                 defaultValue={priceTo}

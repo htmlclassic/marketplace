@@ -6,7 +6,7 @@ import Sort from './components/Sort';
 import { useEffect, useState } from "react";
 import { throttle } from "lodash";
 import clsx from "clsx";
-import { ProductsWithAvgRating } from './types';
+import { Categories, ProductsWithAvgRating } from './types';
 
 interface Props {
   products: ProductsWithAvgRating;
@@ -51,7 +51,9 @@ export default function PageClient({
         </span><span>Меню</span>
       </div>
       <div className="flex p-2">
-        <Filters show={showFilters} />
+        <Filters
+          show={showFilters}
+        />
         <div className="pt-0 w-full">
           <Sort />
           <ProductList products={products} rangeFrom={rangeFrom} />

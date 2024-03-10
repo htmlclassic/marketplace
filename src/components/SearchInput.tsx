@@ -18,7 +18,7 @@ export default function SearchInput() {
   const [maximized, setMaximized] = useState<boolean | null>(null);
 
   const router = useRouter();
-  const href = searchValue !== '' ? `/search?text=${searchValue}&order=price_asc` : '/';
+  const href = `/search?text=${searchValue}`;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
