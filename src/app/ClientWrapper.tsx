@@ -23,7 +23,7 @@ export default function ClientWrapper({ children, initialCart, uid }: Props) {
   /*
     After supabase.auth.signInWithOAuth(provider: 'google' | 'github'), Supabase redirects to /
     On the client session now exists, but in my server component /account/layout.tsx
-    session is null. Layout redirects to /login page, because this is protected route.
+    session is null. The layout redirects to /login page, because this is protected route.
     Idk why, but /login sees that session is TRUE and redirects back to root.
     So my /account route doesn't see the session, but /login sees it.
 
@@ -31,7 +31,7 @@ export default function ClientWrapper({ children, initialCart, uid }: Props) {
     you signed in successfully.
 
     The solution: on initial website load I do router.refresh(), so /account can see session now.
-    Have no idea how does it work, but it works.
+    Have no idea how it workы, but it works.
   */
   useEffect(() => {
     const supabase = createClientSupabaseClient();
