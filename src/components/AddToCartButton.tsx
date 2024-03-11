@@ -7,6 +7,7 @@ import { CartContext } from "@/src/CartContext";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
+import { motion } from 'framer-motion';
 
 interface Props {
   product: Product;
@@ -55,10 +56,14 @@ export default function AddToCartButton({
       {
         inCart
           ? 
-            <span className="flex items-center justify-center gap-3">
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="flex items-center justify-center gap-3"
+            >
               <span>В корзине</span>
               <ShoppingCartIcon sx={{ width: 18, height: 18 }} />
-            </span>
+            </motion.span>
           :
             'В корзину'
       }
