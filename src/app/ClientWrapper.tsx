@@ -32,6 +32,8 @@ export default function ClientWrapper({ children, initialCart, uid }: Props) {
 
     The solution: on initial website load I do router.refresh(), so /account can see session now.
     Have no idea how it workы, but it works.
+
+    P.s. maybe this is because <Link href="/account"> prefetches the route before session is loaded?
   */
   useEffect(() => {
     const supabase = createClientSupabaseClient();
