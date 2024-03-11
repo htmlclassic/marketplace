@@ -60,7 +60,7 @@ export default function SearchInput() {
       onClick={e => e.stopPropagation()}
     >
       <div className={clsx({
-        "overflow-hidden group transition-all duration-300 ease-in-out rounded-md flex sm:border border-white border-opacity-30 focus-within:bg-white focus-within:text-gray-400": true,
+        "overflow-hidden group transition-all duration-300 ease-in-out rounded-full flex sm:border border-white border-opacity-20 focus-within:bg-white focus-within:text-gray-400": true,
         "w-12 sm:w-full": maximized === null,
         "w-full": maximized === true,
         "w-12": maximized === false
@@ -84,8 +84,7 @@ export default function SearchInput() {
           placeholder="Искать на Marketplace"
           className={clsx({
             "transition-all duration-300 order-1 group-has-[:focus-within]:text-black bg-transparent w-full text-sm outline-none placeholder:text-white group-has-[:focus-within]:placeholder:text-gray-400": true,
-            "p-2": maximized === true,
-            "sm:p-2": maximized === null,
+            "py-1 px-5 pr-0": maximized === null || maximized === true,
             "opacity-0": maximized === false
           })}
         />

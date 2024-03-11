@@ -2,10 +2,10 @@
 
 import CartItemsCount from './CartItemsCount';
 import Link from 'next/link';
-import MenuIcon from './assets/menu-icon.svg';
+import PersonIcon from '@mui/icons-material/Person';
+import Button from '@mui/material/Button';
 
-import React, { Suspense, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 import SearchInput from '../SearchInput';
 import Catalog from '../Catalog';
 import clsx from 'clsx';
@@ -28,22 +28,28 @@ export default function Navbar() {
   return (
     <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 flex gap-x-5 sm:gap-x-10 justify-between items-center before:bg-black before:bg-opacity-80 before:backdrop-hack before:backdrop-blur-md text-white z-20">
       <div className="flex gap-7 items-center">
-        <button
+        <Button
           ref={ref}
           onClick={() => setShowCatalog(!showCatalog)}
-          className={clsx({
-            "shrink-0 text-white transition-all duration-300": true,
-          })}
+          sx={{
+            width: 'max-content',
+            minWidth: 0,
+            padding: '0.7rem',
+            borderRadius: '100%'
+          }}
+          TouchRippleProps={{
+            className: "text-white"
+          }}
         >
           <CatalogIcon />
-        </button>
+        </Button>
         <Link href="/" className="text-2xl font-medium hidden sm:inline">Marketplace</Link>
       </div>  
       <SearchInput />
       <div className="items-center lg:gap-4 justify-between hidden sm:flex">
         <CartItemsCount />
         <Link href="/account" title="Аккаунт" className="shrink-0 flex py-2 pl-4">
-          <UserIcon />
+          <PersonIcon sx={{ width: 30, height: 30 }} />
         </Link>
       </div>
       <Link href="/" className="text-2xl font-medium sm:hidden">M</Link>
