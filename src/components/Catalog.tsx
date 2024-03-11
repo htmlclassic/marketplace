@@ -88,12 +88,12 @@ export default function CatalogClient({ show, hide }: Props) {
         "opacity-0 pointer-events-none translate-y-[calc(var(--initial-translate)-1rem)]": !show
       })}
     >
-    <div className="w-full overflow-auto grid grid-cols-[repeat(1,max-content)] sm:grid-cols-[repeat(2,max-content)] md:grid-cols-[repeat(2,max-content)] lg:grid-cols-[repeat(3,max-content)] xl:lg:grid-cols-[repeat(4,max-content)] gap-x-5 gap-y-7 justify-between">
+    <div className="w-full overflow-y-auto overflow-x-hidden grid grid-cols-[repeat(1,1fr)] sm:grid-cols-[repeat(2,1fr)] md:grid-cols-[repeat(2,1fr)] lg:grid-cols-[repeat(3,1fr)] xl:lg:grid-cols-[repeat(4,1fr)] gap-x-5 gap-y-7 justify-between">
         {
           categories.map((cat, i) =>
             <Link
               href={`/search?category=${cat.name}`}
-              className="transition-all hover:text-sky-400 flex items-center gap-3"
+              className="transition-all hover:text-sky-400 flex items-center gap-3 [overflow-wrap:anywhere]"
               onClick={hide}
               key={cat.id}
             >

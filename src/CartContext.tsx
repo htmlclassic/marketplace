@@ -52,6 +52,9 @@ export default function CartContextProvider({ children, initialCart, uid }: Prop
   }, [cart]);
 
   const addItem = (item: CartItem) => {
+    const itemAlreadyInCart = cart.find(cartItem => cartItem.product.id === item.product.id);
+    if (itemAlreadyInCart) return;
+
     if (uid) {
       api.addToCart(item.product.id, item.quantity);
     }
