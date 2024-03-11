@@ -15,7 +15,9 @@ export default function Profile({ profile: profileInitial }: Props) {
   const [profile, setProfile] = useState(profileInitial);
   const [showEditProfile, setShowEditProfile] = useState(false);
 
-  const fullName = profile.first_name + ' ' + profile.last_name;
+  const name = profile.name;
+  const birthdate = profile.birthdate ? dayjs(profile.birthdate).format('DD.MM.YYYY')
+    : 'Не указано';
 
   if (signOutLoader) {
     return (
@@ -40,15 +42,15 @@ export default function Profile({ profile: profileInitial }: Props) {
         <div className="grid grid-cols-[repeat(2,max-content)] gap-y-10 gap-x-20">
           <div>
             <div className="text-xs text-gray-600">
-              ФИО
+              Имя
             </div>
-            {fullName}
+            {name}
           </div>
           <div>
             <div className="text-xs text-gray-600">
               Дата рождения
             </div>
-            {dayjs(profile.birthdate).format('DD.MM.YYYY')}
+            {birthdate}
           </div>
           <div>
             <div className="text-xs text-gray-600">

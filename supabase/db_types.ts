@@ -101,13 +101,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "chat_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "profile"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "chat_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
@@ -115,7 +108,14 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "chat_seller_id_fkey"
+            foreignKeyName: "public_chat_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_chat_seller_id_fkey"
             columns: ["seller_id"]
             isOneToOne: false
             referencedRelation: "profile"
@@ -371,23 +371,20 @@ export type Database = {
         Row: {
           birthdate: string | null
           email: string
-          first_name: string | null
           id: string
-          last_name: string | null
+          name: string | null
         }
         Insert: {
           birthdate?: string | null
           email: string
-          first_name?: string | null
           id: string
-          last_name?: string | null
+          name?: string | null
         }
         Update: {
           birthdate?: string | null
           email?: string
-          first_name?: string | null
           id?: string
-          last_name?: string | null
+          name?: string | null
         }
         Relationships: [
           {
