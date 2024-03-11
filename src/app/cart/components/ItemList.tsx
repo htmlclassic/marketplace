@@ -2,23 +2,29 @@
 
 import { AnimatePresence } from "framer-motion";
 import Item from "./Item";
+import { useContext } from "react";
+import { CartContext } from "@/src/CartContext";
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 
-interface Props {
-  cart: CartItem[];
-  removeCartItem: (productId: string) => void;
-  setItemQuantity: (productId: string, newQuantity: number) => void;
-}
+export default function ItemList() {
+  const { cart, clearCart, removeItem, setItemQuantity } = useContext(CartContext);
 
-export default function ItemList({ cart, removeCartItem, setItemQuantity }: Props) {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 w-full max-w-5xl bg-white p-2">
+      <button
+        onClick={clearCart}
+        className="p-3 font-medium px-5 text-sm w-max rounded-full bg-sky-900 bg-opacity-5 hover:bg-opacity-10 transition-all duration-300"
+      >
+        <span className="mr-3">Очистить корзину</span>
+        <RemoveShoppingCartIcon sx={{ width: 20, height: 20 }} />
+      </button>
       <AnimatePresence>
         {
           cart.map(cartItem => {
             return (
               <Item
                 cartItem={cartItem}
-                removeCartItem={() => removeCartItem(cartItem.product.id)}
+                removeCartItem={() => removeItem(cartItem.product.id)}
                 setItemQuantity={(newQuantity: number) => setItemQuantity(cartItem.product.id, newQuantity)}
                 key={cartItem.product.id}
               />
