@@ -65,7 +65,6 @@ export default function Product({
         </div>
         <div className={clsx({
           "side-padding order-2 flex-col items-center gap-3 sm:flex-row flex": true,
-          "max-w-[400px]": !uid
         })}>
           <AddToCartButton
             product={product}

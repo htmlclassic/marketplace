@@ -12,11 +12,11 @@ interface Props {
 }
 
 export default function ChatButton({ uid, productId, productOwnerId }: Props) {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleCreateChat = async () => {
-    setLoading(true);
+    if (!uid) router.push('/login');
+
     const supabase = createClientSupabaseClient();
 
     const { data: chat } = await supabase
@@ -56,12 +56,11 @@ export default function ChatButton({ uid, productId, productOwnerId }: Props) {
   }
 
   return (
-    uid &&
-      <Button
-        className='bg-emerald-400'
-        onClick={handleCreateChat}
-      >
-        Написать продавцу
-      </Button>
+    <Button
+      className='bg-emerald-400'
+      onClick={handleCreateChat}
+    >
+      Написать продавцу
+    </Button>
   );
 }
