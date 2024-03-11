@@ -30,16 +30,11 @@ export async function signOut() {
 export async function signUp(formData: FormData) {
   const email = String(formData.get('email'));
   const password = String(formData.get('password'));
-  const first_name = String(formData.get('first_name'));
-  const last_name = String(formData.get('last_name'));
+  const name = String(formData.get('name'));
   const supabase = createOtherSupabaseClient();
 
-  if (!first_name.trim()) {
+  if (!name.trim()) {
     redirect(`/signup?error=${'Поле \'Имя\' пустое'}`);
-  }
-
-  if (!last_name.trim()) {
-    redirect(`/signup?error=${'Поле \'Фамилия\' пустое'}`);
   }
 
   const { data: { user }, error } = await supabase.auth.signUp({
@@ -54,7 +49,7 @@ export async function signUp(formData: FormData) {
 
     const { error } = await supabase
       .from('profile')
-      .update({ first_name, last_name })
+      .update({ name })
       .eq('id', uid);
 
     if (error) throw new Error(error.message);
