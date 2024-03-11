@@ -12,8 +12,7 @@ export default function SubmitButton({ setProfileData }: Props) {
   useEffect(() => {
     if (formData) {
       const email = String(formData.get('email'));
-      const first_name = String(formData.get('first_name'));
-      const last_name = String(formData.get('last_name'));
+      const name = String(formData.get('name'));
       const birthdate = String(formData.get('birthdate'));
       const birthdateFormatted = birthdate !== ''
         ? dayjs(birthdate, 'DD/MM/YYYY').format('YYYY-MM-DD')
@@ -22,8 +21,7 @@ export default function SubmitButton({ setProfileData }: Props) {
       setProfileData(data => ({
         ...data,
         email,
-        first_name,
-        last_name,
+        name,
         birthdate: birthdateFormatted
       }));
     }

@@ -11,14 +11,8 @@ export default function Page() {
       <h1 className="text-lg mb-5 text-center">Регистрация</h1>
       <input
         className="rounded-md px-4 py-2 bg-inherit border"
-        name="first_name"
+        name="name"
         placeholder="Имя"
-        required
-      />
-      <input
-        className="rounded-md px-4 py-2 bg-inherit border"
-        name="last_name"
-        placeholder="Фамилия"
         required
       />
       <input

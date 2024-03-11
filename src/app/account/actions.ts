@@ -16,8 +16,7 @@ export async function editProfileAction(formData: FormData) {
   if (!uid) throw new Error('Current user not authorized');
 
   const email = String(formData.get('email'));
-  const first_name = String(formData.get('first_name'));
-  const last_name = String(formData.get('last_name'));
+  const name = String(formData.get('name'));
   const birthdate = String(formData.get('birthdate'));
   const birthdateFormatted = birthdate !== ''
       ? dayjs(birthdate, 'DD/MM/YYYY').format('YYYY-MM-DD')
@@ -26,7 +25,7 @@ export async function editProfileAction(formData: FormData) {
   const { error } = await supabase
     .from('profile')
     .update({
-      email, first_name, last_name, birthdate: birthdateFormatted
+      email, name, birthdate: birthdateFormatted
     })
     .eq('id', uid);
 

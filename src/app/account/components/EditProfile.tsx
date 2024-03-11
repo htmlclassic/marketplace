@@ -48,17 +48,8 @@ export default function EditProfile({
           <span className="font-bold">Имя: </span>
           <input
             type="text"
-            defaultValue={profileData.first_name ?? ''}
-            name="first_name"
-            className="border p-2 rounded-md disabled:border-red-400"
-          />
-        </label>
-        <label className="flex flex-col gap-2">
-          <span className="font-bold">Фамилия: </span>
-          <input
-            type="text"
-            defaultValue={profileData.last_name ?? ''}
-            name="last_name"
+            defaultValue={profileData.name || ''}
+            name="name"
             className="border p-2 rounded-md disabled:border-red-400"
           />
         </label>
