@@ -644,6 +644,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      verify_user_password: {
+        Args: {
+          password: string
+        }
+        Returns: boolean
+      }
       withdraw_from_wallet: {
         Args: {
           wallet_id: number

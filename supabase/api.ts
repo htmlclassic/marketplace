@@ -69,6 +69,12 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       return session;
     },
 
+    async verifyUserPassword(password: string) {
+      const { data } = await supabase.rpc('verify_user_password', { password });
+    
+      return Boolean(data);
+    },
+
     async getCurrentUserId() {
       const { data: { user } } = await supabase.auth.getUser();
       
