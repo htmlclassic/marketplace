@@ -28,16 +28,4 @@ export default async function uploadProductAction(form: Form) {
   if (addProductError) throw new Error(addProductError.message);
 
   return product.id;
-  
-  // validate total size (4.5mb max because of vercel limitations)
-  // on each iteration check mime type first
-  // for (const file of files) {
-  //   if (typeof file !== 'string') {
-  //     // supabase doesn't like russian letters in img name, only english. throws an error. any way to solve it?
-  //     const randomFileName = Math.random().toString().split('.')[1] + file.name.split('.')[1];
-  //     const { error } = await supabase.storage.from('images').upload(`${productId}/${randomFileName}`, file);
-      
-  //     if (error) console.warn('Couldnt add one of your images: ' + error.message);
-  //   }
-  // }
 }
