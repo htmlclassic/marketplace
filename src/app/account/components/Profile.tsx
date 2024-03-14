@@ -5,6 +5,7 @@ import EditProfile from "./EditProfile";
 import { signOut } from "@/src/app/(auth)/actions";
 import { useState } from "react";
 import LoadingSpinner from "@/src/components/LoadingSpinner";
+import Link from "next/link";
 
 interface Props {
   profile: Profile;
@@ -66,6 +67,7 @@ export default function Profile({ profile: profileInitial }: Props) {
       >
         Редактировать
       </button>
+      <Link href="/change-password" className="hover:underline">Сменить пароль</Link>
       <button
           onClick={() => {
             setSignOutLoader(true);

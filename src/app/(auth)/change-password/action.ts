@@ -2,13 +2,19 @@
 
 import { getAPI } from "@/supabase/api";
 import { createOtherSupabaseClient } from "@/supabase/utils_server";
+import { z } from "zod";
+import { formSchema } from "./types";
 
-async function changePassword(formData: FormData) {
+export async function changePassword(values: z.infer<typeof formSchema>) {
   const supabase = createOtherSupabaseClient();
   const api = getAPI(supabase);
 
-  const oldPassword = String(formData.get('old_password'));
-  const newPassword = String(formData.get('new_password'));
+  const isValid = formSchema.safeParse(values).success;
+
+  if (!isValid) return false;
+
+  const oldPassword = values.old_password;
+  const newPassword = values.new_password;
 
   const oldPasswordVerified = await api.verifyUserPassword(oldPassword);
 
