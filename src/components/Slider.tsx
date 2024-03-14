@@ -3,7 +3,11 @@
 import clsx from "clsx";
 import { useState } from "react";
 import EmblaCarousel from "./EmblaCarousel";
-import { motion } from "framer-motion";
+
+import {
+  Dialog,
+  DialogContent,
+} from "@/src/components/ui/dialog"
 
 interface SliderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -28,20 +32,11 @@ export default function Slider({ children: chld }: SliderProps) {
         />
       </div>
       <div className="gap-5 hidden sm:flex">
-        {
-          showPreview &&
-            <div
-              onClick={() => setShowPreview(false)}
-              className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-30 flex justify-center items-center cursor-pointer"
-            >
-              <motion.div
-                onClick={e => e.stopPropagation()}
-                className="relative landscape:w-[80vh] portrait:w-[90vw] aspect-square cursor-default overflow-hidden rounded-lg"
-              >
-                { children[activeElementIndex] }
-              </motion.div>
-            </div>
-        }
+        <Dialog open={showPreview} onOpenChange={open => setShowPreview(open)}>
+          <DialogContent className="overflow-hidden landscape:w-[80vh] portrait:w-[90vw] max-h-none max-w-none aspect-square p-0 border-none focus:outline-none">
+            { children[activeElementIndex] }
+          </DialogContent>
+        </Dialog>
         {
           children.length !== 1 && 
           <div className="flex flex-col gap-2 h-[80vw] sm:h-[500px] overflow-y-auto no-scrollbar">
@@ -54,7 +49,7 @@ export default function Slider({ children: chld }: SliderProps) {
                     key={index}
                     onClick={() => handleClick(index)}
                     className={clsx({
-                      'w-[100px] h-[100px] border-[4px] shrink-0 cursor-pointer relative flex justify-center items-center rounded-lg overflow-hidden': true,
+                      'w-[120px] h-[120px] border-[4px] shrink-0 cursor-pointer relative flex justify-center items-center rounded-lg overflow-hidden': true,
                       'border-sky-400': isActive,
                       'border-transparent': !isActive
                     })}
