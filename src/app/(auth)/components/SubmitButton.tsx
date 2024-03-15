@@ -21,10 +21,10 @@ export default function SubmitButton({ children, isSubmitting, icon }: Props) {
   return (
     <Button
       variant='default'
-      className="relative py-6 px-3 mt-3"
+      className="relative py-6 px-3 mt-3 group"
       disabled={pending}
     >
-      <div className="absolute left-3 top-1/2 -translate-y-1/2">  
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-300 group-hover:translate-x-1/2">  
         {
           pending
             ?
