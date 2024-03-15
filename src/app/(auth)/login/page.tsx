@@ -39,23 +39,13 @@ export default function Login() {
       </CardHeader>
       <CardContent className={clsx({
         "relative p-6 pt-0 transition-all duration-300": true,
-        "pb-32": showEmailLogin
+        "pb-20": showEmailLogin
       })}>
         <form className={clsx({
           "flex flex-col gap-3 transition-all duration-300": true,
           "-translate-x-[120%] pointer-events-none": showEmailLogin,
           "translate-x-0 pointer-events-auto": !showEmailLogin
         })}>
-          <Button
-            variant='outline'
-            formAction={signInWithGithub}
-            className="py-6 px-3 relative"
-          >
-            <div className="absolute left-3 top-1/2 -translate-y-1/2">  
-              <GithubIcon />
-            </div>
-            <span className="ml-3 text-base">Продолжить с GitHub</span>
-          </Button>
           <Button
             variant='outline'
             formAction={signInWithGoogle}
@@ -65,6 +55,16 @@ export default function Login() {
               <GoogleIcon />
             </div>
             <span className="ml-3 text-base">Продолжить с Google</span>
+          </Button>
+          <Button
+            variant='outline'
+            formAction={signInWithGithub}
+            className="py-6 px-3 relative"
+          >
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">  
+              <GithubIcon />
+            </div>
+            <span className="ml-3 text-base">Продолжить с GitHub</span>
           </Button>
           <Button
             variant='outline'

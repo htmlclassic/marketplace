@@ -16,7 +16,7 @@ export async function signIn(formData: FormData) {
   })
 
   if (error) {
-    redirect(`/login?error=${error.message}`);
+    redirect(`/login?error=${encodeURIComponent('Неверная почта или пароль')}`);
   }
 
   redirect('/');
@@ -33,7 +33,7 @@ export async function signUp(data: z.infer<typeof signupFormSchema>) {
   const supabase = createOtherSupabaseClient();
   
   if (!signupFormSchema.safeParse(data).success) {
-    redirect(`/signup?error=${'Поля формы не прошли валидацию'}`);
+    redirect(`/signup?error=${encodeURIComponent('Поля формы не прошли валидацию')}`);
   }
 
   const { data: { user }, error } = await supabase.auth.signUp({
@@ -42,7 +42,7 @@ export async function signUp(data: z.infer<typeof signupFormSchema>) {
   });
 
   if (error) {
-    redirect(`/signup?error=${'Ошибка аутентификации'}`);
+    redirect(`/signup?error=${encodeURIComponent('Ошибка аутентификации')}`);
   } else {
     const uid = user!.id;
 
@@ -68,7 +68,7 @@ export async function signInWithGithub() {
     redirect(data.url);
   }
 
-  redirect(`/signup?error=${'Could not sign in user via Github'}`);
+  redirect(`/signup?error=${encodeURIComponent('Ошибка входа с помощью GitHub')}`);
 }
 
 export async function signInWithGoogle() {
@@ -88,5 +88,5 @@ export async function signInWithGoogle() {
     redirect(data.url);
   }
 
-  redirect(`/signup?error=${'Could not sign in user via Github'}`);
+  redirect(`/signup?error=${encodeURIComponent('Ошибка входа с помощью Google')}`);
 }
