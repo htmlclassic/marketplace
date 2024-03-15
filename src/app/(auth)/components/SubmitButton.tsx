@@ -1,16 +1,17 @@
 'use client';
 
 import { Button } from "@/src/components/ui/button";
-import { EnterIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
 interface Props {
   children: React.ReactNode;
+  icon?: React.ReactNode;
   isSubmitting?: (value: boolean) => void;
 }
 
-export default function SubmitButton({ children, isSubmitting }: Props) {
+export default function SubmitButton({ children, isSubmitting, icon }: Props) {
   const { pending } = useFormStatus();
 
   useEffect(() => {
@@ -25,10 +26,10 @@ export default function SubmitButton({ children, isSubmitting }: Props) {
     >
       <div className="absolute left-3 top-1/2 -translate-y-1/2">  
         {
-          pending ?
-            <ReloadIcon className="w-[20px] h-[20px] animate-spin-fast" />
-            :
-            <EnterIcon className="w-[20px] h-[20px]" />
+          pending
+            ?
+              <ReloadIcon className="w-[20px] h-[20px] animate-spin-fast" />
+            : icon
         }
       </div>
       <span className="ml-3 text-base">{children}</span>

@@ -8,6 +8,7 @@ import { signIn } from "../../actions";
 import Messages from "../../messages";
 import SubmitButton from "../../components/SubmitButton";
 import { useState } from "react";
+import { EnterIcon } from "@radix-ui/react-icons";
 
 export default function SubmitWithEmailForm({ show }: { show: boolean }) {
   const [disabled, setDisabled] = useState(false);
@@ -22,7 +23,10 @@ export default function SubmitWithEmailForm({ show }: { show: boolean }) {
       <Input id="email" className="shrink-0 py-5" name="email"  disabled={disabled} />
       <Label htmlFor="password">Пароль</Label>
       <InputPassword id="password" className="shrink-0 py-5" name="password"  disabled={disabled} />
-      <SubmitButton isSubmitting={(value) => setDisabled(value)}>Вход</SubmitButton>
+      <SubmitButton
+        isSubmitting={(value) => setDisabled(value)}
+        icon={<EnterIcon className="w-[20px] h-[20px]" />}
+      >Вход</SubmitButton>
       <Messages />
     </form>
   );
