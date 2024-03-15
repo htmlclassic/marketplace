@@ -2,6 +2,8 @@
 
 import { createOtherSupabaseClient } from "@/supabase/utils_server";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+import { signupFormSchema } from "./types";
 
 export async function signIn(formData: FormData) {
   const email = String(formData.get('email'))
@@ -27,29 +29,26 @@ export async function signOut() {
   redirect('/');
 }
 
-export async function signUp(formData: FormData) {
-  const email = String(formData.get('email'));
-  const password = String(formData.get('password'));
-  const name = String(formData.get('name'));
+export async function signUp(data: z.infer<typeof signupFormSchema>) {
   const supabase = createOtherSupabaseClient();
-
-  if (!name.trim()) {
-    redirect(`/signup?error=${'Поле \'Имя\' пустое'}`);
+  
+  if (!signupFormSchema.safeParse(data).success) {
+    redirect(`/signup?error=${'Поля формы не прошли валидацию'}`);
   }
 
   const { data: { user }, error } = await supabase.auth.signUp({
-    email,
-    password
+    email: data.email,
+    password: data.password
   });
 
   if (error) {
-    redirect(`/signup?error=${'Could not authenticate user'}`);
+    redirect(`/signup?error=${'Ошибка аутентификации'}`);
   } else {
     const uid = user!.id;
 
     const { error } = await supabase
       .from('profile')
-      .update({ name })
+      .update({ name: data.name })
       .eq('id', uid);
 
     if (error) throw new Error(error.message);

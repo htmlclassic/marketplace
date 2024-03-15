@@ -20,7 +20,7 @@ export default function SubmitButton({ children, isSubmitting, icon }: Props) {
 
   return (
     <Button
-      variant='outline'
+      variant='default'
       className="relative py-6 px-3 mt-3"
       disabled={pending}
     >

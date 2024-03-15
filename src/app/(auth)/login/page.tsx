@@ -22,7 +22,7 @@ export default function Login() {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
 
   return (
-    <Card className="py-10 w-full max-w-[400px] overflow-hidden relative">
+    <Card className="py-10 w-full max-w-[400px] overflow-hidden relative shadow-none border-none sm:shadow-[0_0_5px_1px_rgba(0,0,0,0.1)] sm:border">
       <Button 
         onClick={() => setShowEmailLogin(false)}
         variant="ghost" 
