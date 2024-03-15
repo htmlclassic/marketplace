@@ -13,7 +13,7 @@ const InputPassword = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   };
 
   return (
-    <div className="relative rounded-md overflow-hidden">
+    <div className="relative rounded-md">
       <Input
         ref={ref}
         type={passwordVisible ? 'text' : 'password'}

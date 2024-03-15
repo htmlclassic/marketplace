@@ -1,4 +1,4 @@
-import SubmitButton from "../SubmitButton";
+import SubmitButton from "../components/SubmitButton";
 import { signUp } from "../actions";
 import Messages from "../messages";
 

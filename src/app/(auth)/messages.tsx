@@ -8,7 +8,7 @@ export default function Messages() {
   
   return (
     error &&
-      <p className="mt-4 text-sm text-red-500 text-center">
+      <p className="text-sm text-red-500 text-center">
         {error}
       </p>
   );
