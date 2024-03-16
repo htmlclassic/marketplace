@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function ClientWrapper({ children, initialCart, uid }: Props) {
-  const router = useRouter();
+  // const router = useRouter();
 
   /*
     After supabase.auth.signInWithOAuth(provider: 'google' | 'github'), Supabase redirects to /
@@ -35,17 +35,17 @@ export default function ClientWrapper({ children, initialCart, uid }: Props) {
 
     P.s. maybe this is because <Link href="/account"> prefetches the route before session is loaded?
   */
-  useEffect(() => {
-    const supabase = createClientSupabaseClient();
+  // useEffect(() => {
+  //   const supabase = createClientSupabaseClient();
 
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'INITIAL_SESSION') {
-        router.refresh();
-      }
-    });
+  //   const { data } = supabase.auth.onAuthStateChange((event, session) => {
+  //     if (event === 'INITIAL_SESSION') {
+  //       router.refresh();
+  //     }
+  //   });
 
-    return () => data.subscription.unsubscribe();
-  }, []);
+  //   return () => data.subscription.unsubscribe();
+  // }, []);
 
   return (
       <CartContextProvider initialCart={initialCart} uid={uid}>
