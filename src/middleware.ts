@@ -1,5 +1,4 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
@@ -56,17 +55,6 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
-
-  const code = requestUrl.searchParams.get('code')
-
-  if (code) {
-    await supabase.auth.exchangeCodeForSession(code)
-
-    return NextResponse.redirect(requestUrl.origin, {
-      // a 301 status is required to redirect from a POST to a GET route
-      status: 301,
-    });
-  }
 
   const { data: { session } } = await supabase.auth.getSession();
   
