@@ -1,119 +1,126 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { Form } from "../types";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
 import clsx from "clsx";
-import Button from "@/src/components/Button";
+import { z } from "zod";
+import { FormSchema } from "../types";
+import { FieldError, SubmitHandler, useForm } from "react-hook-form";
+import { Input } from "@/src/components/ui/input";
+import { Textarea } from "@/src/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/ui/select"
+import { Label } from "@/src/components/ui/label";
+import { Button } from "@/src/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField, FormItem } from "@/src/components/ui/form";
 
 interface Props {
-  form: Form;
-  setForm: Dispatch<SetStateAction<Form>>;
+  setForm: Dispatch<SetStateAction<z.infer<typeof FormSchema> | null>>;
   goToNextStep: () => void;
   categories: string[];
   show: boolean;
 }
 
 export default function Step1({
-  form,
   setForm,
   categories,
   goToNextStep,
   show
 }: Props) {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema)
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (data) => {
+    setForm({ ...data });
+    goToNextStep();
+  };
+
   return (
+    <Form {...form}>
     <form
       className={clsx({
         "flex-col gap-3 w-full": true,
         "flex": show,
         "hidden": !show
       })}
-      onSubmit={e => {
-        e.preventDefault();
-        goToNextStep();
-      }}
+      onSubmit={form.handleSubmit(onSubmit)}
     >
-      <TextField
-        value={form.title}
-        onChange={e => setForm({ ...form, title: e.target.value })}
-        label="Название"
-        variant="outlined"
-        multiline
-        name="title"
-        required
-      />
-      <TextField
-        value={form.description}
-        onChange={e => setForm({ ...form, description: e.target.value })}
-        label="Описание"
-        rows={10}
-        variant="outlined"
-        multiline
-        name="description"
-        required
-      />
-      <TextField
-        value={form.category}
-        onChange={e => setForm({ ...form, category: e.target.value })}
-        label="Категория"
-        select
-        name="category"
-        required
-      >
-        {
-          categories.map(name =>
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          )
-        }
-      </TextField>
-      <TextField
-        value={form.price}
-        onChange={e => {
-          let value = e.target.value;
-          const MIN = 1;
-          const MAX = 2147483647;
-
-          if (Number(value) < MIN) {
-            value = String(MIN);
-          }
-
-          if (Number(value) > MAX) {
-            value = String(MAX)
-          }
-
-          setForm({ ...form, price: value });
-        }}
-        label="Цена"
-        variant="outlined"
-        type="number"
-        name="price"
-        required
-      />
-      <TextField
-        value={form.quantity}
-        onChange={e => {
-          let value = e.target.value;
-          const MIN = 1;
-          const MAX = 32767;
-
-          if (Number(value) < MIN) {
-            value = String(MIN);
-          }
-
-          if (Number(value) > MAX) {
-            value = String(MAX);
-          }
-
-          setForm({ ...form, quantity: value });
-        }}
-        label="Количество"
-        variant="outlined"
-        type="number"
-        name="quantity"
-        required
-      />
-      <Button className="bg-sky-400">Далее</Button>
+      <div>
+        <Label htmlFor="product_name">Наименование</Label>
+        <Input
+          {...form.register('title')}
+          id="product_name"
+          className="py-5"
+        />
+        <Error error={form.formState.errors.title} />
+      </div>
+      <div>
+        <Label htmlFor="product_description">Описание</Label>
+        <Textarea
+          {...form.register('description')}
+          rows={10}
+          id="product_description"
+        />
+        <Error error={form.formState.errors.description} />
+      </div>
+      <div>
+        <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <Label>Категория
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="font-normal py-5">
+                      <SelectValue placeholder="Выбрать категорию" />
+                    </SelectTrigger>
+                    <SelectContent {...form.register('category')}>
+                      {
+                        categories.map(name =>
+                          <SelectItem key={name} value={name}>
+                            {name}
+                          </SelectItem>
+                        )
+                      }
+                    </SelectContent>
+                  </Select>
+                </Label>
+                <Error error={form.formState.errors.category} />
+              </FormItem>
+            )}
+          />    
+      </div>
+      <div>
+        <Label htmlFor="product_price">Цена</Label>
+        <Input
+          {...form.register('price', { valueAsNumber: true })}
+          id="product_price"
+          className="py-5"
+        />
+        <Error error={form.formState.errors.price} />
+      </div>
+      <div>
+        <Label htmlFor="product_quantity">Количество</Label>
+        <Input
+          {...form.register('quantity', { valueAsNumber: true })}
+          id="product_quantity"
+          className="py-5"
+        />
+        <Error error={form.formState.errors.quantity} />
+      </div>
+      <Button className="p-7">Далее</Button>
     </form>
+    </Form>
+  );
+}
+
+function Error({ error }: { error: FieldError | undefined }) {
+  return (
+    error &&
+      <div className="text-sm text-red-400 mt-2">{error.message}</div>
   );
 }

@@ -7,11 +7,12 @@ import Image from "next/image";
 import clsx from "clsx";
 import MuiButton from "@mui/material/Button";
 
-import type { Form } from "../types";
+import type { FormSchema } from "../types";
 import Button from "@/src/components/Button";
+import { z } from "zod";
 
 export interface Props {
-  form: Form;
+  form: z.infer<typeof FormSchema> | null;
   goToPrevStep: () => void;
   show: boolean;
 }
@@ -73,8 +74,8 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
 
       router.refresh();
       router.push('/');
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error(error.message);
     }
   };
 

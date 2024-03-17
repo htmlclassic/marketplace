@@ -16,7 +16,7 @@ interface SliderProps {
 export default function Slider({ children: chld }: SliderProps) {
   const children = Array.isArray(chld) ? chld : [ chld ];
   const [activeElementIndex, setActiveElementIndex] = useState(0);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showDetailedPicture, setShowPreview] = useState(false);
 
   const handleClick = (index: number) => setActiveElementIndex(index);
 
@@ -32,8 +32,8 @@ export default function Slider({ children: chld }: SliderProps) {
         />
       </div>
       <div className="gap-5 hidden sm:flex">
-        <Dialog open={showPreview} onOpenChange={open => setShowPreview(open)}>
-          <DialogContent className="overflow-hidden landscape:w-[80vh] portrait:w-[90vw] max-h-none max-w-none aspect-square p-0 border-none focus:outline-none">
+        <Dialog open={showDetailedPicture} onOpenChange={open => setShowPreview(open)}>
+          <DialogContent className="overflow-hidden landscape:w-[80vh] portrait:w-[90vw] max-h-none max-w-none border-white border-2 aspect-square p-0 focus:outline-none">
             { children[activeElementIndex] }
           </DialogContent>
         </Dialog>

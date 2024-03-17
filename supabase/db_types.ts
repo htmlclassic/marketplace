@@ -367,6 +367,38 @@ export type Database = {
           }
         ]
       }
+      product_characteristic: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          product_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+          product_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+          product_id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_product_characteristic_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "product"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profile: {
         Row: {
           birthdate: string | null
