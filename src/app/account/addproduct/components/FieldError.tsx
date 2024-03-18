@@ -1,4 +1,4 @@
-import { FieldError } from "react-hook-form";
+import type { FieldError } from "react-hook-form";
 
 export default function FieldError({ error }: { error: FieldError | undefined }) {
   return (
