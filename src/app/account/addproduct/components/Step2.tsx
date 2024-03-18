@@ -1,18 +1,16 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import uploadProductAction from "../uploadProductAction";
+import uploadProductAction from "../actions";
 import { createClientSupabaseClient } from "@/supabase/utils_client";
 import { getAPI } from "@/supabase/api";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import MuiButton from "@mui/material/Button";
-
-import type { FormSchema } from "../types";
 import Button from "@/src/components/Button";
-import { z } from "zod";
+import { FormState } from "../types";
 
 export interface Props {
-  form: z.infer<typeof FormSchema> | null;
+  form: FormState | null;
   goToPrevStep: () => void;
   show: boolean;
 }

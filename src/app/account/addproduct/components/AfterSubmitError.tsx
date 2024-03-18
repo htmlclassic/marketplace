@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 
-export default function Messages() {
+export default function AfterSubmitError() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   

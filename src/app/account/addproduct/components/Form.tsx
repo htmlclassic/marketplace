@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 
-import { FormSchema } from "../types";
+import { FormState } from "../types";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import { useRouter } from "next/navigation";
 import Stepper from "./Stepper";
-import { z } from "zod";
 
 interface Props {
   categories: string[];
@@ -15,7 +14,7 @@ interface Props {
 
 export default function Form({ categories }: Props) {
   const [step, setStep] = useState<0 | 1>(0);
-  const [form, setForm] = useState<z.infer<typeof FormSchema> | null>(null);
+  const [form, setForm] = useState<FormState | null>(null);
 
   const router = useRouter();
 
