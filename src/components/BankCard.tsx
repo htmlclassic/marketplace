@@ -1,8 +1,6 @@
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
 import cardValidator from "card-validator";
 import clsx from "clsx";
 import creditCardType from "credit-card-type";
@@ -11,6 +9,8 @@ import { z } from "zod";
 import { numberWithSpaces } from "../utils";
 import { Button } from "./ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 interface Props {
   onSubmit: (formData: Inputs) => Promise<any>;
@@ -47,7 +47,7 @@ export default function BankCard({ onSubmit, sumToPay }: Props) {
   return (
     <form
       onSubmit={handleSubmit(action)} 
-      className="border p-3 sm:p-6 flex flex-col gap-3 w-full max-w-[400px] rounded-md"
+      className="border py-6 px-3 sm:px-6 flex flex-col gap-3 w-full max-w-[420px] rounded-md"
     >
       <header className="mb-5 flex gap-5 items-center">
         <BankCardIcon />
@@ -56,92 +56,89 @@ export default function BankCard({ onSubmit, sumToPay }: Props) {
           <p className="text-gray-500">МИР, Mastercard, Visa</p>
         </div>
       </header>
-      <TextField
-        error={!!errors.number}
-        helperText={errors.number?.message}
-        {...register('number', {
-          onChange(e: React.ChangeEvent<HTMLInputElement>) {
-            let value = e.target.value;
+      <Label className="flex flex-col gap-1">
+        Номер карты
+        <div className="relative">
+          <Input
+            {...register('number', {
+              onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                let value = e.target.value;
 
-            value = lastCharIsDigit(value);
+                value = lastCharIsDigit(value);
 
-            e.target.value = splitStringByGroups(value, 4);
-          }
-        })}
-        label="Номер карты"
-        variant="outlined"
-        className="w-full"
-        FormHelperTextProps={{
-          className: "m-1"
-        }}
-        inputProps={{
-          maxLength: cardNumberMaxLength,
-        }}
-        InputProps={{
-          endAdornment: <InputAdornment position="end">{cardTypeIcon}</InputAdornment>,
-        }}
-        disabled={isSubmitting}
-      />
+                e.target.value = splitStringByGroups(value, 4);
+              },
+            })}
+            maxLength={cardNumberMaxLength}
+            className="py-5"
+            disabled={isSubmitting}
+          />
+          <div className={clsx({
+            "absolute right-3 top-1/2 -translate-y-1/2": true,
+            "opacity-30": isSubmitting
+          })}>{cardTypeIcon}</div>
+        </div>
+        {
+          errors.number?.message &&
+          <div className="text-sm text-red-400">{errors.number.message}</div>
+        }
+      </Label>
       <div className="flex gap-3">
-        <TextField
-          error={!!errors.exp}
-          helperText={errors.exp?.message}
-          {...register('exp', {
-            onChange(e: React.ChangeEvent<HTMLInputElement>) {
-              let value = e.target.value;
-              const inputType = ((e.nativeEvent as any).inputType) as string;
-              
-              value = lastCharIsDigit(value);
-              e.target.value = value;
+        <Label className="flex flex-col gap-1 w-full">
+          Срок действия
+          <Input
+            {...register('exp', {
+              onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                let value = e.target.value;
+                const inputType = ((e.nativeEvent as any).inputType) as string;
+                
+                value = lastCharIsDigit(value);
+                e.target.value = value;
 
-              if (value.length === 2) {
-                value = value + '/';
+                if (value.length === 2) {
+                  value = value + '/';
 
+                  e.target.value = value;
+                }
+
+                if (value.length === 3 && value.at(-1) !== '/') {
+                  value = value[0] + value[1] + '/' + value[2];
+
+                  e.target.value = value;
+                }
+
+                if (value.length === 3 && inputType === 'deleteContentBackward') {
+                  e.target.value = value.slice(0, 2);
+                }
+              }
+            })}
+            className="py-5"
+            disabled={isSubmitting}
+          />
+          {
+            errors.exp?.message &&
+            <div className="text-sm text-red-400">{errors.exp.message}</div>
+          }
+        </Label>
+        <Label className="flex flex-col gap-1 w-full">
+          CVC/CVV
+          <Input
+            {...register('securityCode', {
+              onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                let value = e.target.value;
+
+                value = lastCharIsDigit(value);
                 e.target.value = value;
               }
-
-              if (value.length === 3 && value.at(-1) !== '/') {
-                value = value[0] + value[1] + '/' + value[2];
-
-                e.target.value = value;
-              }
-
-              if (value.length === 3 && inputType === 'deleteContentBackward') {
-                e.target.value = value.slice(0, 2);
-              }
-            }
-          })}
-          label="Срок действия"
-          variant="outlined"
-          inputProps={{
-            maxLength: 5
-          }}
-          FormHelperTextProps={{
-            className: "m-1"
-          }}
-          disabled={isSubmitting}
-        />
-        <TextField
-          error={!!errors.securityCode}
-          helperText={errors.securityCode?.message}
-          {...register('securityCode', {
-            onChange(e: React.ChangeEvent<HTMLInputElement>) {
-              let value = e.target.value;
-
-              value = lastCharIsDigit(value);
-              e.target.value = value;
-            }
-          })}
-          label="CVC"
-          variant="outlined"
-          inputProps={{
-            maxLength: 3
-          }}
-          FormHelperTextProps={{
-            className: "m-1"
-          }}
-          disabled={isSubmitting}
-        />
+            })}
+            className="py-5"
+            disabled={isSubmitting}
+          />
+          {
+            errors.securityCode?.message &&
+            <div className="text-sm text-red-400">{errors.securityCode.message}</div>
+          }
+        </Label>
       </div>
       <Button
         disabled={isSubmitting}
@@ -179,7 +176,7 @@ export const FormDataZodSchema = z.object({
   securityCode: z.string()
     .refine(cvv => {
       if (cardValidator.cvv(cvv).isValid) return true;
-    }, { message: 'Проверьте CVC' })
+    }, { message: 'Проверьте CVC/CVV' })
 });
 
 type CardType = 'mir' | 'mastercard' | 'visa';
