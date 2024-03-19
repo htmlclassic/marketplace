@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { signInWithGoogle } from '../actions';
 import { signInWithGithub } from '../actions';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import { CaretLeftIcon} from '@radix-ui/react-icons';
+import { CaretLeftIcon, ReloadIcon} from '@radix-ui/react-icons';
 
 import {
   Card,
@@ -20,6 +20,8 @@ import SubmitWithEmailForm from './components/SubmitWithEmailForm';
 
 export default function Login() {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
+  const [googleSigningIn, setGoogleSigningIn] = useState(false);
+  const [githubSigningIn, setGithubSigningIn] = useState(false);
 
   return (
     <Card className="py-10 w-full max-w-[400px] overflow-hidden relative shadow-none border-none sm:shadow-[0_0_5px_1px_rgba(0,0,0,0.1)] sm:border">
@@ -50,9 +52,14 @@ export default function Login() {
             variant='outline'
             formAction={signInWithGoogle}
             className="py-6 px-3 relative"
+            onClick={() => setGoogleSigningIn(true)}
           >
             <div className="absolute left-3 top-1/2 -translate-y-1/2">  
-              <GoogleIcon />
+              {
+                googleSigningIn 
+                  ? <ReloadIcon className="w-[20px] h-[20px] animate-spin-fast" /> 
+                  : <GoogleIcon />
+              }
             </div>
             <span className="ml-3 text-base">Продолжить с Google</span>
           </Button>
@@ -60,9 +67,14 @@ export default function Login() {
             variant='outline'
             formAction={signInWithGithub}
             className="py-6 px-3 relative"
+            onClick={() => setGithubSigningIn(true)}
           >
             <div className="absolute left-3 top-1/2 -translate-y-1/2">  
-              <GithubIcon />
+              {
+                githubSigningIn 
+                  ? <ReloadIcon className="w-[20px] h-[20px] animate-spin-fast" /> 
+                  : <GithubIcon />
+              }
             </div>
             <span className="ml-3 text-base">Продолжить с GitHub</span>
           </Button>
