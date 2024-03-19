@@ -1,4 +1,4 @@
-import Button from "@/src/components/Button";
+import { Button } from "@/src/components/ui/button";
 import Link from "next/link";
 
 export default function EmptyCart() {
@@ -8,7 +8,9 @@ export default function EmptyCart() {
       <Link
         href="/"
       >
-        <Button className="w-[250px]">
+        <Button
+          className="w-[250px] py-7"
+        >
           К покупкам
         </Button>
       </Link>

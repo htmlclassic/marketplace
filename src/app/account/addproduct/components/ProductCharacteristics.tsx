@@ -29,10 +29,10 @@ export default function ProductCharacteristics({ register, errors }: Props) {
 
   return (
     <div className="gap-3 flex flex-col">
-      <span>Характеристики</span>
+      <span className="font-medium py-5">Стандартные характеристики</span>
       <div>
         <Label htmlFor="product_size">Размеры (мм)</Label>
-        <div className="flex gap-3"> 
+        <div className="flex gap-3 flex-col sm:flex-row"> 
           <Input
             { ...register('size_x', { valueAsNumber: true }) }
             id="product_size"
@@ -66,10 +66,12 @@ export default function ProductCharacteristics({ register, errors }: Props) {
         <FieldError error={errors.weight} />
       </div>
       <div className="flex flex-col gap-3">
-        <span>Пользовательские характеристики</span>
+        <span className="font-medium py-5">
+          Пользовательские характеристики (опционально)
+        </span>
         {
           new Array(customFieldsCount).fill(0).map((el, i) =>
-            <div className="flex gap-3" key={i}>
+            <div className="flex gap-3 flex-col sm:flex-row" key={i}>
               <Input
                 { ...register(`custom_characterstics.${i}.key`) }
                 className="py-5"

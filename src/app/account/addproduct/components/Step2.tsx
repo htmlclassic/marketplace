@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import MuiButton from "@mui/material/Button";
-import Button from "@/src/components/Button";
 import { FormState } from "../types";
+import { Button } from "@/src/components/ui/button";
+import { UploadIcon, ReloadIcon, ArrowLeftIcon } from "@radix-ui/react-icons";
+import { toast } from 'sonner';
 
 export interface Props {
   form: FormState | null;
@@ -73,7 +75,8 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
       router.refresh();
       router.push('/');
     } catch (error: any) {
-      console.error(error.message);
+      setSubmitting(false);
+      toast.error(error.message);
     }
   };
 
@@ -130,8 +133,8 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
             <div
               onClick={() => setPrimaryImgName(img.name)}
               className={clsx({
-                "relative aspect-square w-[30%] outline outline-3 outline-offset-4 rounded-lg overflow-hidden cursor-pointer transition-all duration-300": true,
-                "outline-sky-400": primaryImgName === img.name,
+                "relative aspect-square w-[40%] outline outline-3 outline-offset-4 rounded-lg overflow-hidden cursor-pointer transition-all duration-300": true,
+                "outline-slate-600": primaryImgName === img.name,
                 "outline-transparent": primaryImgName !== img.name
               })}
               title="Нажмите на изображение, чтобы сделать его основным."
@@ -145,26 +148,35 @@ export default function Step2({ form, goToPrevStep, show }: Props) {
             </div>
         )}
       </div>
-      <Button
-        className={clsx({
-          "bg-sky-400 mt-5": true,
-          "animate-pulse": submitting
-        })}
-        disabled={submitting}
-      >
-        {
-          submitting ? 'Загружаем ваш товар' : 'Загрузить товар'
-        }
-      </Button>
-      <Button
-        type="button"
-        onClick={goToPrevStep}
-        className={clsx({
-          "bg-slate-400": true,
-          "animate-pulse": submitting
-        })}
-        disabled={submitting}
-      >Назад</Button>
+      <div className="flex flex-col sm:flex-row gap-3 mt-10">
+        <Button
+          variant="outline"
+          type="button"
+          onClick={goToPrevStep}
+          disabled={submitting}
+          className="py-7 w-full relative"
+        >
+          <ArrowLeftIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-[15px] h-[15px]" />
+          Назад
+        </Button>
+        <Button
+          disabled={submitting}
+          className="relative py-7 w-full"
+        >
+          <div>
+            {
+              submitting
+                ? <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                    <ReloadIcon className="animate-spin-fast w-[15px] h-[15px]" />
+                  </div>
+                : <UploadIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-[15px] h-[15px]" />
+            }
+            {
+              submitting ? 'Загружаем ваш товар' : 'Загрузить товар'
+            }
+          </div>
+        </Button>
+      </div>
     </form>
   );
 }

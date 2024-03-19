@@ -10,6 +10,7 @@ import { Roboto } from 'next/font/google';
 import ClientWrapper from './ClientWrapper';
 import Navbar from '../components/Navbar';
 import MobileMenu from '../components/MobileMenu';
+import { Toaster } from "@/src/components/ui/sonner";
 
 // import type { Viewport } from 'next'
  
@@ -68,6 +69,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <main className="w-full grow flex max-w-[1400px] mx-auto z-10">
             {children}
           </main>
+          <Toaster />
           <MobileMenu />
         </ClientWrapper>
       </body>

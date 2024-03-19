@@ -3,7 +3,6 @@
 import { getAPI } from "@/supabase/api";
 import { createOtherSupabaseClient } from "@/supabase/utils_server";
 import { FormSchema, FormState } from "./types";
-import { redirect } from "next/navigation";
 import { removeEmptyCustomCharacteristics } from "./utils";
 
 export default async function uploadProductAction(form: FormState | null) {
@@ -11,11 +10,9 @@ export default async function uploadProductAction(form: FormState | null) {
   const api = getAPI(supabase);
   const uid = await api.getCurrentUserId();
 
-  if (!uid) throw new Error('Current user not authorized');
-  if (!form)
-    redirect(`?error=${encodeURIComponent('Форма пустая')}`);
-  if (!FormSchema.safeParse(form).success)
-    redirect(`?error=${encodeURIComponent('Ошибка валидации формы')}`);
+  if (!uid) throw new Error('Пользователь не авторизован');
+  if (!form) throw new Error('Форма пустая');
+  if (!FormSchema.safeParse(form).success) throw new Error('Ошибка валидации формы');
 
   const title = form.title;
   const description = form.description;
@@ -34,8 +31,7 @@ export default async function uploadProductAction(form: FormState | null) {
     .select()
     .single();
 
-  if (addProductError)
-    redirect(`?error=${encodeURIComponent('Не удалось добавить товар')}`);
+  if (addProductError) throw new Error('Не удалось добавить товар');
 
   const { error: addDefaultCharacteristicsError } = await supabase
     .from('product_characteristic')
@@ -45,7 +41,7 @@ export default async function uploadProductAction(form: FormState | null) {
     ]);
   
   if (addDefaultCharacteristicsError)
-    redirect(`?error=${encodeURIComponent('Не удалось добавить стандартные характеристики товара')}`);
+    throw new Error('Не удалось добавить стандартные характеристики товара');
 
   if (customCharacteristics.length) {
     const customCharacteristicsFormatted = customCharacteristics.map(char => ({
@@ -59,7 +55,7 @@ export default async function uploadProductAction(form: FormState | null) {
       .insert(customCharacteristicsFormatted);
 
     if (addCustomCharacteristicsError)
-      redirect(`?error=${encodeURIComponent('Не удалось добавить пользовательские характеристики товара')}`);
+    throw new Error('Не удалось добавить пользовательские характеристики товара');
   }
 
   return product.id;
