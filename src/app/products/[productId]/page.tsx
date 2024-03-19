@@ -4,13 +4,13 @@ import Product from './components/Product';
 import Reviews from './components/Reviews';
 import { Suspense } from 'react';
 
-interface ItemProps {
+interface PageProps {
   params: {
     productId: string;
   }
 }
 
-export default async function ProductPage({ params: { productId } }: ItemProps) {
+export default async function ProductPage({ params: { productId } }: PageProps) {
   const supabase = createServerComponentSupabaseClient();
   const api = getAPI(supabase);
   const product = ( await api.getProducts([productId]) )?.[0];

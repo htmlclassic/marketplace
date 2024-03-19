@@ -1,17 +1,16 @@
 'use client';
 
-import Button from "@/src/components/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import cardValidator from "card-validator";
 import clsx from "clsx";
 import creditCardType from "credit-card-type";
-import React, { useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { numberWithSpaces } from "../utils";
-import { CartContext } from "../CartContext";
+import { Button } from "./ui/button";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface Props {
   onSubmit: (formData: Inputs) => Promise<any>;
@@ -48,12 +47,12 @@ export default function BankCard({ onSubmit, sumToPay }: Props) {
   return (
     <form
       onSubmit={handleSubmit(action)} 
-      className="border p-3 sm:p-6 flex flex-col gap-3 w-full max-w-[400px] rounded-lg"
+      className="border p-3 sm:p-6 flex flex-col gap-3 w-full max-w-[400px] rounded-md"
     >
-      <header className="mb-5 flex gap-3 items-center">
+      <header className="mb-5 flex gap-5 items-center">
         <BankCardIcon />
         <div>
-          <h1 className="font-medium text-lg">Банковская карта</h1>
+          <h1 className="font-medium">Банковская карта</h1>
           <p className="text-gray-500">МИР, Mastercard, Visa</p>
         </div>
       </header>
@@ -146,13 +145,17 @@ export default function BankCard({ onSubmit, sumToPay }: Props) {
       </div>
       <Button
         disabled={isSubmitting}
-        className={clsx({
-          "mt-5": true,
-          "animate-pulse": isSubmitting
-        })}
+        className="mt-5 py-6 flex gap-1"
       >
-        <span>Оплатить </span>
-        { sumToPay && numberWithSpaces(sumToPay) + ' ₽' }
+        {
+          isSubmitting ?
+            <ReloadIcon className="animate-spin-fast w-[20px] h-[20px]" />
+          :  
+            <>
+              <span>Оплатить </span>
+              <span>{ sumToPay && numberWithSpaces(sumToPay) + ' ₽' }</span>
+            </>
+        }
       </Button>
     </form>
   )
@@ -201,46 +204,23 @@ function splitStringByGroups(str: string, groupLength: number, separatorChar: st
 
 function BankCardIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={ICON_SIZE + 10}
-      height={ICON_SIZE + 10}
-      className="icon"
-      viewBox="0 0 1024 1024"
-    >
-      <path
-        fill="#248CBE"
-        d="M617.1 671.2H148.2c-46.3 0-83.9-37.6-83.9-83.9v-307c0-46.3 37.6-83.9 83.9-83.9h468.9c46.3 0 83.9 37.6 83.9 83.9v306.9c0 46.4-37.5 84-83.9 84z"
-      ></path>
-      <path fill="#183351" d="M64.3 302.3h636.8v96.1H64.3z"></path>
-      <path
-        fill="#FBFAEE"
-        d="M304 531.8H128.3c-12.1 0-22-9.9-22-22s9.9-22 22-22H304c12.1 0 22 9.9 22 22s-9.9 22-22 22zm133.4 69.4H128.3c-12.1 0-22-9.9-22-22s9.9-22 22-22h309.1c12.1 0 22 9.9 22 22s-9.9 22-22 22z"
-      ></path>
-      <path
-        fill="#F5DB6F"
-        d="M875.8 827.6H406.9c-46.3 0-83.9-37.6-83.9-83.9v-307c0-46.3 37.6-83.9 83.9-83.9h468.9c46.3 0 83.9 37.6 83.9 83.9v306.9c0 46.4-37.5 84-83.9 84z"
-      ></path>
-      <path
-        fill="#AEB8C4"
-        d="M788.3 607.2H387c-12.1 0-22-9.9-22-22s9.9-22 22-22h401.3c12.1 0 22 9.9 22 22s-9.9 22-22 22z"
-      ></path>
-      <path
-        fill="#FBFAEE"
-        d="M562.7 688.2H387c-12.1 0-22-9.9-22-22s9.9-22 22-22h175.8c12.1 0 22 9.9 22 22-.1 12.1-10 22-22.1 22zm133.4 69.4H387c-12.1 0-22-9.9-22-22s9.9-22 22-22h309.1c12.1 0 22 9.9 22 22s-9.9 22-22 22z"
-      ></path>
-      <path
-        fill="#F3C262"
-        d="M510.4 520.3H401.8c-20.3 0-36.8-16.5-36.8-36.8v-50.8c0-20.3 16.5-36.8 36.8-36.8h108.6c20.3 0 36.8 16.5 36.8 36.8v50.8c0 20.3-16.5 36.8-36.8 36.8z"
-      ></path>
-      <path
-        fill="#F7A04D"
-        d="M547.2 438.1h-34.3v-42.2H479v124.4h33.9v-47.7h34.3zm-144.6-42.2v42.2H365v34.5h37.6v47.7h33.9V395.9z"
-      ></path>
-      <path
-        fill="#F7F9DD"
-        d="M959.7 577.8V484c-80.6-.3-148.2-56.4-166.1-131.6h-95.5c19.2 127.2 129.2 225.1 261.6 225.4z"
-      ></path>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={25} height={25}>
+      <g>
+        <g fill="none" fillRule="evenodd" stroke="none" strokeWidth="1">
+          <g fillRule="nonzero" transform="translate(-48 -48)">
+            <g transform="translate(48 48)">
+              <path
+                fillRule="nonzero"
+                d="M24 0v24H0V0h24zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018zm.265-.113l-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022zm-.715.002a.023.023 0 00-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01-.184-.092z"
+              ></path>
+              <path
+                fill="#000"
+                d="M22 10v7a3 3 0 01-3 3H5a3 3 0 01-3-3v-7h20zm-4 4h-3a1 1 0 100 2h3a1 1 0 100-2zm1-10a3 3 0 013 3v1H2V7a3 3 0 013-3h14z"
+              ></path>
+            </g>
+          </g>
+        </g>
+      </g>
     </svg>
   );
 }
