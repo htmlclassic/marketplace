@@ -1,6 +1,6 @@
 'use client'
 
-import Slider from '@/src/components/Slider';
+import Carousel from '@/src/components/Carousel';
 import Image from 'next/image';
 import ImgPlaceholder from '@/src/components/noimage.jpg'
 import Link from 'next/link';
@@ -51,20 +51,23 @@ export default function Product({
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <h1 className="side-padding font-semibold text-xl max-w-6xl order-1 sm:mb-3 sm:order-none">{product.title}</h1>
-      {
-        uid &&
-          <div className="side-padding">
-            <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
-          </div>
-      }
-      <div className="flex-col gap-5 w-max contents sm:flex">
-        <div className='sm:side-padding'>
-          <Slider>{ imageList }</Slider>
+    <div className="product-mobile-grid lg:product-desktop-grid">
+      <div className="[grid-area:header]">
+        <h1 className="side-padding font-semibold text-xl max-w-6xl sm:mb-3">{product.title}</h1>
+        {
+          uid &&
+            <div className="side-padding">
+              <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
+            </div>
+        }
+      </div>
+
+      <div className="flex flex-col gap-3 [grid-area:carousel-and-buttons]">
+        <div className="sm:side-padding w-full">
+          <Carousel>{ imageList }</Carousel>
         </div>
         <div className={clsx({
-          "side-padding order-2 flex-col items-center gap-3 sm:flex-row flex": true,
+          "side-padding flex-col items-center gap-3 sm:flex-row flex": true,
         })}>
           <AddToCartButton
             product={product}
@@ -76,7 +79,12 @@ export default function Product({
           />
         </div>
       </div>
-      <div className="side-padding flex flex-col gap-5 order-2">
+
+      <div className="[grid-area:characteristics] side-padding">
+        Характеристики
+      </div>
+
+      <div className="side-padding flex flex-col gap-3 [grid-area:info]">
         <p className="text-lg font-bold text-sky-600">{numberWithSpaces(product.price)} ₽</p>
         <p className="flex gap-5 items-center">
           Категория:
@@ -89,11 +97,15 @@ export default function Product({
         </p>
         <p>Продавец: <span className="font-semibold">{sellerName}</span></p>
       </div>
-      <div className="side-padding order-last flex flex-col gap-5">
+
+      <div className="side-padding flex flex-col gap-3 [grid-area:description]">
         <h2 className="font-semibold text-xl">Описание</h2>
         <div className="flex flex-col gap-3 max-w-6xl border-b pb-5 whitespace-pre-wrap">
           {product.description}
         </div>
+      </div>
+
+      <div className="[grid-area:reviews] side-padding">
         { Reviews }
       </div>
     </div>

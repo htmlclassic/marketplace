@@ -9,11 +9,11 @@ import {
   DialogContent,
 } from "@/src/components/ui/dialog"
 
-interface SliderProps {
+interface CarouselProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-export default function Slider({ children: chld }: SliderProps) {
+export default function Carousel({ children: chld }: CarouselProps) {
   const children = Array.isArray(chld) ? chld : [ chld ];
   const [activeElementIndex, setActiveElementIndex] = useState(0);
   const [showDetailedPicture, setShowPreview] = useState(false);
@@ -21,8 +21,8 @@ export default function Slider({ children: chld }: SliderProps) {
   const handleClick = (index: number) => setActiveElementIndex(index);
 
   return (
-    <>
-      <div className="aspect-square sm:hidden">
+    <div>
+      <div className="relative aspect-square sm:hidden">
         <EmblaCarousel
           slides={children}
           options={{
@@ -33,7 +33,7 @@ export default function Slider({ children: chld }: SliderProps) {
       </div>
       <div className="gap-5 hidden sm:flex">
         <Dialog open={showDetailedPicture} onOpenChange={open => setShowPreview(open)}>
-          <DialogContent className="overflow-hidden landscape:w-[80vh] portrait:w-[90vw] max-h-none max-w-none border-white border-2 aspect-square p-0 focus:outline-none">
+          <DialogContent className="overflow-hidden landscape:w-[95vh] portrait:w-[95vw] max-h-none max-w-none border-white border-2 aspect-square p-0 focus:outline-none">
             { children[activeElementIndex] }
           </DialogContent>
         </Dialog>
@@ -63,11 +63,11 @@ export default function Slider({ children: chld }: SliderProps) {
         }
         <div
           onClick={() => setShowPreview(true)}
-          className="w-[80vw] h-[80vw] sm:w-[500px] sm:h-[500px] relative flex justify-center items-center rounded-lg overflow-hidden cursor-pointer"
+          className="w-full h-[500px] relative flex justify-center items-center rounded-lg overflow-hidden cursor-pointer"
         >
           { children[activeElementIndex] }
         </div>
       </div>
-    </>
+    </div>
   );
 }

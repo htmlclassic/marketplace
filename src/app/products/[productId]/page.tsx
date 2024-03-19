@@ -26,7 +26,7 @@ export default async function ProductPage({ params: { productId } }: ItemProps) 
   const { data: sellerName } = await supabase.rpc('get_user_name', { userid: product.owner});
 
   return (
-    <div className="top-margin space-y-5 overflow-x-hidden w-full">
+    <div className="top-margin overflow-x-hidden w-full">
       <Product
         product={product}
         sellerName={sellerName!}

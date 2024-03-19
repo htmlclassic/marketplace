@@ -65,3 +65,32 @@
     @apply absolute inset-0 -z-10;
   }
 }
+
+@responsive {
+  .product-desktop-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1.2fr 1fr;
+    grid-template-areas:
+      "header header"
+      "carousel-and-buttons characteristics"
+      "info info"
+      "description description"
+      "reviews reviews"
+    ;
+  }  
+
+  .product-mobile-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "carousel-and-buttons"
+      "info"
+      "description"
+      "characteristics"
+      "reviews"
+    ;
+  }
+}

@@ -26,7 +26,7 @@ export default function EmblaCarousel({ slides, options }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const hideNavigationDots = options?.hideNavigationDots ?? false;
-  const hideNavigationArros = options?.hideNavigationArrows ?? false;
+  const hideNavigationArrows = options?.hideNavigationArrows ?? false;
 
   useEffect(() => {
     if (emblaApi) {
@@ -37,7 +37,7 @@ export default function EmblaCarousel({ slides, options }: Props) {
   return (
     <div className="relative w-full h-full flex flex-col items-center gap-[10px]">
       {
-        !hideNavigationArros &&
+        !hideNavigationArrows &&
           <NavArrows
             emblaApi={emblaApi}
             activeIndex={activeIndex}
