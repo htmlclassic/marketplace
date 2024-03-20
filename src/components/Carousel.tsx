@@ -39,7 +39,7 @@ export default function Carousel({ children: chld }: CarouselProps) {
         </Dialog>
         {
           children.length !== 1 && 
-          <div className="flex flex-col gap-2 h-[80vw] sm:h-[500px] overflow-y-auto no-scrollbar">
+          <div className="flex flex-col gap-2 h-[80vw] sm:h-[500px] overflow-y-auto no-scrollbar shrink-0">
             {
               children.map((element, index) => {
                 const isActive = activeElementIndex === index;
