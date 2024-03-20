@@ -48,25 +48,7 @@
     margin: 0;
     -moz-appearance: textfield !important;
   }
-}
 
-@layer utilities {
-  /*
-    Chromium browsers don't render nested backdrop filters.
-    As a workaround, add 'before:' to the outer filter, along with 'before:backdrop-hack':
-
-      <div class="before:backdrop-blur-md before:backdrop-hack>
-        <div class="backdrop-blur-md"></div>
-      </div>
-
-    See https://stackoverflow.com/a/76207141.
-  */
-  .backdrop-hack {
-    @apply absolute inset-0 -z-10;
-  }
-}
-
-@responsive {
   .product-desktop-grid {
     display: grid;
     gap: 1rem;
@@ -93,5 +75,21 @@
       "characteristics-full"
       "reviews"
     ;
+  }
+}
+
+@layer utilities {
+  /*
+    Chromium browsers don't render nested backdrop filters.
+    As a workaround, add 'before:' to the outer filter, along with 'before:backdrop-hack':
+
+      <div class="before:backdrop-blur-md before:backdrop-hack>
+        <div class="backdrop-blur-md"></div>
+      </div>
+
+    See https://stackoverflow.com/a/76207141.
+  */
+  .backdrop-hack {
+    @apply absolute inset-0 -z-10;
   }
 }
