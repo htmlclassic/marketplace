@@ -11,6 +11,13 @@ import { useEffect } from 'react';
 import { createClientSupabaseClient } from '@/supabase/utils_client';
 import { useRouter } from 'next/navigation';
 
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient();
+
 interface Props {
   children: React.ReactNode;
   initialCart: CartItem[];
@@ -48,14 +55,16 @@ export default function ClientWrapper({ children, initialCart, uid }: Props) {
   }, []);
 
   return (
-      <CartContextProvider initialCart={initialCart} uid={uid}>
-        <LocalizationProvider
-          dateAdapter={AdapterDayjs}
-          adapterLocale="ru"
-          localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
-        >
-          {children}
-        </LocalizationProvider>
-      </CartContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <CartContextProvider initialCart={initialCart} uid={uid}>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="ru"
+            localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
+          >
+            {children}
+          </LocalizationProvider>
+        </CartContextProvider>
+      </QueryClientProvider>
   );
 }

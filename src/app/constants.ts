@@ -1,0 +1,1 @@
+export const PRODUCTS_TO_FETCH_COUNT = 20;
