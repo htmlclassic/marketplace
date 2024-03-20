@@ -3,6 +3,7 @@ import { createServerComponentSupabaseClient } from '@/supabase/utils_server';
 import Product from './components/Product';
 import Reviews from './components/Reviews';
 import { Suspense } from 'react';
+import { getProduct } from './utils';
 
 interface PageProps {
   params: {
@@ -13,16 +14,16 @@ interface PageProps {
 export default async function ProductPage({ params: { productId } }: PageProps) {
   const supabase = createServerComponentSupabaseClient();
   const api = getAPI(supabase);
-  const product = ( await api.getProducts([productId]) )?.[0];
   const uid = await api.getCurrentUserId();
+
+  const product = await getProduct(productId);
 
   if (!product) return (
     <div className="grow flex">
       <p>Такого товара не существует.</p>
     </div>
   );
-  
-  const isFavorite = await api.isProductFavorite(product.id);
+
   const { data: sellerName } = await supabase.rpc('get_user_name', { userid: product.owner});
 
   return (
@@ -36,7 +37,6 @@ export default async function ProductPage({ params: { productId } }: PageProps) 
             <Reviews productId={product.id} />
           </Suspense>
         }
-        isFavorite={isFavorite}
       />
     </div>
   );

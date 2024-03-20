@@ -36,8 +36,8 @@ export default async function uploadProductAction(form: FormState | null) {
   const { error: addDefaultCharacteristicsError } = await supabase
     .from('product_characteristic')
     .insert([
-      { name: 'size', value: size, product_id: product.id },
-      { name: 'weight', value: weight.toString(), product_id: product.id }
+      { name: 'Размеры (мм)', value: size, product_id: product.id },
+      { name: 'Вес (г)', value: weight.toString(), product_id: product.id }
     ]);
   
   if (addDefaultCharacteristicsError)

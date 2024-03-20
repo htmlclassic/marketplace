@@ -10,12 +10,16 @@ import ManageFavoriteButton from '../../../../components/ManageFavoriteButton';
 import { numberWithSpaces } from '@/src/utils';
 import clsx from 'clsx';
 
+import type { Product } from '../types';
+import { useRef } from 'react';
+import { Button } from '@/src/components/ui/button';
+import ProductCharacteristicList from './ProductCharacteristicList';
+
 interface ProductProps {
-  product: Product;
+  product: NonNullable<Product>;
   Reviews: React.ReactNode;
   sellerName: string;
   uid: string | null;
-  isFavorite: boolean;
 }
 
 export default function Product({
@@ -23,8 +27,10 @@ export default function Product({
   product,
   sellerName,
   Reviews,
-  isFavorite
 }: ProductProps) {
+  const descriptionRef = useRef<HTMLDivElement | null>(null);
+  const isFavorite = !!product.favorite_product.find(pr => pr.product_id === product.id);
+
   let imageList: React.ReactNode = 
     <Image
       src={ImgPlaceholder}
@@ -80,8 +86,23 @@ export default function Product({
         </div>
       </div>
 
-      <div className="[grid-area:characteristics] side-padding">
-        Характеристики
+      <div className="[grid-area:characteristics-short] side-padding hidden lg:block">
+        <h2 className="text-base mb-7 font-medium">Характеристики</h2>
+        <ProductCharacteristicList
+          characteristics={product.product_characteristic}
+          maxRows={7}
+        />
+        <Button 
+          variant="link" 
+          className="px-0 mt-5 hidden lg:flex" 
+          onClick={() => {
+            descriptionRef.current?.scrollIntoView({
+              behavior: "smooth"
+            });
+          }}
+        >
+          Перейти к описанию
+        </Button>
       </div>
 
       <div className="side-padding flex flex-col gap-3 [grid-area:info]">
@@ -98,11 +119,26 @@ export default function Product({
         <p>Продавец: <span className="font-semibold">{sellerName}</span></p>
       </div>
 
-      <div className="side-padding flex flex-col gap-3 [grid-area:description]">
-        <h2 className="font-semibold text-xl">Описание</h2>
-        <div className="flex flex-col gap-3 max-w-6xl border-b pb-5 whitespace-pre-wrap">
+      <div className="side-padding mt-5 relative flex flex-col gap-7 [grid-area:description] mb-5">
+        <h2 className="font-medium text-xl">Описание</h2>
+        <div
+          className="flex flex-col gap-3 max-w-6xl whitespace-pre-wrap"
+        >
           {product.description}
         </div>
+
+        <div
+          ref={descriptionRef}  
+          id="product_description"
+          className="absolute left-0 -top-[calc(var(--header-height)+1rem)]"></div>
+      </div>
+
+      <div className="[grid-area:characteristics-full] side-padding mb-5">
+        <h2 className="text-xl mb-7 font-medium">Характеристики</h2>
+        <ProductCharacteristicList
+          characteristics={product.product_characteristic}
+          maxRows={Infinity}
+        />
       </div>
 
       <div className="[grid-area:reviews] side-padding">

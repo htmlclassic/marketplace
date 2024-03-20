@@ -35,7 +35,7 @@ export default function ReviewList({
     <motion.div
       className="flex flex-col"
     >
-      <h2 className="font-semibold text-xl mb-7">Отзывы</h2>
+      <h2 className="font-medium text-xl mb-7">Отзывы</h2>
       <div className="flex flex-col gap-5">
         {
           reviews.length
