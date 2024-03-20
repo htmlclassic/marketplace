@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import type { Product } from '../types';
 import { useRef } from 'react';
 import { Button } from '@/src/components/ui/button';
+import { Badge } from "@/src/components/ui/badge";
 import ProductCharacteristicList from './ProductCharacteristicList';
 
 interface ProductProps {
@@ -107,16 +108,24 @@ export default function Product({
 
       <div className="side-padding flex flex-col gap-3 [grid-area:info]">
         <p className="text-lg font-bold text-sky-600">{numberWithSpaces(product.price)} ₽</p>
-        <p className="flex gap-5 items-center">
-          Категория:
-          <Link
-            href={`/search?category=${product.category}`}
-            className="border rounded-3xl p-2 transition-all hover:border-slate-400"
-          >
-            {product.category}
-          </Link>
-        </p>
-        <p>Продавец: <span className="font-semibold">{sellerName}</span></p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Badge className="w-max p-0">
+            <Link
+                href={`/search?category=${product.category}`}
+                className="p-2"
+              >
+                {product.category}
+            </Link>
+          </Badge>
+          <div className="flex gap-3 text-sm items-center">
+            {/* <span>Продавец</span> */}
+            <Badge className="w-max sm:max-w-[500px] p-2 select-none flex gap-1 font-normal">
+              <SellerIcon />
+              Продавец:
+              <span className="ml-1 line-clamp-1 font-medium">{sellerName}</span>
+            </Badge>
+          </div>
+        </div>
       </div>
 
       <div className="side-padding mt-5 relative flex flex-col gap-7 [grid-area:description] mb-5">
@@ -145,5 +154,16 @@ export default function Product({
         { Reviews }
       </div>
     </div>
+  );
+}
+
+function SellerIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="20" height="20" className="shrink-0">
+      <g fill="currentColor">
+        <path d="M12 10a4 4 0 100-8 4 4 0 000 8z"></path>
+        <path d="M2.728 5.818a.75.75 0 10-1.455.364l.382 1.528a8.21 8.21 0 005.595 5.869v4.473c0 .898 0 1.648.08 2.242.084.628.27 1.195.726 1.65.455.456 1.022.642 1.65.726.595.08 1.344.08 2.242.08h.104c.899 0 1.648 0 2.243-.08.627-.084 1.194-.27 1.65-.726.455-.455.64-1.022.725-1.65.08-.594.08-1.344.08-2.242v-4.193a2.624 2.624 0 011.856 2.208l.65 5.52a.75.75 0 001.489-.175l-.65-5.52A4.124 4.124 0 0016 12.25H8.085A6.709 6.709 0 013.11 7.346l-.382-1.528z"></path>
+      </g>
+    </svg>
   );
 }
