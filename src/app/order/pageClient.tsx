@@ -68,9 +68,9 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
         router.push(`/transaction/${orderId}`);
       } else {
         setOrderId(orderId);
+        clearCart();
       }
 
-      clearCart();
     } catch (error) {
       console.log(error);
     }
@@ -93,8 +93,7 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
 
   if (!cart.length) return (
     <div className="side-padding grow flex flex-col pt-10">
-      Невозможно оплатить пустую корзину. Как вы сюда попали?
-      <span className="text-2xl">😨</span>
+      Корзина пуста. Нельзя оплатить товары, которых нет.
     </div>
   );
 
