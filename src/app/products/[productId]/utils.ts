@@ -8,7 +8,8 @@ export async function getProduct(productId: string) {
     .select(`
       *, 
       product_characteristic(name, value),
-      favorite_product(product_id)
+      favorite_product(product_id),
+      review(rating)
     `)
     .eq('id', productId)
     .limit(1)

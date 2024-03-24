@@ -15,6 +15,7 @@ import { useRef } from 'react';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from "@/src/components/ui/badge";
 import ProductCharacteristicList from './ProductCharacteristicList';
+import Rating from '@/src/components/Rating';
 
 interface ProductProps {
   product: NonNullable<Product>;
@@ -67,6 +68,9 @@ export default function Product({
               <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
             </div>
         }
+        <div className="side-padding">
+          <Rating value={getProductAvgRating(product)} readonly />
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 [grid-area:carousel-and-buttons]">
@@ -166,4 +170,13 @@ function SellerIcon() {
       </g>
     </svg>
   );
+}
+
+function getProductAvgRating(product: Product) {
+  if (!product || product.review.length === 0) return 0;
+
+  const avgRating = product.review.reduce((acc, review) => acc + review.rating, 0) /
+    product.review.length;
+
+  return avgRating;
 }
