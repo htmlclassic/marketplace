@@ -1,10 +1,8 @@
-import { getAPI } from "@/supabase/api";
-import { createOtherSupabaseClient } from "@/supabase/utils_server";
 import Table from "./Table";
+import { getSellerStatistics } from "./utils";
 
 export default async function Page() {
-  const api = getAPI(createOtherSupabaseClient())
-  const stats = await api.getSellerStatistics();
+  const stats = await getSellerStatistics();
 
   if (!stats)
     return (
@@ -14,8 +12,6 @@ export default async function Page() {
     );
 
   return (
-    <div className="flex w-full overflow-x-auto">
-      <Table stats={stats} />
-    </div>
+    <Table stats={stats} />
   );
 }

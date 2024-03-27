@@ -216,50 +216,6 @@ export function getAPI(supabase: SupabaseClient<Database>) {
       }
     , THROTTLE_MS),
 
-    async getSellerStatistics() {
-      const uid = await this.getCurrentUserId();
-
-      if (!uid) throw new Error('User is not authorized.');
-
-      // I set up a condition when querying this table
-      // so it selects only current user's sold items
-      const { data: soldItems } = await supabase
-        .from('order_items')
-        .select();
-      
-      if (!soldItems?.length) return null;
-
-      const products = await this.getProducts(soldItems.map(item => item.product_id));
-
-      if (!products) throw new Error('Could fetch products');
-
-      const stats: SellerStatistics[] = [];
-
-      for (const item of soldItems) {
-        const productInStats = stats.find(pr => pr.product.id === item.product_id);
-
-        if (productInStats) {
-          productInStats.grossPay += item.price;
-          productInStats.soldCount += item.quantity;
-        } else {
-          const product = products.find(pr => pr.id === item.product_id)!;
-
-          // sellers and customers accessing the same table
-          // there's intersection in terms of RLS policies
-          // so rn, I have to skip products, if user doesnt own it
-          if (product.owner !== uid) continue;
-
-          stats.push({
-            product,
-            soldCount: item.quantity,
-            grossPay: item.price
-          });
-        }
-      }
-
-      return stats.length ? stats : null;
-    },
-
     async getOwnedProducts() {
       const uid = await this.getCurrentUserId();
 

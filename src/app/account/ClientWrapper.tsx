@@ -62,7 +62,7 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
         />
         <div
           className={clsx({
-            "flex grow transition-all pl-0 sm:pl-[calc(var(--nav-width)+1rem)]": true,
+            "flex w-full transition-all pl-0 sm:pl-[calc(var(--nav-width)+1rem)]": true,
             "pl-[calc(var(--nav-width)+1rem)]": showMenu === true,
             "pl-0": showMenu === false
           })}

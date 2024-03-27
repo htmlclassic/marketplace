@@ -23,12 +23,6 @@ declare global {
     quantity: number;
   }
 
-  interface SellerStatistics {
-    product: Product;
-    soldCount: number;
-    grossPay: number;
-  }
-
   type SearchFilter = 'price_asc' | 'price_desc' | 'rating_desc';
 
   type PaymentType = 'marketplace' | 'bank_card';
