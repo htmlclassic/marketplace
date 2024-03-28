@@ -7,11 +7,12 @@ import { useContext } from "react";
 import { CartContext } from "@/src/CartContext";
 
 interface Props {
+  session: boolean;
   orderId: number;
   sumToPay: number;
 }
 
-export default function Client({ orderId, sumToPay }: Props) {
+export default function Client({ orderId, sumToPay, session }: Props) {
   const { clearCart } = useContext(CartContext);
   const router = useRouter();
 
@@ -22,8 +23,9 @@ export default function Client({ orderId, sumToPay }: Props) {
           await action(orderId);
 
           clearCart();          
-          router.refresh();
-          router.push('/');
+          
+          if (session) router.push('/account/orders');
+          else router.push(`/track-order/${orderId}`);
         }}
         sumToPay={sumToPay}
       />

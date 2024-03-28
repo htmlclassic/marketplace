@@ -1,4 +1,4 @@
-import { createServiceSupabaseClient } from "@/supabase/utils_server";
+import { createServerComponentSupabaseClient, createServiceSupabaseClient } from "@/supabase/utils_server";
 import Client from "./Client";
 
 export const dynamic = 'force-dynamic';
@@ -9,10 +9,14 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const supabase = createServiceSupabaseClient();
+  const supabaseService = createServiceSupabaseClient();
+
+  const supabaseServer = createServerComponentSupabaseClient();
+  const { data: { session } } = await supabaseServer.auth.getSession();
+
   const orderId = Number(params.orderid);
 
-  const { data: order } = await supabase
+  const { data: order } = await supabaseService
     .from('order')
     .select(`
       cancelled,
@@ -39,6 +43,10 @@ export default async function Page({ params }: Props) {
     order.order_items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <Client orderId={orderId} sumToPay={sumToPay} />
+    <Client 
+      orderId={orderId} 
+      sumToPay={sumToPay} 
+      session={Boolean(session)}
+    />
   );
 }

@@ -35,7 +35,6 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
   const router = useRouter();
 
   const { cart, clearCart } = useContext(CartContext);
-  const [orderId, setOrderId] = useState<number | null>(null);
 
   const totalSumToPay = cart.reduce((acc, cartItem) =>
     acc + cartItem.product.price * cartItem.quantity, 0);
@@ -67,29 +66,16 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
       if (paymentType === 'bank_card') {
         router.push(`/transaction/${orderId}`);
       } else {
-        setOrderId(orderId);
         clearCart();
+
+        if (uid) router.push('/account/orders');
+        else router.push(`/track-order/${orderId}`);
       }
 
     } catch (error) {
       console.log(error);
     }
   };
-
-  if (orderId) {
-    return (
-      <div className="side-padding grow flex flex-col pt-10">
-        <div>
-          <h2 className="font-semibold text-3xl mb-3">Заказ оформлен!</h2>
-          <Link
-            href={`track-order/${orderId}`}
-            className="underline"
-          >Отследить заказ можно здесь.</Link>
-          <p className="text-sm text-gray-500">Мы также отправили ссылку для отслеживания заказа вам на почту.</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!cart.length) return (
     <div className="side-padding grow flex flex-col pt-10">

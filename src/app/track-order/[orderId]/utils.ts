@@ -1,15 +1,17 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { createServiceSupabaseClient } from "@/supabase/utils_server";
+import { unstable_noStore } from "next/cache";
 
-export async function getOrders(from: number, to: number, supabase: SupabaseClient<Database>) {
-  const { data: orders } = await supabase
+export async function getOrder(orderId: number) {
+  unstable_noStore();
+
+  const supabase = createServiceSupabaseClient();
+
+  const { data: order } = await supabase
     .from('order')
     .select
       (`id,
         delivery_date,
-        address,
         created_at,
-        phone_number,
-        email,
         receiver_name,
   
         order_items(
@@ -31,7 +33,9 @@ export async function getOrders(from: number, to: number, supabase: SupabaseClie
     .order('created_at', { ascending: false })
     .order('created_at', { referencedTable: 'order_items', ascending: true })
     .order('created_at', { referencedTable: 'order_payment_details', ascending: true })
-    .range(from, to);
-  
-  return orders?.length ? orders : null;
+    .eq('id', orderId)
+    .limit(1)
+    .single();
+
+  return order ? order : null;
 }

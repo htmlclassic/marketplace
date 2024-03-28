@@ -1,4 +1,5 @@
-import { getOrderInfo } from './server';
+import Order from './components/Order';
+import { getOrder } from './utils';
 
 interface Props {
   params: {
@@ -8,17 +9,17 @@ interface Props {
 
 export default async function Page({ params }: Props) {
   const orderId = parseInt(params.orderId);
-  const data = await getOrderInfo(orderId);
+  const order = await getOrder(orderId);
 
   return (
-    <pre className="side-padding">
+    <div className="side-padding flex justify-center grow pt-5">
       {
-        data
+        order 
           ?
-            JSON.stringify(data, null, 2)
-          :
-            <h1>Такого заказа не существует</h1>
+            <Order order={order} />
+          :  
+            <p>Такого заказа не существует</p>
       }
-    </pre>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 'use server';
 
 import { createServiceSupabaseClient } from "@/supabase/utils_server";
-import { unstable_noStore } from "next/cache";
+import { revalidatePath, unstable_noStore } from "next/cache";
 
 export async function action(orderId: number) {
   unstable_noStore();
@@ -52,5 +52,7 @@ export async function action(orderId: number) {
       });
   }
 
-  await supabase.rpc('set_order_payment_status_to_true', { orderid: orderId })
+  await supabase.rpc('set_order_payment_status_to_true', { orderid: orderId });
+
+  revalidatePath('/');
 }
