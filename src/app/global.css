@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* gradient for top navbar */
+  .gradient {
+    background-color: #85FFBD;
+    background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .side-padding {
+    @apply px-2 sm:px-6;
+  }
+
+  .top-margin {
+    @apply mt-2 sm:mt-6;
+  }
+
+  .button {
+    @apply bg-[#494949] text-white rounded-lg px-8 py-4 relative font-semibold min-w-max w-full;
+  }
+}
+
+@layer base {
+  :root {
+    --header-height: 4.375rem;
+    --mobile-menu-height: 3.75rem;
+  }
+
+  body {
+    overflow-y: scroll;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
+
+  .product-desktop-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1.2fr 1fr;
+    grid-template-areas:
+      "header header"
+      "carousel-and-buttons characteristics-short"
+      "info info"
+      "description description"
+      "characteristics-full characteristics-full"
+      "reviews reviews"
+    ;
+  }  
+
+  .product-mobile-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "carousel-and-buttons"
+      "info"
+      "description"
+      "characteristics-full"
+      "reviews"
+    ;
+  }
+}
+
+@layer utilities {
+  /*
+    Chromium browsers don't render nested backdrop filters.
+    As a workaround, add 'before:' to the outer filter, along with 'before:backdrop-hack':
+
+      <div class="before:backdrop-blur-md before:backdrop-hack>
+        <div class="backdrop-blur-md"></div>
+      </div>
+
+    See https://stackoverflow.com/a/76207141.
+  */
+  .backdrop-hack {
+    @apply absolute inset-0 -z-10;
+  }
+}
