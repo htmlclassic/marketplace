@@ -2,21 +2,48 @@
 
 import clsx from "clsx";
 import { useState } from "react";
-import EmblaCarousel from "./EmblaCarousel";
+import EmblaCarousel from "../../../../components/EmblaCarousel";
+import Image from "next/image";
+import ImgPlaceholder from '@/src/components/noimage.jpg'
 
 import {
   Dialog,
   DialogContent,
 } from "@/src/components/ui/dialog"
 
-interface CarouselProps {
-  children: React.ReactNode | React.ReactNode[];
+interface Props {
+  imgUrls: string[] | null;
 }
 
-export default function Carousel({ children: chld }: CarouselProps) {
-  const children = Array.isArray(chld) ? chld : [ chld ];
+export default function Carousel({ imgUrls }: Props) {
   const [activeElementIndex, setActiveElementIndex] = useState(0);
   const [showDetailedPicture, setShowPreview] = useState(false);
+
+  let imageList = [
+    <Image
+      src={ImgPlaceholder}
+      alt="photo of a product"
+      className="object-cover"
+      fill
+      sizes="2000px"
+      priority
+    />
+  ];
+
+  if (imgUrls) {
+    imageList = 
+      imgUrls.map(imgUrl =>
+        <Image
+          key={imgUrl}
+          src={imgUrl}
+          alt="photo of a product"
+          className="object-cover"
+          fill
+          sizes="2000px"
+          priority
+        />
+      );
+  }
 
   const handleClick = (index: number) => setActiveElementIndex(index);
 
@@ -24,7 +51,7 @@ export default function Carousel({ children: chld }: CarouselProps) {
     <div>
       <div className="relative aspect-square sm:hidden">
         <EmblaCarousel
-          slides={children}
+          slides={imageList}
           options={{
             loop: true,
             hideNavigationArrows: true
@@ -32,16 +59,26 @@ export default function Carousel({ children: chld }: CarouselProps) {
         />
       </div>
       <div className="gap-5 hidden sm:flex">
-        <Dialog open={showDetailedPicture} onOpenChange={open => setShowPreview(open)}>
-          <DialogContent className="overflow-hidden landscape:w-[95vh] portrait:w-[95vw] max-h-none max-w-none border-white border-2 aspect-square p-0 focus:outline-none">
-            { children[activeElementIndex] }
-          </DialogContent>
-        </Dialog>
         {
-          children.length !== 1 && 
+          imgUrls &&
+            <Dialog open={showDetailedPicture} onOpenChange={open => setShowPreview(open)}>
+              <DialogContent className="overflow-hidden landscape:w-[95vh] portrait:w-[95vw] max-h-none max-w-none border-white border-2 aspect-square p-0 focus:outline-none">
+                <Image
+                  src={imgUrls[activeElementIndex]}
+                  alt="photo of a product"
+                  className="object-contain"
+                  fill
+                  sizes="2000px"
+                  priority
+                />
+              </DialogContent>
+            </Dialog>
+        }
+        {
+          imageList.length !== 1 && 
           <div className="flex flex-col gap-2 h-[80vw] sm:h-[500px] overflow-y-auto no-scrollbar shrink-0">
             {
-              children.map((element, index) => {
+              imageList.map((element, index) => {
                 const isActive = activeElementIndex === index;
 
                 return (
@@ -65,7 +102,7 @@ export default function Carousel({ children: chld }: CarouselProps) {
           onClick={() => setShowPreview(true)}
           className="w-full h-[500px] relative flex justify-center items-center rounded-lg overflow-hidden cursor-pointer"
         >
-          { children[activeElementIndex] }
+          { imageList[activeElementIndex] }
         </div>
       </div>
     </div>

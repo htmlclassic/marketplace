@@ -1,8 +1,6 @@
 'use client'
 
-import Carousel from '@/src/components/Carousel';
-import Image from 'next/image';
-import ImgPlaceholder from '@/src/components/noimage.jpg'
+import PhotoGallery from '@/src/app/products/[productId]/components/PhotoGallery';
 import Link from 'next/link';
 import ChatButton from './ChatButton';
 import AddToCartButton from '../../../../components/AddToCartButton';
@@ -33,31 +31,6 @@ export default function Product({
   const descriptionRef = useRef<HTMLDivElement | null>(null);
   const isFavorite = !!product.favorite_product.find(pr => pr.product_id === product.id);
 
-  let imageList: React.ReactNode = 
-    <Image
-      src={ImgPlaceholder}
-      alt="photo of a product"
-      className="object-cover"
-      fill
-      sizes="2000px"
-      priority
-    />;
-
-  if (product.img_urls) {
-    imageList = 
-      product.img_urls.map(imgUrl =>
-        <Image
-          key={imgUrl}
-          src={imgUrl}
-          alt="photo of a product"
-          className="object-cover"
-          fill
-          sizes="2000px"
-          priority
-        />
-      );
-  }
-
   return (
     <div className="product-mobile-grid lg:product-desktop-grid">
       <div className="[grid-area:header]">
@@ -75,7 +48,7 @@ export default function Product({
 
       <div className="flex flex-col gap-3 [grid-area:carousel-and-buttons]">
         <div className="sm:side-padding w-full">
-          <Carousel>{ imageList }</Carousel>
+          <PhotoGallery imgUrls={product.img_urls} />
         </div>
         <div className={clsx({
           "side-padding flex-col items-center gap-3 sm:flex-row flex": true,
