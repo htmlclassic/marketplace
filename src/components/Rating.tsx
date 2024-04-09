@@ -37,7 +37,7 @@ export default function Rating({
         new Array(max).fill(0).map((el, i) =>
           <div
             className={clsx({
-              "p-1": true,
+              "p-1 first-of-type:pr-0 last-of-type:pl-0": true,
               "cursor-default": readonly,
               "peer hover:text-yellow-400 peer-hover:text-yellow-400 cursor-pointer": !readonly,
               "text-gray-400": i < max - value,
