@@ -29,7 +29,9 @@ export default function Product({
   Reviews,
 }: ProductProps) {
   const descriptionRef = useRef<HTMLDivElement | null>(null);
+  const reviewsRef = useRef<HTMLDivElement | null>(null);
   const isFavorite = !!product.favorite_product.find(pr => pr.product_id === product.id);
+  const reviewCount = product.review.length;
 
   return (
     <div className="product-mobile-grid lg:product-desktop-grid">
@@ -41,8 +43,19 @@ export default function Product({
               <ManageFavoriteButton isFavorite={isFavorite} productId={product.id} />
             </div>
         }
-        <div className="side-padding">
+        <div className="side-padding flex items-center gap-5">
           <Rating value={getProductAvgRating(product)} readonly />
+          <Button 
+            variant="link" 
+            className="p-0" 
+            onClick={() => {
+              reviewsRef.current?.scrollIntoView({
+                behavior: "smooth"
+              });
+            }}
+          >
+            Отзывы ({reviewCount})
+          </Button>
         </div>
       </div>
 
@@ -127,8 +140,11 @@ export default function Product({
         />
       </div>
 
-      <div className="[grid-area:reviews] side-padding">
+      <div className="relative [grid-area:reviews] side-padding">
         { Reviews }
+        <div
+          ref={reviewsRef}  
+          className="absolute left-0 -top-[calc(var(--header-height)+1rem)]"></div>
       </div>
     </div>
   );
