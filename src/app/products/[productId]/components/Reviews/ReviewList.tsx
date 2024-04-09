@@ -11,13 +11,15 @@ interface Props {
   productId: string;
   currentUserName: string | null;
   canReview: boolean;
+  userLoggedIn: boolean;
 }
 
 export default function ReviewList({
   reviews: initialReviews,
   productId,
   currentUserName,
-  canReview
+  canReview,
+  userLoggedIn
 }: Props) {
   // i tried useOptimistic hook but it didnt rerender my component on state change, idk why
   const [reviews, setReviews] = useState(initialReviews);
@@ -41,7 +43,11 @@ export default function ReviewList({
           reviews.length
             ?
               reviews.map((review, i) =>
-                <Review key={i} review={review} />
+                <Review
+                  key={i} 
+                  review={review} 
+                  userLoggedIn={userLoggedIn} 
+                />
               )
             :
               <div>Никто пока что не оценил этот товар.</div>

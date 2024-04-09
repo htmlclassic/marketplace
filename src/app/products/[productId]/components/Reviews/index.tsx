@@ -106,6 +106,7 @@ export default async function Index({ productId }: { productId: string; }) {
       productId={productId}
       currentUserName={currentUserName}
       canReview={canReview}
+      userLoggedIn={!!uid}
     />
   );
 }

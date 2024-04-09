@@ -20,9 +20,10 @@ dayjs.updateLocale('en', {
 
 interface Props {
   review: ReviewType;
+  userLoggedIn: boolean;
 }
 
-export default function Review({ review }: Props) {
+export default function Review({ review, userLoggedIn }: Props) {
   return (
     <article className="flex flex-col gap-3 max-w-2xl overflow-hidden [overflow-wrap:anywhere]">
       <header className="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center mb-1">
@@ -49,19 +50,22 @@ export default function Review({ review }: Props) {
         <div className="font-bold">Комментарий</div>
         <div>{review.comment}</div>
       </div>
-      <div className="flex gap-3 items-center mt-3">
-        <div className="text-sm text-gray-500">Вам помог этот отзыв?</div>
-        <Button
-          meta={review.likes}
-          type="review_like"
-          reviewId={review.id!}
-        />
-        <Button
-          meta={review.dislikes}
-          type="review_dislike"
-          reviewId={review.id!}
-        />
-      </div>
+      {
+        userLoggedIn &&
+          <div className="flex gap-3 items-center mt-3">
+            <div className="text-sm text-gray-500">Вам помог этот отзыв?</div>
+            <Button
+              meta={review.likes}
+              type="review_like"
+              reviewId={review.id!}
+            />
+            <Button
+              meta={review.dislikes}
+              type="review_dislike"
+              reviewId={review.id!}
+            />
+          </div>
+      }
     </article>
   );
 }
