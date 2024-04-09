@@ -1,19 +1,22 @@
 'use client';
 
-import clsx from "clsx";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FormDataZodSchema, Inputs, StrippedCartItem } from "./types";
 import buyItems from "./buyItems";
 import { CartContext } from "@/src/CartContext";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@/src/components/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AsYouType } from 'libphonenumber-js'
 import { numberWithSpaces } from "@/src/utils";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
+import { Input } from "@/src/components/ui/input";
+import { Label } from "@/src/components/ui/label";
+import Error from "./components/Error";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
+import { Form, FormField } from "@/src/components/ui/form";
+import { Button } from "@/src/components/ui/button";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface Props {
   uid: string | null;
@@ -21,6 +24,10 @@ interface Props {
 }
 
 export default function PageClient({ uid, marketplaceBalance }: Props) {
+  const form = useForm<Inputs>({
+    resolver: zodResolver(FormDataZodSchema)
+  });
+
   const {
     register,
     handleSubmit,
@@ -28,10 +35,9 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
     formState: {
       errors,
       isSubmitting
-    },
-  } = useForm<Inputs>({
-    resolver: zodResolver(FormDataZodSchema)
-  });
+    }
+  } = form;
+
   const router = useRouter();
 
   const { cart, clearCart } = useContext(CartContext);
@@ -42,6 +48,7 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
   const paymentType = watch('paymentType') as PaymentType;
 
   let submitButtonContent: React.ReactNode = 'Перейти к оплате';
+  const submitButtonDisabled = isSubmitting || paymentType === 'marketplace' && !marketplaceAllowBuy;
 
   if (paymentType === 'marketplace' && marketplaceAllowBuy)
     submitButtonContent = `Оплатить ${numberWithSpaces(totalSumToPay)} ₽`;
@@ -87,107 +94,126 @@ export default function PageClient({ uid, marketplaceBalance }: Props) {
     <div
       className="relative grow flex flex-col justify-center items-center"
     >
-      <h1 className="mb-10">Оформление заказа</h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex gap-5 flex-col p-3 w-[90vw] sm:w-[450px]"
-      >
-        <TextField
-          error={!!errors.receiverName}
-          helperText={errors.receiverName?.message}
-          label="Имя получателя"
-          variant="outlined"
-          {...register('receiverName', {
-            required: true
-          })}
-          disabled={isSubmitting}
-        />
-        <TextField
-          error={!!errors.address}
-          helperText={errors.address?.message}
-          {...register('address', {
-            required: true
-          })}
-          label="Адрес"
-          variant="outlined"
-          disabled={isSubmitting}
-        />
-        <TextField
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          {...register('email', {
-            required: true
-          })}
-          label="Электронная почта"
-          variant="outlined"
-          disabled={isSubmitting}
-        />
-        <TextField
-          error={!!errors.phoneNumber}
-          helperText={errors.phoneNumber?.message}
-          {...register('phoneNumber', {
-            onChange(e: React.ChangeEvent<HTMLInputElement>) {
-              const inputType = ((e.nativeEvent as any).inputType) as string;
-              
-              if (inputType === 'deleteContentBackward') return;
+      <h1 className="mb-5">Оформление заказа</h1>
+      <Form {...form}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex gap-5 flex-col p-3 w-[90vw] sm:w-[450px]"
+        >
+          <Label className="flex flex-col gap-1">
+            <Input
+              {...register('receiverName', {
+                required: true
+              })}
+              placeholder="Имя получателя"
+              disabled={isSubmitting}
+              className="py-5"
+            />
+            <Error error={errors.receiverName} />
+          </Label>
+          <Label className="flex flex-col gap-1">
+            <Input
+              {...register('address', {
+                required: true
+              })}
+              placeholder="Адрес"
+              disabled={isSubmitting}
+              className="py-5"
+            />
+            <Error error={errors.address} />
+          </Label>
+          <Label className="flex flex-col gap-1">
+            <Input
+              {...register('email', {
+                required: true
+              })}
+              placeholder="Электронная почта"
+              disabled={isSubmitting}
+              className="py-5"
+            />
+            <Error error={errors.email} />
+          </Label>
+          <Label className="flex flex-col gap-1">
+            <Input
+              {...register('phoneNumber', {
+                onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                  const inputType = ((e.nativeEvent as any).inputType) as string;
+                  
+                  if (inputType === 'deleteContentBackward') return;
 
-              e.target.value = new AsYouType('RU').input(e.target.value)
-            },
-          })}
-          label="Номер телефона"
-          variant="outlined"
-          disabled={isSubmitting}
-        />
-        <TextField
-          error={!!errors.paymentType}
-          helperText={errors.paymentType?.message}
-          {...register('paymentType', {
-            required: true
-          })}
-          defaultValue=""
-          label="Способ оплаты"
-          select
-          disabled={isSubmitting}
-        >
-          <MenuItem
-            value="bank_card"
+                  e.target.value = new AsYouType('RU').input(e.target.value)
+                },
+              })}
+              placeholder="Номер телефона"
+              disabled={isSubmitting}
+              className="py-5"
+            />
+            <Error error={errors.phoneNumber} />
+          </Label>
+
+          <FormField
+            control={form.control}
+            name="paymentType"
+            render={({ field }) => (
+              <Label className="flex flex-col gap-1">
+                <Select
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                  disabled={isSubmitting}
+                >
+                  <SelectTrigger className="py-5">
+                    <SelectValue placeholder="Способ оплаты" />
+                  </SelectTrigger>
+                  <SelectContent
+                    {...register('paymentType', {
+                      required: true
+                    })}
+                  >
+                    <SelectItem value="bank_card">
+                      <div className="flex gap-3 items-center">
+                        <CardIcon />
+                        Банковская карта
+                      </div>
+                    </SelectItem>
+                    {
+                      uid &&
+                        <SelectItem value="marketplace">
+                          <div className="flex gap-3 items-center">
+                            <WalletIcon />
+                            Marketplace кошелёк
+                          </div>
+                        </SelectItem>
+                    }
+                  </SelectContent>
+                </Select>
+                <Error error={errors.paymentType} />
+              </Label>  
+            )}
+          />
+
+          <Button 
+            disabled={submitButtonDisabled}
+            className="py-6"
           >
-            <div className="flex gap-3">
-              <CardIcon />
-              Банковская карта
-            </div>
-          </MenuItem>
+            {
+              isSubmitting
+                ? 
+                  <ReloadIcon className="w-[20px] h-[20px] animate-spin-fast" />
+                :
+                  submitButtonContent
+            }
+          </Button>
           {
-            uid &&
-              <MenuItem
-                value="marketplace"
-                className="flex gap-3"
-              >
-                <div className="flex gap-3">
-                  <WalletIcon />
-                  Marketplace кошелёк
-                </div>
-              </MenuItem>
+            paymentType === 'marketplace' && !marketplaceAllowBuy &&
+            <Link 
+              href="account/wallet"
+              className="text-sm text-gray-400 transition-all hover:underline hover:text-black"
+            >
+              Пополнить кошелёк
+            </Link>
           }
-        </TextField>
-        <Button 
-          disabled={isSubmitting || paymentType === 'marketplace' && !marketplaceAllowBuy}
-          className={clsx({
-            "animate-pulse": isSubmitting
-          })}
-        >
-          {submitButtonContent}
-        </Button>
-        {
-          paymentType === 'marketplace' && !marketplaceAllowBuy &&
-          <Link 
-            href="account/wallet"
-            className="text-sm text-gray-400 transition-all hover:underline hover:text-black"
-          >
-            Пополнить кошелёк
-          </Link>
-        }
-      </form>
+        </form>
+      </Form>
     </div>
   );
 }
@@ -239,8 +265,8 @@ function CardIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       fill="none"
       viewBox="0 0 24 24"
     >
@@ -260,8 +286,8 @@ function WalletIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       fill="none"
       viewBox="0 0 24 24"
     >
