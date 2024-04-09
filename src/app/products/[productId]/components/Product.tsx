@@ -34,7 +34,7 @@ export default function Product({
   return (
     <div className="product-mobile-grid lg:product-desktop-grid">
       <div className="[grid-area:header]">
-        <h1 className="side-padding font-semibold text-xl max-w-6xl sm:mb-3">{product.title}</h1>
+        <h1 className="side-padding font-semibold text-xl max-w-6xl mb-3">{product.title}</h1>
         {
           uid &&
             <div className="side-padding">
