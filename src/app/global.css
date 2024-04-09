@@ -1,4 +1,4 @@
-@tailwind base;
+@tailwind base; 
 @tailwind components;
 @tailwind utilities;
 
@@ -28,6 +28,29 @@
 
   .button {
     @apply bg-[#494949] text-white rounded-lg px-8 py-4 relative font-semibold min-w-max w-full;
+  }
+
+
+  @supports (max-height: 100svh) {
+    .catalog-max-height-mobile {
+      /* for browsers that support svh */
+      max-height: calc(100svh - var(--header-height) - 2rem - var(--mobile-menu-height));
+    }
+  }
+
+  @supports not (max-height: 100svh) {
+    .catalog-max-height-mobile {
+      /* for browsers that don't support svh */
+      /*
+        its not 100vh intentionally, to substract mobile top bar height.
+        not an accurate calculation, i know
+      */
+      max-height: calc(95vh - var(--header-height) - 2rem - var(--mobile-menu-height));
+    }
+  }
+
+  .catalog-max-height-desktop {
+    max-height: calc(100vh - var(--header-height) - 2rem);
   }
 }
 

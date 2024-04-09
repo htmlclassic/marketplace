@@ -83,7 +83,7 @@ export default function CatalogClient({ show, hide }: Props) {
     <div
       onClick={e => e.stopPropagation()}
       className={clsx({
-        "flex [--initial-translate:calc(var(--header-height))] max-h-[calc(100svh-var(--header-height)-2rem-var(--mobile-menu-height))] sm:max-h-[calc(100svh-var(--header-height)-2rem)] z-50 bg-black text-white bg-opacity-80 backdrop-blur-md absolute left-1/2 top-0 -translate-x-1/2 w-[95%] max-w-6xl p-6 rounded-2xl transition-all duration-300 ease-in-out": true,
+        "flex [--initial-translate:calc(var(--header-height))] catalog-max-height-mobile sm:catalog-max-height-desktop z-50 bg-black text-white bg-opacity-80 backdrop-blur-md absolute left-1/2 top-0 -translate-x-1/2 w-[95%] max-w-6xl p-6 rounded-2xl transition-all duration-300 ease-in-out": true,
         "translate-y-[calc(var(--initial-translate)+1rem)]": show,
         "opacity-0 pointer-events-none translate-y-[calc(var(--initial-translate)-1rem)]": !show
       })}
