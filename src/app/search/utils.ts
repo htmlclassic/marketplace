@@ -66,7 +66,7 @@ export async function loadProducts(
     .order(orderColumn, orderOptions)
     .order('created_at', { ascending: true }); // avoid showing the same products on lazy load
 
-  if (text) query.textSearch('title', `${text}`);
+  if (text) query.ilike('title', `%${text}%`);
   if (category) query.eq('category', category);
   
   const { data: products } = await query;
