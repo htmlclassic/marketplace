@@ -3,7 +3,6 @@
 import CartItemsCount from './CartItemsCount';
 import Link from 'next/link';
 import PersonIcon from '@mui/icons-material/Person';
-import Button from '@mui/material/Button';
 
 import React, { useEffect, useRef, useState } from 'react';
 import SearchInput from '../SearchInput';
@@ -31,21 +30,12 @@ export default function Navbar({ searchHistory }: Props) {
   return (
     <div className="h-[var(--header-height)] transform-gpu sticky top-0 py-1 px-4 flex gap-x-5 sm:gap-x-10 justify-between items-center before:bg-black before:bg-opacity-80 before:backdrop-hack before:backdrop-blur-md text-white z-20">
       <div className="flex gap-7 items-center">
-        <Button
+        <button
           ref={ref}
           onClick={() => setShowCatalog(!showCatalog)}
-          sx={{
-            width: 'max-content',
-            minWidth: 0,
-            padding: '0.7rem',
-            borderRadius: '100%'
-          }}
-          TouchRippleProps={{
-            className: "text-white"
-          }}
         >
           <CatalogIcon />
-        </Button>
+        </button>
         <Link href="/" className="text-2xl font-medium hidden sm:inline">Marketplace</Link>
       </div>  
       <SearchInput searchHistory={searchHistory} />
