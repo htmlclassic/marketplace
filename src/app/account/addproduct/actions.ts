@@ -14,6 +14,7 @@ export default async function uploadProductAction(form: FormState | null) {
   if (!form) throw new Error('Форма пустая');
   if (!FormSchema.safeParse(form).success) throw new Error('Ошибка валидации формы');
 
+  const type = form.type;
   const title = form.title;
   const description = form.description;
   const category = form.category;
@@ -26,7 +27,7 @@ export default async function uploadProductAction(form: FormState | null) {
   const { data: product, error: addProductError } = await supabase
     .from('product')
     .insert({
-      title, description, category, price, quantity, owner: uid
+      type, title: `${type} ${title}`, description, category, price, quantity, owner: uid
     })
     .select()
     .single();

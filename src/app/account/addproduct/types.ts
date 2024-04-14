@@ -3,6 +3,8 @@ import { z } from "zod";
 const INT2_MAX = 32_767;
 const INT4_MAX = 2_147_483_647;
 
+const TYPE_MAX_LENGTH = 50;
+
 const TITLE_MIN_LENGTH = 10;
 const TITLE_MAX_LENGTH = 200;
 
@@ -10,14 +12,24 @@ const DESCRIPTION_MIN_LENGTH = 50;
 const DESCRIPTION_MAX_LENGTH = 10_000;
 
 export const FormSchema = z.object({
+  type: z.string().trim()
+    .min(
+      TITLE_MIN_LENGTH, 
+      { message: `Тип товара не должен быть короче ${TITLE_MIN_LENGTH} символов` }
+    )
+    .max(
+      TYPE_MAX_LENGTH, 
+      { message: `Тип товара не должен превышать ${TITLE_MAX_LENGTH} символов` }
+    ),
+
   title: z.string().trim()
     .min(
       TITLE_MIN_LENGTH, 
-      { message: `Наименование не должно быть короче ${TITLE_MIN_LENGTH} символов` }
+      { message: `Дополнительная информация не должна быть короче ${TITLE_MIN_LENGTH} символов` }
     )
     .max(
       TITLE_MAX_LENGTH, 
-      { message: `Наименование не должно превышать ${TITLE_MAX_LENGTH} символов` }
+      { message: `Дополнительная информация не должна превышать ${TITLE_MAX_LENGTH} символов` }
     ),
 
   description: z.string().trim()

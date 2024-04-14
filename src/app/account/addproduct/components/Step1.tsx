@@ -10,7 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select"
+} from "@/src/components/ui/select";
+import { Badge } from "@/src/components/ui/badge";
 import { Label } from "@/src/components/ui/label";
 import { Button } from "@/src/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,27 +47,56 @@ export default function Step1({
     goToNextStep();
   };
 
+  const type = form.watch('type') ?? '';
+  const title = form.watch('title') ?? '';
+
   return (
     <Form {...form}>
       <form
         className={clsx({
-          "flex-col gap-3 w-full": true,
+          "flex-col gap-5 w-full": true,
           "flex": show,
           "hidden": !show
         })}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div>
-          <Label htmlFor="product_name">Наименование</Label>
-          <Input
-            {...form.register('title')}
-            id="product_name"
-            className="py-5"
-          />
-          <FieldError error={form.formState.errors.title} />
+          <div className="flex flex-col mb-3">
+            <Label htmlFor="product_type" className="flex items-center gap-1">
+              Тип товара
+              <Badge
+                className="rounded-full w-4 h-4 text-xs p-0 flex items-center justify-center -translate-y-[5px]"
+                title="Ваш товар - это конкретно что? Примеры: видеокарта, моющее средство, щётка для чистки обуви"
+              >?</Badge>
+            </Label>
+            <Input
+              {...form.register('type')}
+              id="product_type"
+              className="py-5"
+            />
+            <FieldError error={form.formState.errors.type} />
+          </div>
+          <div className="flex flex-col">
+            <Label htmlFor="product_name" className="flex items-center gap-1">
+              Дополнительная информация
+              <Badge
+                className="rounded-full w-4 h-4 text-xs p-0 flex items-center justify-center -translate-y-[5px]"
+                title="Дополнительная информация о товаре, которая также, как и тип товара, будет отражена в заголовке товара"
+              >?</Badge>
+            </Label>
+            <Input
+              {...form.register('title')}
+              id="product_name"
+              className="py-5"
+            />
+            <FieldError error={form.formState.errors.title} />
+          </div>
+          <div className="text-sm text-gray-600 mt-1">
+            Итоговый заголовок товара: {`${type} ${title}`}
+          </div>
         </div>
-        <div>
-          <Label htmlFor="product_description">Описание</Label>
+        <div className="flex flex-col">
+          <Label htmlFor="product_description">Подробное описание</Label>
           <Textarea
             {...form.register('description')}
             rows={10}
@@ -101,7 +131,7 @@ export default function Step1({
               )}
             />    
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
           <Label htmlFor="product_price">Цена</Label>
           <Input
             {...form.register('price', { valueAsNumber: true })}
@@ -111,7 +141,7 @@ export default function Step1({
           />
           <FieldError error={form.formState.errors.price} />
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
           <Label htmlFor="product_quantity">Количество</Label>
           <Input
             {...form.register('quantity', { valueAsNumber: true })}

@@ -29,4 +29,9 @@ declare global {
 
   // gets an array's element type
   type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+
+  interface SearchSuggestion {
+    id: number;
+    text: string;
+  }
 }

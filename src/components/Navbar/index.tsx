@@ -8,9 +8,12 @@ import Button from '@mui/material/Button';
 import React, { useEffect, useRef, useState } from 'react';
 import SearchInput from '../SearchInput';
 import Catalog from '../Catalog';
-import clsx from 'clsx';
 
-export default function Navbar() {
+interface Props {
+  searchHistory: SearchSuggestion[];
+}
+
+export default function Navbar({ searchHistory }: Props) {
   const [showCatalog, setShowCatalog] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -45,7 +48,7 @@ export default function Navbar() {
         </Button>
         <Link href="/" className="text-2xl font-medium hidden sm:inline">Marketplace</Link>
       </div>  
-      <SearchInput />
+      <SearchInput searchHistory={searchHistory} />
       <div className="items-center lg:gap-4 justify-between hidden sm:flex">
         <CartItemsCount />
         <Link href="/account" title="Аккаунт" className="shrink-0 flex py-2 pl-4">

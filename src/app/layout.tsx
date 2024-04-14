@@ -61,11 +61,17 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     });
   }
 
+  const { data: searchHistory } = await supabase
+    .from('search_history')
+    .select('id, text')
+    .order('created_at', { ascending: false })
+    .limit(10);
+
   return (
     <html className={inter.className} lang='ru'>
       <body className="flex flex-col [--mobile-pb:calc(var(--mobile-menu-height)+1rem)] pb-[--mobile-pb] sm:pb-6 min-h-[100svh] max-w-[1920px] mx-auto">
         <ClientWrapper initialCart={initialCart} uid={uid}>
-          <Navbar />
+          <Navbar searchHistory={searchHistory ?? []} />
           <main className="w-full grow flex max-w-[1400px] mx-auto z-10">
             {children}
           </main>
