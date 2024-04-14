@@ -12,6 +12,9 @@ export async function getProduct(productId: string) {
       review(rating)
     `)
     .eq('id', productId)
+    .order('id', {
+      referencedTable: 'product_characteristic'
+    })
     .limit(1)
     .single();
 
