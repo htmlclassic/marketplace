@@ -30,7 +30,7 @@ export default function SearchInput({ searchHistory: searchHistoryInitial }: Pro
   const { data: suggestions } = useQuery({ 
     queryKey: ['suggestions', searchValue], 
     queryFn: () => getSuggestions(searchValue),
-    initialData: []
+    placeholderData: prev => prev
   });
 
   const search = async (text: string) => {
@@ -214,12 +214,12 @@ export default function SearchInput({ searchHistory: searchHistoryInitial }: Pro
       <div
         className={clsx({
           "sm:w-[80vw] lg:w-full sm:fixed lg:absolute transition-all p-3 sm:rounded-lg border-t border-gray-200 sm:border-none sm:shadow-[0_5px_10px_5px_rgba(0,0,0,0.3)] grow top-[calc(100%+5px)] left-1/2 sm:-translate-x-1/2 bg-white text-black": true,
-          "opacity-0 translate-y-[150px] pointer-events-none absolute": !active || (searchValue ? !suggestions.length : !searchHistory.length),
+          "opacity-0 translate-y-[150px] pointer-events-none absolute": !active || (searchValue ? !suggestions?.length : !searchHistory.length),
         })}
       >
         <SearchSuggestionList
           showHistoryIcon={!searchValue}
-          suggestions={searchValue ? suggestions : searchHistory}
+          suggestions={searchValue ? suggestions ?? [] : searchHistory}
           handleSuggestionClick={handleSuggestionClick}
         />
       </div>
